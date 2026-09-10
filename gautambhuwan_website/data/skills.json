@@ -1,0 +1,30 @@
+{
+  "networking": [
+    { "name": "TCP/IP Suite", "level": "Advanced", "description": "Layer 2 through Layer 7 protocol analysis, packet inspection, and troubleshooting." },
+    { "name": "IPv4 & IPv6 Subnetting", "level": "Advanced", "description": "VLSM, CIDR prefix aggregation, dual-stack deployment, and transition mechanisms." },
+    { "name": "VLANs & Inter-VLAN Routing", "level": "Advanced", "description": "802.1Q trunking, VTP management, Router-on-a-Stick, and Layer 3 switch SVI routing." },
+    { "name": "Routing Protocols (OSPF, BGP)", "level": "Intermediate", "description": "Single and multi-area OSPFv2/v3, metric calculation, route filtering, and eBGP peering." },
+    { "name": "Network Services (DNS, DHCP, NAT)", "level": "Advanced", "description": "Authoritative & recursive DNS architectures, DHCP relay agents, and dynamic PAT/NAT." },
+    { "name": "Access Control Lists (ACLs)", "level": "Advanced", "description": "Standard, extended, and named IPv4/IPv6 packet filtering and security policies." }
+  ],
+  "systems": [
+    { "name": "Linux Administration (Ubuntu, Debian)", "level": "Advanced", "description": "Kernel parameters, systemd service lifecycle, package management, and system hardening." },
+    { "name": "Web Servers (Nginx, Apache)", "level": "Advanced", "description": "Reverse proxy configuration, TLS termination, load balancing, and rate limiting." },
+    { "name": "SSH & Remote Access", "level": "Advanced", "description": "Key-based authentication, SSH bastions, tunneling, and daemon security hardening." },
+    { "name": "Bash & Shell Automation", "level": "Intermediate", "description": "Automated provisioning scripts, cron tasks, log parsing, and diagnostic utilities." },
+    { "name": "System Monitoring & Logging", "level": "Intermediate", "description": "Syslog aggregation, journalctl inspection, resource metric tracing, and alert pipelines." }
+  ],
+  "infrastructure": [
+    { "name": "Cisco IOS & Hardware", "level": "Advanced", "description": "Switching platforms (Catalyst), edge routers (ISR/ASR), and CLI orchestration." },
+    { "name": "MikroTik RouterOS", "level": "Intermediate", "description": "Firewall rules, queue management, PPPoE server setups, and Winbox administration." },
+    { "name": "Device Monitoring & Telemetry", "level": "Intermediate", "description": "SNMP traps, ping heartbeats, and hardware health management (Hik-Partner Pro portal)." },
+    { "name": "GPON & Optical Basics", "level": "Familiar", "description": "OLT/ONT link budgets, optical power margin verification, and split ratios." }
+  ],
+  "virtualization_cloud": [
+    { "name": "Docker & Containerization", "level": "Intermediate", "description": "Custom Dockerfiles, volume persistence, bridge networking, and microservice containers." },
+    { "name": "Simulation Labs (Cisco Packet Tracer)", "level": "Advanced", "description": "Complex multi-site WAN/LAN topology simulations, failure failover, and protocol debug." },
+    { "name": "DNS Management & Anycast", "level": "Advanced", "description": "Distributed authoritative zone administration via ClouDNS, TTL tuning, and DNSSEC." },
+    { "name": "Git & GitHub Version Control", "level": "Intermediate", "description": "Branching workflows, SSH authentication, CI/CD static site actions, and releases." },
+    { "name": "Cloud Infrastructure Basics", "level": "Familiar", "description": "VPC concepts, security groups, public/private subnets, and serverless web delivery." }
+  ]
+}

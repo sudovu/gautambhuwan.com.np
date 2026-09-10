@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080c16"/>
+      <stop offset="50%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="cyberGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="avatarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="800" rx="32" fill="url(#bgGrad)"/>
+  
+  <!-- Subtle Technical Grid Lines -->
+  <g stroke="rgba(255,255,255,0.04)" stroke-width="1">
+    <line x1="100" y1="0" x2="100" y2="800"/>
+    <line x1="200" y1="0" x2="200" y2="800"/>
+    <line x1="300" y1="0" x2="300" y2="800"/>
+    <line x1="400" y1="0" x2="400" y2="800"/>
+    <line x1="500" y1="0" x2="500" y2="800"/>
+    <line x1="600" y1="0" x2="600" y2="800"/>
+    <line x1="700" y1="0" x2="700" y2="800"/>
+    <line x1="0" y1="100" x2="800" y2="100"/>
+    <line x1="0" y1="200" x2="800" y2="200"/>
+    <line x1="0" y1="300" x2="800" y2="300"/>
+    <line x1="0" y1="400" x2="800" y2="400"/>
+    <line x1="0" y1="500" x2="800" y2="500"/>
+    <line x1="0" y1="600" x2="800" y2="600"/>
+    <line x1="0" y1="700" x2="800" y2="700"/>
+  </g>
+  
+  <!-- Concentric Orbital Technical Rings -->
+  <circle cx="400" cy="380" r="280" stroke="rgba(139, 92, 246, 0.15)" stroke-width="1.5" stroke-dasharray="8 6" fill="none"/>
+  <circle cx="400" cy="380" r="220" stroke="rgba(6, 182, 212, 0.2)" stroke-width="1.5" stroke-dasharray="12 8" fill="none"/>
+  <circle cx="400" cy="380" r="160" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" fill="none"/>
+  
+  <!-- Central Avatar Container -->
+  <circle cx="400" cy="380" r="140" fill="url(#avatarGrad)" stroke="url(#cyberGlow)" stroke-width="3.5"/>
+  
+  <!-- Monogram Logo in Avatar -->
+  <path d="M330 330 L400 450 L470 330" stroke="#f8fafc" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M365 390 L400 330 L435 390" stroke="#38bdf8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  
+  <!-- Technical Data Overlay Badges -->
+  <rect x="250" y="590" width="300" height="44" rx="22" fill="rgba(15, 23, 42, 0.85)" stroke="rgba(56, 189, 248, 0.3)" stroke-width="1.5"/>
+  <text x="400" y="618" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="700" fill="#38bdf8" text-anchor="middle" letter-spacing="2">VHUWON MATHERS</text>
+  
+  <text x="400" y="660" font-family="'Courier New', monospace" font-size="13" font-weight="600" fill="#94a3b8" text-anchor="middle" letter-spacing="1.5">SYS // NETWORKS // INFRASTRUCTURE</text>
+  <text x="400" y="690" font-family="'Courier New', monospace" font-size="11" fill="#64748b" text-anchor="middle">[ REPLACE WITH USER PHOTO IN ASSETS ]</text>
+</svg>

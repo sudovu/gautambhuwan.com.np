@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="14" fill="#0b0f19"/>
+  <rect x="1" y="1" width="62" height="62" rx="13" stroke="#8b5cf6" stroke-opacity="0.3" stroke-width="2"/>
+  <!-- Network Nodes & Connecting Circuit -->
+  <circle cx="16" cy="18" r="3" fill="#06b6d4"/>
+  <circle cx="32" cy="46" r="3.5" fill="#8b5cf6"/>
+  <circle cx="48" cy="18" r="3" fill="#38bdf8"/>
+  <circle cx="32" cy="18" r="2.5" fill="#a855f7"/>
+  <!-- Stylized V & M Geometry -->
+  <path d="M16 18 L32 46 L48 18" stroke="#f8fafc" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M24 32 L32 18 L40 32" stroke="#06b6d4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

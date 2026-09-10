@@ -1,0 +1,38 @@
+[
+  {
+    "title": "Demystifying OSPF Area Design & Route Summarization",
+    "slug": "ospf-area-design",
+    "category": "Networking",
+    "date": "August 2026",
+    "readingTime": "6 min read",
+    "excerpt": "A deep dive into why multi-area OSPF topologies are critical for containing link-state advertisements (LSAs), reducing SPF recalculation overhead, and designing resilient backbones.",
+    "url": "blog.html#ospf-area-design"
+  },
+  {
+    "title": "Hardening Ubuntu Server for Public-Facing Infrastructure",
+    "slug": "linux-server-hardening",
+    "category": "Systems",
+    "date": "July 2026",
+    "readingTime": "8 min read",
+    "excerpt": "Key practices for locking down Linux production instances: SSH key authentication, UFW firewall profiles, fail2ban rate-limiting, and unattended security updates.",
+    "url": "blog.html#linux-server-hardening"
+  },
+  {
+    "title": "Understanding Anycast DNS and Global Latency Reduction",
+    "slug": "anycast-dns-latency",
+    "category": "Infrastructure",
+    "date": "June 2026",
+    "readingTime": "5 min read",
+    "excerpt": "How BGP Anycast routing allows multiple physical nameservers worldwide to share a single IP address, routing clients to the nearest geographical node with automatic failover.",
+    "url": "blog.html#anycast-dns-latency"
+  },
+  {
+    "title": "Bridge Networks in Docker: What Really Happens Under the Hood",
+    "slug": "docker-bridge-networking",
+    "category": "Cloud & DevOps",
+    "date": "May 2026",
+    "readingTime": "7 min read",
+    "excerpt": "Inspecting veth pairs, Linux bridge interfaces, and iptables NAT rules that power container communication in isolated environments.",
+    "url": "blog.html#docker-bridge-networking"
+  }
+]

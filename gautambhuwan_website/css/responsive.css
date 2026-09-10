@@ -1,0 +1,161 @@
+/* ==========================================================================
+   VHUWON MATHERS — RESPONSIVE STYLESHEET
+   Domain: gautambhuwan.com.np
+   Breakpoints: 320px, 480px, 768px, 1024px, 1280px+
+   ========================================================================== */
+
+/* Large Desktops & Wide Displays */
+@media (min-width: 1440px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
+/* Tablets & Small Laptops (Max 1024px) */
+@media (max-width: 1024px) {
+  .section {
+    padding: 72px 0;
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+  }
+}
+
+/* Tablets & Mobile Devices (Max 860px) */
+@media (max-width: 860px) {
+  .desktop-nav {
+    display: none;
+  }
+
+  .mobile-nav-toggle {
+    display: flex;
+  }
+
+  .site-header {
+    height: 68px;
+  }
+
+  .nav-container {
+    height: 68px;
+  }
+
+  .hero-layout {
+    flex-direction: column-reverse;
+    text-align: left;
+    gap: 40px;
+  }
+
+  .hero-visual {
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  .tech-strip-inner {
+    justify-content: flex-start;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .tech-tag-item {
+    white-space: nowrap;
+  }
+}
+
+/* Mobile Phones (Max 640px) */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .section {
+    padding: 56px 0;
+  }
+
+  .section-tight {
+    padding: 40px 0;
+  }
+
+  .card {
+    padding: 24px 18px;
+  }
+
+  .grid-3, .grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .back-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Small Screens (Max 380px) */
+@media (max-width: 380px) {
+  .brand-name {
+    font-size: 0.95rem;
+  }
+
+  .display-title {
+    font-size: 2.1rem;
+  }
+
+  .btn {
+    padding: 10px 18px;
+    font-size: 0.88rem;
+  }
+}
+
+/* Print Stylesheet for Resume / Documentation */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  body::before, .site-header, .site-footer, .back-to-top, .theme-toggle-btn {
+    display: none !important;
+  }
+
+  .container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  .card {
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "proj-01",
+    "title": "Enterprise Multi-Area OSPF Network Simulation",
+    "category": "networking",
+    "categoryLabel": "Networking",
+    "year": "2025",
+    "status": "Completed Lab",
+    "description": "Engineered a redundant multi-area OSPF enterprise topology in Cisco Packet Tracer with dual ABRs, inter-VLAN trunking, redundant default routes, and secure access lists.",
+    "technologies": ["Cisco Packet Tracer", "OSPFv2", "VLANs", "Router-on-a-Stick", "ACLs"],
+    "github": "https://github.com/sudovu",
+    "demo": "labs.html#lab-001"
+  },
+  {
+    "id": "proj-02",
+    "title": "Hardened Nginx Reverse Proxy & Anycast DNS Integration",
+    "category": "systems",
+    "categoryLabel": "Systems",
+    "year": "2025",
+    "status": "Operational",
+    "description": "Architected a secure Linux web gateway with custom Nginx server blocks, HTTP/2 enforcement, SSL/TLS optimization, and Anycast-routed DNS zones across distributed global nodes.",
+    "technologies": ["Linux", "Nginx", "ClouDNS", "SSL/TLS", "Anycast DNS"],
+    "github": "https://github.com/sudovu",
+    "demo": "labs.html#lab-002"
+  },
+  {
+    "id": "proj-03",
+    "title": "Isolated Microservice Container Architecture",
+    "category": "cloud",
+    "categoryLabel": "Cloud & DevOps",
+    "year": "2026",
+    "status": "Ongoing Lab",
+    "description": "Designed isolated container environments utilizing customized Dockerfiles, persistent volumes, and bridge network namespaces for secure service execution.",
+    "technologies": ["Docker", "Linux Containers", "Bridge Networks", "Storage Volumes"],
+    "github": "https://github.com/sudovu",
+    "demo": "labs.html#lab-003"
+  },
+  {
+    "id": "proj-04",
+    "title": "Automated DNS Zone & Service Health Monitoring Pipeline",
+    "category": "automation",
+    "categoryLabel": "Automation",
+    "year": "2026",
+    "status": "Operational",
+    "description": "Implemented automated probe mechanisms and bash alerting scripts to audit domain records, name server latency, and HTTP endpoint availability in real-time.",
+    "technologies": ["Bash", "ClouDNS API", "cURL", "Cron", "Linux"],
+    "github": "https://github.com/sudovu",
+    "demo": "labs.html#lab-004"
+  },
+  {
+    "id": "proj-05",
+    "title": "Static Cloud Architecture & Distributed Web Delivery",
+    "category": "web",
+    "categoryLabel": "Web & Cloud",
+    "year": "2026",
+    "status": "Production",
+    "description": "Constructed an ultra-fast, serverless multi-page web platform utilizing pure semantic HTML5, CSS custom properties, and edge CDN distribution with custom domain SSL integration.",
+    "technologies": ["HTML5", "CSS3", "JavaScript", "GitHub Pages", "DNS Routing"],
+    "github": "https://github.com/sudovu/gautambhuwan.com.np",
+    "demo": "https://gautambhuwan.com.np"
+  },
+  {
+    "id": "proj-06",
+    "title": "Subnetting Engine & IP Address Management Blueprint",
+    "category": "networking",
+    "categoryLabel": "Networking",
+    "year": "2025",
+    "status": "Reference Project",
+    "description": "Formulated a structured IPv4/IPv6 address allocation framework for scalable branch networks, minimizing broadcast domains and maximizing routing table efficiency.",
+    "technologies": ["IPv4", "IPv6", "VLSM", "IPAM", "CIDR"],
+    "github": "https://github.com/sudovu",
+    "demo": "labs.html#lab-005"
+  }
+]
