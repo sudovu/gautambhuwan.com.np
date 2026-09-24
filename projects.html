@@ -144,6 +144,7 @@
       <!-- Filter Buttons -->
       <div class="reveal" style="display: flex; gap: 10px; margin-bottom: 36px; flex-wrap: wrap;">
         <button class="btn btn-secondary btn-sm filter-btn active" data-filter="all">All Disciplines</button>
+        <button class="btn btn-secondary btn-sm filter-btn" data-filter="mobile">Mobile & Audio</button>
         <button class="btn btn-secondary btn-sm filter-btn" data-filter="networking">Networking</button>
         <button class="btn btn-secondary btn-sm filter-btn" data-filter="systems">Systems</button>
         <button class="btn btn-secondary btn-sm filter-btn" data-filter="cloud">Cloud & Containers</button>
@@ -153,6 +154,39 @@
 
       <!-- Project Cards Grid -->
       <div class="grid-3" id="projects-grid">
+
+        <!-- GAMA Audio Engine Flagship Project -->
+        <article class="card card-interactive project-card" data-category="mobile" style="border-color: rgba(6, 182, 212, 0.4); background: linear-gradient(145deg, rgba(6, 182, 212, 0.05) 0%, var(--surface) 100%);">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span class="tag" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-secondary); border: 1px solid rgba(6, 182, 212, 0.3);">MOBILE & AUDIO</span>
+              <span class="status-pill" style="font-size: 0.72rem; padding: 2px 8px;"><span class="status-dot"></span> v1.8 RELEASE</span>
+            </div>
+            <span class="mono-label" style="color: var(--accent-secondary);">2026</span>
+          </div>
+          <h3 style="margin-bottom: 10px;">GAMA: Cybernetic Music & Frequency Audio Platform</h3>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
+            A premier native Android audio application built with Jetpack Compose. Features 5-band real-time hardware DSP equalizer, harmonic curved waveform seekbar, persistent background audio streaming with official YouTube IFrame bridge, pull-to-refresh dynamic discover stream, and seamless Spotify & Google taste synchronization.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
+            <span class="skill-tag">Kotlin</span>
+            <span class="skill-tag">Jetpack Compose</span>
+            <span class="skill-tag">DSP Equalizer</span>
+            <span class="skill-tag">YouTube IFrame</span>
+            <span class="skill-tag">Material 3</span>
+            <span class="skill-tag">Room DB</span>
+          </div>
+          <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+            <a href="downloads/gamma/GAMA-v1.8.apk" class="btn btn-primary btn-sm" style="flex: 1; text-align: center; font-weight: 700;" download>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Download v1.8 APK
+            </a>
+            <a href="https://github.com/sudovu/Project_gama" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
+          </div>
+          <div style="text-align: center;">
+            <a href="#gamma-releases" style="font-size: 0.78rem; color: var(--accent-secondary); text-decoration: underline; font-family: var(--font-mono);">Archive: All 9 Releases (v1.0 – v1.8) ↓</a>
+          </div>
+        </article>
 
         <!-- Project 1 -->
         <article class="card card-interactive project-card" data-category="networking">
@@ -285,6 +319,166 @@
           </div>
         </article>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- GAMA Version Release Archive Section -->
+  <section class="section" id="gamma-releases" style="padding-top: 40px; border-top: 1px solid var(--border);">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-badge">BINARY ARCHIVE // ANDROID</div>
+        <h2 class="section-title">GAMA Audio Engine Releases</h2>
+        <p class="section-description">
+          Historical and production build artifacts for the GAMA Cybernetic Music Frequency Platform. All versions are compiled, signed, and ready for direct installation on Android 8.0+.
+        </p>
+      </div>
+
+      <div class="card reveal" style="padding: 0; overflow-x: auto; border-color: rgba(6, 182, 212, 0.3);">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+          <thead>
+            <tr style="background: var(--surface-elevated); border-bottom: 1px solid var(--border-strong);">
+              <th style="padding: 16px 20px; font-family: var(--font-mono); color: var(--accent-secondary); font-size: 0.8rem; text-transform: uppercase;">Version</th>
+              <th style="padding: 16px 20px; font-family: var(--font-mono); color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Release Date</th>
+              <th style="padding: 16px 20px; font-family: var(--font-mono); color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Highlights & Key Changes</th>
+              <th style="padding: 16px 20px; font-family: var(--font-mono); color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Size</th>
+              <th style="padding: 16px 20px; font-family: var(--font-mono); color: var(--accent-secondary); font-size: 0.8rem; text-transform: uppercase; text-align: right;">Binary</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- v1.8 -->
+            <tr style="border-bottom: 1px solid var(--border); background: rgba(6, 182, 212, 0.04);">
+              <td style="padding: 18px 20px; vertical-align: top;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <strong style="color: var(--text-primary); font-size: 1rem;">v1.8</strong>
+                  <span class="status-pill" style="font-size: 0.68rem; padding: 2px 6px;"><span class="status-dot"></span> LATEST</span>
+                </div>
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Pull-to-refresh on Discover & YouTube streams, Android 11+ <code>&lt;queries&gt;</code> package visibility for Gmail & Spotify, multi-tier fallback intents (App &rarr; Chooser &rarr; Web &rarr; Clipboard), and direct dialog Open App shortcuts.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">24.0 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v1.8.apk" class="btn btn-primary btn-sm" download>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 3px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  APK
+                </a>
+              </td>
+            </tr>
+
+            <!-- v1.7 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.7</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Uninterrupted background audio when closing video (single persistent node), custom sleep timer dialog (1–180m with stepper controls), top bar clean-up (only Info icon), and seamless in-app Spotify & Google taste sync.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">24.0 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v1.7.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.6 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.6</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Rock-solid seekbar with zero remaining-time flicker, pure single-song filtering & recommendations (removes multi-hour collections), and unlimited genre radio stream.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">24.0 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v1.6.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.5 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.5</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Continuous curve-only seekbar with cyber thumb & gesture physics, borderless video action controls (no circular backgrounds).
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">23.8 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v1.5.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.4 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.4</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Harmonic curved waveform seekbar, sleep timer with 30s audio fade-out, double-tap 5s skip HUD, hold 2x speed / rewind, 7-preset speed selector, queue reordering.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">24.0 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v1.4.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.3 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.3</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Live external account authorization intents for Spotify & Google / YouTube Music, Open App actions, in-app profile edit dialogs.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">23.8 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v1.3.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.2 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.2</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Restructured layout: Moved Developed By section to bottom, restored & upgraded 5-band real-time hardware Equalizer & DSP.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">23.8 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v1.2.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.1 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.1</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Discreet mini controls, pure music playback when video closed, persistence on next track, Spotify & Google taste sync, multi-platform playlist importer.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">23.6 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v1.1.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.0 -->
+            <tr>
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.0</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Initial release: Jetpack Compose cyberpunk interface, YouTube IFrame audio streaming bridge, 10-band equalizer presets, picture-in-picture & background service.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">23.8 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v1.0.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <span class="mono-label" style="color: var(--text-dim);">REPOSITORY: SUDOVU/PROJECT_GAMA // ARCHIVE HASHES VERIFIED</span>
+        <a href="https://github.com/sudovu/Project_gama/tree/main/versions" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+          Browse Git Release Tree &rarr;
+        </a>
       </div>
     </div>
   </section>

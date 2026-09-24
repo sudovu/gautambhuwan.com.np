@@ -1,5 +1,18 @@
 [
   {
+    "id": "proj-gamma",
+    "title": "GAMA: Cybernetic Music & Frequency Audio Platform",
+    "category": "mobile",
+    "categoryLabel": "Mobile & Audio",
+    "year": "2026",
+    "status": "Production Release (v1.8)",
+    "description": "Native Android audio streaming and frequency manipulation suite built with Jetpack Compose. Features 5-band real-time hardware DSP equalizer, harmonic curved waveform seekbar, persistent background audio streaming with official YouTube IFrame bridge, pull-to-refresh dynamic discover stream, and seamless Spotify & Google taste synchronization.",
+    "technologies": ["Kotlin", "Jetpack Compose", "DSP Equalizer", "YouTube IFrame", "Material 3", "Room DB", "Android MediaSession"],
+    "github": "https://github.com/sudovu/Project_gama",
+    "demo": "projects.html#gamma-releases",
+    "download": "downloads/gamma/GAMA-v1.8.apk"
+  },
+  {
     "id": "proj-01",
     "title": "Enterprise Multi-Area OSPF Network Simulation",
     "category": "networking",
