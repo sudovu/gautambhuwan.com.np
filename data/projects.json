@@ -5,12 +5,12 @@
     "category": "mobile",
     "categoryLabel": "Mobile & Audio",
     "year": "2026",
-    "status": "Production Release (v2.0)",
-    "description": "Native Android audio streaming and frequency manipulation suite built with Jetpack Compose. Features instant cache-first launch (<50ms), sub-second search with LRU caching, dedicated 'Shuffle All Recommended' quick action, 5-band real-time hardware DSP equalizer, harmonic curved waveform seekbar, persistent background audio streaming with official YouTube IFrame bridge, and seamless Spotify & Google taste synchronization.",
+    "status": "Production Release (v2.1)",
+    "description": "Native Android audio streaming and frequency manipulation suite built with Jetpack Compose. Features all-genre combined shuffle stream without repeating songs, separate Spotify and YouTube Music live taste synchronization, streamlined dashboard without network indicator, instant cache-first launch (<50ms), sub-second search with LRU caching, 5-band real-time hardware DSP equalizer, and persistent background audio streaming with official YouTube IFrame bridge.",
     "technologies": ["Kotlin", "Jetpack Compose", "DSP Equalizer", "YouTube IFrame", "Material 3", "Room DB", "Android MediaSession"],
     "github": "https://github.com/sudovu/Project_gama",
     "demo": "projects.html#gamma-releases",
-    "download": "downloads/gamma/GAMA-v2.0.apk"
+    "download": "downloads/gamma/GAMA-v2.1.apk"
   },
   {
     "id": "proj-01",
