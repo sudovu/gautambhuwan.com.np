@@ -144,6 +144,7 @@
       <!-- Filter Buttons -->
       <div class="reveal" style="display: flex; gap: 10px; margin-bottom: 36px; flex-wrap: wrap;">
         <button class="btn btn-secondary btn-sm filter-btn active" data-filter="all">All Disciplines</button>
+        <button class="btn btn-secondary btn-sm filter-btn" data-filter="ai">AI & Systems</button>
         <button class="btn btn-secondary btn-sm filter-btn" data-filter="mobile">Mobile & Audio</button>
         <button class="btn btn-secondary btn-sm filter-btn" data-filter="networking">Networking</button>
         <button class="btn btn-secondary btn-sm filter-btn" data-filter="systems">Systems</button>
@@ -154,6 +155,40 @@
 
       <!-- Project Cards Grid -->
       <div class="grid-3" id="projects-grid">
+
+        <!-- GAM.AI Edge Intelligence Flagship Project -->
+        <article class="card card-interactive project-card" data-category="ai" style="border-color: rgba(16, 185, 129, 0.4); background: linear-gradient(145deg, rgba(16, 185, 129, 0.05) 0%, var(--surface) 100%);">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">AI & SYSTEMS</span>
+              <span class="status-pill" style="font-size: 0.72rem; padding: 2px 8px;"><span class="status-dot" style="background: #10b981;"></span> v1.5.0 RELEASE</span>
+            </div>
+            <span class="mono-label" style="color: #10b981;">2026</span>
+          </div>
+          <h3 style="margin-bottom: 10px;">GAM.AI: Edge AI & Universal Offline Intelligence</h3>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
+            Zero-dependency Edge AI platform and local-first universal assistant. Operates 100% air-gapped on &lt;120MB RAM or transitions seamlessly to Hybrid Online Intelligence with Wikipedia REST and DuckDuckGo Lite live web research. Features 3 tailored personas (General, Student, NetEng), multi-vendor network provisioning (Cisco, Huawei, FortiGate, MikroTik, OLT/ONT), continuous token safety, and cross-platform native binaries for Android, Linux, Windows, and Web PWA.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">Edge AI</span>
+            <span class="skill-tag">Android WebView</span>
+            <span class="skill-tag">SQLite</span>
+            <span class="skill-tag">Smart Cache</span>
+            <span class="skill-tag">Wikipedia REST</span>
+            <span class="skill-tag">PWA</span>
+          </div>
+          <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+            <a href="downloads/gam-ai/gam-ai-v1.5.0.apk" class="btn btn-primary btn-sm" style="flex: 1; text-align: center; font-weight: 700; background: #10b981; border-color: #10b981; color: #000;" download>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Download v1.5.0 APK
+            </a>
+            <a href="https://github.com/sudovu/GAM.AI" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
+          </div>
+          <div style="text-align: center;">
+            <a href="#gam-ai-releases" style="font-size: 0.78rem; color: #10b981; text-decoration: underline; font-family: var(--font-mono);">Archive: All 6 Releases (v1.0.0 – v1.5.0) + Windows EXE &amp; Web ↓</a>
+          </div>
+        </article>
 
         <!-- GAMA Audio Engine Flagship Project -->
         <article class="card card-interactive project-card" data-category="mobile" style="border-color: rgba(6, 182, 212, 0.4); background: linear-gradient(145deg, rgba(6, 182, 212, 0.05) 0%, var(--surface) 100%);">
@@ -319,6 +354,136 @@
           </div>
         </article>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- GAM.AI Version Release Archive Section -->
+  <section class="section" id="gam-ai-releases" style="padding-top: 40px; border-top: 1px solid var(--border);">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-badge" style="color: #10b981; border-color: rgba(16, 185, 129, 0.3);">BINARY ARCHIVE // EDGE AI & CROSS-PLATFORM</div>
+        <h2 class="section-title">GAM.AI Edge Intelligence Releases</h2>
+        <p class="section-description">
+          Historical and production build artifacts for GAM.AI Zero-Dependency Edge Intelligence &amp; Universal Assistant. All APKs are compiled, verified, and ready for direct installation on Android 7.0+, with standalone packages available for Windows and Web PWA.
+        </p>
+      </div>
+
+      <!-- Quick Platform Download Strip -->
+      <div class="reveal" style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
+        <a href="downloads/gam-ai/gam-ai-v1.5.0.apk" class="btn btn-primary btn-sm" style="background: #10b981; border-color: #10b981; color: #000; font-weight: 700;" download>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Latest Android APK (v1.5.0 &bull; 4.98 MB)
+        </a>
+        <a href="downloads/gam-ai/gam-ai.exe" class="btn btn-secondary btn-sm" download>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Windows Standalone EXE (10.8 MB)
+        </a>
+        <a href="downloads/gam-ai/gam-ai-web-app.zip" class="btn btn-secondary btn-sm" download>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Web PWA Bundle (458 KB)
+        </a>
+        <a href="https://github.com/sudovu/GAM.AI" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+          Source Repository &rarr;
+        </a>
+      </div>
+
+      <div class="card reveal" style="padding: 0; overflow-x: auto; border-color: rgba(16, 185, 129, 0.3);">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+          <thead>
+            <tr style="background: var(--surface-elevated); border-bottom: 1px solid var(--border-strong);">
+              <th style="padding: 16px 20px; font-family: var(--font-mono); color: #10b981; font-size: 0.8rem; text-transform: uppercase;">Version</th>
+              <th style="padding: 16px 20px; font-family: var(--font-mono); color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Release Date</th>
+              <th style="padding: 16px 20px; font-family: var(--font-mono); color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Highlights & Key Changes</th>
+              <th style="padding: 16px 20px; font-family: var(--font-mono); color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Size</th>
+              <th style="padding: 16px 20px; font-family: var(--font-mono); color: #10b981; font-size: 0.8rem; text-transform: uppercase; text-align: right;">Binary</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- v1.5.0 -->
+            <tr style="border-bottom: 1px solid var(--border); background: rgba(16, 185, 129, 0.04);">
+              <td style="padding: 18px 20px; vertical-align: top;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <strong style="color: var(--text-primary); font-size: 1rem;">v1.5.0</strong>
+                  <span class="status-pill" style="font-size: 0.68rem; padding: 2px 6px; border-color: rgba(16, 185, 129, 0.4);"><span class="status-dot" style="background: #10b981;"></span> LATEST</span>
+                </div>
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                <strong>Hybrid Online Intelligence &amp; Data Engine:</strong> Multi-provider Wikipedia REST API with DuckDuckGo Lite fallback, zero-API-key web intelligence, automated factual extract filtering, dynamic image attachments, and resilient conversational context tracking.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">4.98 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gam-ai/gam-ai-v1.5.0.apk" class="btn btn-primary btn-sm" style="background: #10b981; border-color: #10b981; color: #000; font-weight: 700;" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.4.0 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.4.0</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                <strong>Online vs. Offline Mode Distinction &amp; Live Refresh:</strong> Automated network connectivity detection, smart auto-switch engine, non-intrusive offline alerts, and camera lens vision classification optimizations.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">4.98 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gam-ai/gam-ai-v1.4.0.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.3.0 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.3.0</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                <strong>3-Mode Minimalist Redesign &amp; Agent Handoff:</strong> Tailored General, Student, and NetEng personas, clean bottom navigation tabs, automated build snapshot pipeline, and instant context routing.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">6.27 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gam-ai/gam-ai-v1.3.0.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.2.0 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.2.0</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                <strong>Huawei &amp; ZTE GPON OLT/ONT Profiles &amp; Fiber Diagnostics:</strong> SmartAX MA5600T/MA5800 GPON OLT lineprofile/srvprofile/lineid resolution, ZTE C300/C320 profile generators, and optical power/fiber attenuation calculations.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">4.97 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gam-ai/gam-ai-v1.2.0.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.1.0 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.1.0</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                <strong>Multimodal 3D Studio &amp; Zero-Key Generation:</strong> Three.js kinetic particle canvas, Pollinations AI zero-key text-to-image/video generative pipeline, and responsive touch controls.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">4.97 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gam-ai/gam-ai-v1.1.0.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.0.0 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.0.0</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                <strong>Universal Baseline Production Release:</strong> Zero-dependency Python server, PWA dashboard, Android WebView wrapper, 3-level storage engine (RAM, SmartCache, SQLite), and multilingual English/Hindi/Nepali offline knowledge.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">4.97 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gam-ai/gam-ai-v1.0.0.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>

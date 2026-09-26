@@ -1,5 +1,18 @@
 [
   {
+    "id": "proj-gam-ai",
+    "title": "GAM.AI: Edge AI & Universal Offline Intelligence Platform",
+    "category": "ai",
+    "categoryLabel": "AI & Systems",
+    "year": "2026",
+    "status": "Production Release (v1.5.0)",
+    "description": "Zero-dependency Edge AI platform and local-first universal assistant. Operates 100% air-gapped on under 120MB RAM or transitions seamlessly to Hybrid Online Intelligence with Wikipedia REST and DuckDuckGo Lite live web research. Features 3 tailored personas (General, Student, NetEng), multi-vendor network provisioning (Cisco, Huawei, FortiGate, MikroTik, OLT/ONT), continuous token safety, and cross-platform native binaries for Android, Linux, Windows, and Web PWA.",
+    "technologies": ["Python", "Android WebView", "Edge AI", "SQLite", "Smart Cache", "Wikipedia REST API", "PWA"],
+    "github": "https://github.com/sudovu/GAM.AI",
+    "demo": "projects.html#gam-ai-releases",
+    "download": "downloads/gam-ai/gam-ai-v1.5.0.apk"
+  },
+  {
     "id": "proj-gamma",
     "title": "GAMA: Cybernetic Music & Frequency Audio Platform",
     "category": "mobile",
