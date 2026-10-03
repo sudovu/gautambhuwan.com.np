@@ -95,7 +95,7 @@
     "description": "Formulated a structured IPv4/IPv6 address allocation framework for scalable branch networks, minimizing broadcast domains and maximizing routing table efficiency.",
     "technologies": ["IPv4", "IPv6", "VLSM", "IPAM", "CIDR"],
     "github": "https://github.com/sudovu",
-    "demo": "https://github.com/sudovu"
+    "demo": "labs.html#lab-007"
   },
   {
     "id": "proj-07",

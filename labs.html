@@ -487,6 +487,165 @@ add name=Total-Upload parent=ether1-wan1 queue=pcq-upload priority=1</code></pre
         </div>
       </article>
 
+      <!-- LAB // 007 -->
+      <article id="lab-007" class="card reveal" style="margin-bottom: 48px; border-left: 4px solid var(--accent-secondary);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+          <div>
+            <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.85rem;">LAB // 007</span>
+            <h2 style="font-size: 1.6rem; margin-top: 4px;">Hierarchical IPv4/IPv6 VLSM Engine &amp; IPAM Architecture</h2>
+          </div>
+          <span class="status-pill"><span class="status-dot"></span> REFERENCE BLUEPRINT</span>
+        </div>
+
+        <p class="body-sm" style="margin-bottom: 20px;">
+          <strong>Objective:</strong> Engineer an enterprise-grade hierarchical IP address allocation scheme for a multi-tier enterprise network from a single <code>172.16.0.0/23</code> supernet block (512 total addresses) and dual-stack <code>2001:db8:acad::/48</code> IPv6 global unicast assignment. Maximize host density via Variable Length Subnet Masking (VLSM), eliminate broadcast spillover, preserve address space for expansion, and maintain clean contiguous route summarization boundaries.
+        </p>
+
+        <!-- Subnet Allocation Matrix Table -->
+        <div class="card" style="padding: 0; overflow-x: auto; margin-bottom: 24px; border-color: var(--border-accent);">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Segment / Role</th>
+                <th>VLAN</th>
+                <th>Hosts Req.</th>
+                <th>Network ID</th>
+                <th>Prefix / Mask</th>
+                <th>Usable Host Range</th>
+                <th>Broadcast</th>
+                <th>Dual-Stack IPv6 (/64)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Engineering &amp; Dev</strong></td>
+                <td><span class="tag">VLAN 10</span></td>
+                <td>110</td>
+                <td class="mono">172.16.0.0</td>
+                <td class="mono">/25 (255.255.255.128)</td>
+                <td class="mono">172.16.0.1 – 172.16.0.126</td>
+                <td class="mono">172.16.0.127</td>
+                <td class="mono">2001:db8:acad:10::/64</td>
+              </tr>
+              <tr>
+                <td><strong>Corporate Operations</strong></td>
+                <td><span class="tag">VLAN 20</span></td>
+                <td>55</td>
+                <td class="mono">172.16.0.128</td>
+                <td class="mono">/26 (255.255.255.192)</td>
+                <td class="mono">172.16.0.129 – 172.16.0.190</td>
+                <td class="mono">172.16.0.191</td>
+                <td class="mono">2001:db8:acad:20::/64</td>
+              </tr>
+              <tr>
+                <td><strong>Server Farm &amp; DMZ</strong></td>
+                <td><span class="tag">VLAN 30</span></td>
+                <td>28</td>
+                <td class="mono">172.16.0.192</td>
+                <td class="mono">/27 (255.255.255.224)</td>
+                <td class="mono">172.16.0.193 – 172.16.0.222</td>
+                <td class="mono">172.16.0.223</td>
+                <td class="mono">2001:db8:acad:30::/64</td>
+              </tr>
+              <tr>
+                <td><strong>VoIP &amp; Unified Comms</strong></td>
+                <td><span class="tag">VLAN 40</span></td>
+                <td>26</td>
+                <td class="mono">172.16.0.224</td>
+                <td class="mono">/27 (255.255.255.224)</td>
+                <td class="mono">172.16.0.225 – 172.16.0.254</td>
+                <td class="mono">172.16.0.255</td>
+                <td class="mono">2001:db8:acad:40::/64</td>
+              </tr>
+              <tr>
+                <td><strong>Guest Wi-Fi Isolation</strong></td>
+                <td><span class="tag">VLAN 50</span></td>
+                <td>120</td>
+                <td class="mono">172.16.1.0</td>
+                <td class="mono">/25 (255.255.255.128)</td>
+                <td class="mono">172.16.1.1 – 172.16.1.126</td>
+                <td class="mono">172.16.1.127</td>
+                <td class="mono">2001:db8:acad:50::/64</td>
+              </tr>
+              <tr>
+                <td><strong>IT Out-of-Band Mgmt</strong></td>
+                <td><span class="tag">VLAN 99</span></td>
+                <td>12</td>
+                <td class="mono">172.16.1.128</td>
+                <td class="mono">/28 (255.255.255.240)</td>
+                <td class="mono">172.16.1.129 – 172.16.1.142</td>
+                <td class="mono">172.16.1.143</td>
+                <td class="mono">2001:db8:acad:99::/64</td>
+              </tr>
+              <tr>
+                <td><strong>HQ-to-Branch WAN Link</strong></td>
+                <td><span class="tag">P2P WAN</span></td>
+                <td>2</td>
+                <td class="mono">172.16.1.240</td>
+                <td class="mono">/30 (255.255.255.252)</td>
+                <td class="mono">172.16.1.241 – 172.16.1.242</td>
+                <td class="mono">172.16.1.243</td>
+                <td class="mono">2001:db8:acad:fff0::/64</td>
+              </tr>
+              <tr>
+                <td><strong>HQ-to-Cloud Interconnect</strong></td>
+                <td><span class="tag">P2P Cloud</span></td>
+                <td>2</td>
+                <td class="mono">172.16.1.244</td>
+                <td class="mono">/30 (255.255.255.252)</td>
+                <td class="mono">172.16.1.245 – 172.16.1.246</td>
+                <td class="mono">172.16.1.247</td>
+                <td class="mono">2001:db8:acad:fff1::/64</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="terminal-card" style="margin-bottom: 20px;">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="terminal-dot dot-red"></span>
+              <span class="terminal-dot dot-yellow"></span>
+              <span class="terminal-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">cisco-ios // core-router-vlsm-subinterfaces.ios</span>
+          </div>
+          <pre class="terminal-body"><code>! Core Gateway 802.1Q Subinterface &amp; Route Summarization Configuration
+Core-RTR(config)# ipv6 unicast-routing
+
+! Engineering Subinterface (VLAN 10)
+Core-RTR(config)# interface GigabitEthernet0/0/0.10
+Core-RTR(config-subif)# encapsulation dot1Q 10
+Core-RTR(config-subif)# ip address 172.16.0.1 255.255.255.128
+Core-RTR(config-subif)# ipv6 address 2001:db8:acad:10::1/64
+Core-RTR(config-subif)# exit
+
+! Guest Wi-Fi Subinterface (VLAN 50)
+Core-RTR(config)# interface GigabitEthernet0/0/0.50
+Core-RTR(config-subif)# encapsulation dot1Q 50
+Core-RTR(config-subif)# ip address 172.16.1.1 255.255.255.128
+Core-RTR(config-subif)# ipv6 address 2001:db8:acad:50::1/64
+Core-RTR(config-subif)# exit
+
+! Single Contiguous OSPF Route Summarization towards WAN Core
+Core-RTR(config)# router ospf 1
+Core-RTR(config-router)# area 1 range 172.16.0.0 255.255.254.0
+Core-RTR(config-router)# exit
+Core-RTR# show ip route summary</code></pre>
+        </div>
+
+        <div class="grid-2" style="background: var(--surface-elevated); padding: 20px; border-radius: var(--radius-sm); font-size: 0.9rem;">
+          <div>
+            <strong>Problem Diagnosed:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Legacy flat <code>/24</code> subnet assignments exhausted private address pools rapidly while incurring &gt;85% host address waste on small P2P and server networks, and resulted in fragmented routing tables.</p>
+          </div>
+          <div>
+            <strong>Resolution &amp; Takeaway:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Structuring subnets in descending order of host requirements fit 6 distinct department VLANs plus WAN point-to-point transit circuits inside a single compact <code>172.16.0.0/23</code> block, allowing instantaneous upstream route summarization.</p>
+          </div>
+        </div>
+      </article>
+
     </div>
   </section>
 
