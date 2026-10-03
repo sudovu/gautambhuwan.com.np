@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Developments — Vhuwon Mathers</title>
+  <meta name="description" content="Software developments and production applications by Vhuwon Mathers: GAMA Cybernetic Audio Platform, native Android architectures, and distributed systems.">
+  <meta name="author" content="Vhuwon Mathers">
+  <meta name="theme-color" content="#080b12">
+  <link rel="canonical" href="https://gautambhuwan.com.np/developments.html">
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://gautambhuwan.com.np/developments.html">
+  <meta property="og:title" content="Developments — Vhuwon Mathers">
+  <meta property="og:description" content="Software developments and production applications by Vhuwon Mathers: GAMA Cybernetic Audio Platform, native Android architectures, and distributed systems.">
+  <meta property="og:image" content="https://gautambhuwan.com.np/assets/images/profile/vhuwon-mathers.svg">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Developments — Vhuwon Mathers">
+  <meta name="twitter:description" content="Software developments and production applications by Vhuwon Mathers: GAMA Cybernetic Audio Platform, native Android architectures, and distributed systems.">
+  <meta name="twitter:image" content="https://gautambhuwan.com.np/assets/images/profile/vhuwon-mathers.svg">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <!-- Structured Data (Schema.org JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "GAMA: Cybernetic Music & Frequency Audio Platform",
+    "operatingSystem": "Android",
+    "applicationCategory": "MultimediaApplication",
+    "author": {
+      "@type": "Person",
+      "name": "Vhuwon Mathers",
+      "url": "https://gautambhuwan.com.np"
+    },
+    "downloadUrl": "https://gautambhuwan.com.np/downloads/gamma/GAMA-v2.3.1.apk",
+    "softwareVersion": "2.3.1"
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-link" aria-label="Vhuwon Mathers Home">
+        <div class="brand-badge">VM</div>
+        <div class="brand-text">
+          <span class="brand-name">VHUWON MATHERS</span>
+          <span class="brand-sub">SYS // NETWORKS // INFRA</span>
+        </div>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Primary Navigation">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="about.html" class="nav-link">About</a></li>
+          <li><a href="skills.html" class="nav-link">Skills</a></li>
+          <li><a href="services.html" class="nav-link">Services</a></li>
+          <li><a href="projects.html" class="nav-link">Projects</a></li>
+          <li><a href="labs.html" class="nav-link">Labs</a></li>
+          <li><a href="developments.html" class="nav-link active" aria-current="page">Developments</a></li>
+          <li><a href="experience.html" class="nav-link">Experience</a></li>
+          <li><a href="resume.html" class="nav-link">Resume</a></li>
+          <li><a href="blog.html" class="nav-link">Blog</a></li>
+          <li><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <!-- Theme Switcher -->
+        <button class="theme-toggle-btn" aria-label="Toggle Dark and Light Mode" title="Toggle theme">
+          <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-nav-toggle" aria-label="Open Navigation Menu" aria-expanded="false" aria-controls="mobile-nav">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer & Backdrop -->
+  <div class="mobile-nav-backdrop" aria-hidden="true"></div>
+  <aside id="mobile-nav" class="mobile-nav-drawer" aria-label="Mobile Navigation">
+    <div>
+      <div style="margin-bottom: 24px;">
+        <span class="mono-label" style="color: var(--accent-secondary);">NAVIGATION</span>
+      </div>
+      <ul class="mobile-nav-links">
+        <li><a href="index.html" class="mobile-nav-link">Home</a></li>
+        <li><a href="about.html" class="mobile-nav-link">About</a></li>
+        <li><a href="skills.html" class="mobile-nav-link">Skills</a></li>
+        <li><a href="services.html" class="mobile-nav-link">Services</a></li>
+        <li><a href="projects.html" class="mobile-nav-link">Projects</a></li>
+        <li><a href="labs.html" class="mobile-nav-link">Labs</a></li>
+        <li><a href="developments.html" class="mobile-nav-link active" aria-current="page">Developments</a></li>
+        <li><a href="experience.html" class="mobile-nav-link">Experience</a></li>
+        <li><a href="resume.html" class="mobile-nav-link">Resume</a></li>
+        <li><a href="blog.html" class="mobile-nav-link">Blog</a></li>
+        <li><a href="contact.html" class="mobile-nav-link">Contact</a></li>
+      </ul>
+    </div>
+    <div style="padding-top: 24px; border-top: 1px solid var(--border);">
+      <div class="status-pill" style="margin-bottom: 12px;">
+        <span class="status-dot"></span> SYSTEM ONLINE
+      </div>
+      <p class="body-sm">gautambhuwan.com.np</p>
+    </div>
+  </aside>
+
+<main id="main-content">
+
+  <!-- Header Section -->
+  <section class="section" style="padding-top: 60px;">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-badge">PRODUCTION DEVELOPMENTS // SOFTWARE SUITES</div>
+        <h1 class="section-title">Developments & Engineered Software</h1>
+        <p class="section-description">
+          Flagship mobile platforms, native client architectures, and production applications engineered by Vhuwon Mathers with cybernetic design systems, hardware DSP, and high-performance algorithms.
+        </p>
+      </div>
+
+      <!-- Flagship App Showcase Card -->
+      <article class="card reveal" style="border-color: rgba(6, 182, 212, 0.45); background: linear-gradient(145deg, rgba(6, 182, 212, 0.08) 0%, var(--surface-elevated) 100%); padding: 32px; margin-bottom: 48px; box-shadow: var(--shadow-lg);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <span class="tag" style="background: rgba(6, 182, 212, 0.2); color: var(--accent-secondary); border: 1px solid rgba(6, 182, 212, 0.4); font-weight: 700;">FLAGSHIP DEVELOPMENT</span>
+            <span class="status-pill" style="font-size: 0.76rem; padding: 3px 10px;"><span class="status-dot"></span> v2.3.1 PRODUCTION RELEASE</span>
+            <span class="mono-label" style="color: var(--text-dim);">ANDROID 8.0+ // MULTI-PLATFORM</span>
+          </div>
+          <span class="mono-label" style="color: var(--accent-secondary); font-weight: 700; font-size: 0.9rem;">2026 ACTIVE</span>
+        </div>
+
+        <h2 style="font-size: 2rem; margin-bottom: 14px; color: var(--text-primary); letter-spacing: -0.02em;">
+          GAMA: Cybernetic Music &amp; Frequency Audio Platform
+        </h2>
+
+        <p class="body-md" style="color: var(--text-muted); margin-bottom: 24px; line-height: 1.7; max-width: 960px;">
+          A premier native Android audio application inspired by Echo-Music and Nothing OS fluid glassmorphism. Features dynamic blurred artwork backdrop, sub-second LrcLib time-synchronized lyrics with offline Room caching &amp; micro-calibration (±0.5s), floating capsule mini-player island with horizontal swipe gestures, floating pill navigation dock, authentic single-song streaming with collection/compilation filtering, 1-click multi-source playlist importer (Spotify, YouTube Music, Apple Music), automatic "Most Played" and "Least Played" listening frequency intelligence, and 432Hz/528Hz biological harmonic frequency tuning with 10-band hardware DSP equalization.
+        </p>
+
+        <!-- Tech Stack Badges -->
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px;">
+          <span class="skill-tag">Kotlin 2.0</span>
+          <span class="skill-tag">Jetpack Compose</span>
+          <span class="skill-tag">Material 3</span>
+          <span class="skill-tag">LrcLib Synced Lyrics</span>
+          <span class="skill-tag">Hardware DSP Equalizer</span>
+          <span class="skill-tag">YouTube IFrame Engine</span>
+          <span class="skill-tag">Room DB 2.6</span>
+          <span class="skill-tag">Coroutines &amp; Flow</span>
+          <span class="skill-tag">Multi-Platform CI/CD</span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-bottom: 20px;">
+          <a href="downloads/gamma/GAMA-v2.3.1.apk" class="btn btn-primary" style="font-weight: 700; padding: 12px 24px;" download>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -3px; margin-right: 6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Download Latest v2.3.1 APK (16.9 MB)
+          </a>
+          <a href="https://github.com/sudovu/Project_gama" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+            GitHub Repository (@sudovu/Project_gama)
+          </a>
+          <a href="#gamma-releases" class="btn btn-outline">
+            Release Archive (v1.0 – v2.3.1) &darr;
+          </a>
+        </div>
+
+        <div style="display: flex; gap: 16px; align-items: center; font-size: 0.8rem; color: var(--text-dim); font-family: var(--font-mono);">
+          <span>✓ Official Release Keystore Signed</span>
+          <span>•</span>
+          <span>✓ Play Protect Verified</span>
+          <span>•</span>
+          <span>✓ In-Place Update Compatible</span>
+        </div>
+      </article>
+
+      <!-- Key Engineering Pillars Grid -->
+      <div class="section-header reveal" style="margin-bottom: 24px;">
+        <div class="section-badge">ENGINEERING PILLARS</div>
+        <h2 class="section-title">Key Architectural Features</h2>
+      </div>
+
+      <div class="grid-3" style="margin-bottom: 64px;">
+        <!-- Feature 1 -->
+        <div class="card card-interactive reveal reveal-delay-1">
+          <div style="font-size: 1.5rem; margin-bottom: 12px;">🎨</div>
+          <h3 style="font-size: 1.15rem; margin-bottom: 8px;">Nothing OS Glassmorphism</h3>
+          <p class="body-sm" style="color: var(--text-muted); line-height: 1.6;">
+            Echo-Music inspired frosted glass surfaces, real-time dynamic artwork ambient blurring, floating capsule mini-player island, and gesture-driven bottom navigation.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="card card-interactive reveal reveal-delay-2">
+          <div style="font-size: 1.5rem; margin-bottom: 12px;">📜</div>
+          <h3 style="font-size: 1.15rem; margin-bottom: 8px;">LrcLib Synced Lyrics</h3>
+          <p class="body-sm" style="color: var(--text-muted); line-height: 1.6;">
+            Real-time word and line synchronized lyrics powered by LrcLib, complete with offline Room DB caching and interactive ±0.5s live micro-calibration seek synchronization.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="card card-interactive reveal reveal-delay-3">
+          <div style="font-size: 1.5rem; margin-bottom: 12px;">🎵</div>
+          <h3 style="font-size: 1.15rem; margin-bottom: 8px;">Authentic Single-Song Stream</h3>
+          <p class="body-sm" style="color: var(--text-muted); line-height: 1.6;">
+            Proprietary SmartQueueEngine filters out multi-hour mixes, DJ compilations, and full album streams from search and recommendations, keeping queues pure and genuine.
+          </p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="card card-interactive reveal reveal-delay-1">
+          <div style="font-size: 1.5rem; margin-bottom: 12px;">📊</div>
+          <h3 style="font-size: 1.15rem; margin-bottom: 8px;">Most &amp; Least Played Intelligence</h3>
+          <p class="body-sm" style="color: var(--text-muted); line-height: 1.6;">
+            Autonomous Room database persistence tracks per-track listening frequency to automatically generate "Most Played" and "Least Played" smart playlists with instant 1-tap playback.
+          </p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="card card-interactive reveal reveal-delay-2">
+          <div style="font-size: 1.5rem; margin-bottom: 12px;">🎚️</div>
+          <h3 style="font-size: 1.15rem; margin-bottom: 8px;">Harmonic DSP Audio Engine</h3>
+          <p class="body-sm" style="color: var(--text-muted); line-height: 1.6;">
+            Hardware equalizer with 10-band presets, bass booster, 3D surround sound, and optional 432Hz/528Hz natural harmonic biological frequency resonance tuning.
+          </p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="card card-interactive reveal reveal-delay-3">
+          <div style="font-size: 1.5rem; margin-bottom: 12px;">🚀</div>
+          <h3 style="font-size: 1.15rem; margin-bottom: 8px;">Multi-Platform CI/CD Pipeline</h3>
+          <p class="body-sm" style="color: var(--text-muted); line-height: 1.6;">
+            Automated GitHub Actions CI building signed Android APKs alongside iOS IPAs (SideStore/AltStore wireless sideload compatible) and Windows desktop executables.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Complete GAMA Release Archive Section -->
+  <section class="section" id="gamma-releases" style="padding-top: 40px; border-top: 1px solid var(--border);">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-badge">BINARY ARCHIVE // ANDROID BUILDS</div>
+        <h2 class="section-title">GAMA Release History &amp; Binaries</h2>
+        <p class="section-description">
+          Historical and production build artifacts for the GAMA Cybernetic Music Frequency Platform. All versions are compiled, signed with the official release keystore, and ready for direct installation on Android 8.0+.
+        </p>
+      </div>
+
+      <div class="card reveal" style="padding: 0; overflow-x: auto; border-color: rgba(6, 182, 212, 0.3);">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+          <thead>
+            <tr style="background: var(--surface-elevated); border-bottom: 1px solid var(--border-strong);">
+              <th style="padding: 16px 20px; font-family: var(--font-mono); color: var(--accent-secondary); font-size: 0.8rem; text-transform: uppercase;">Version</th>
+              <th style="padding: 16px 20px; font-family: var(--font-mono); color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Release Date</th>
+              <th style="padding: 16px 20px; font-family: var(--font-mono); color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Highlights &amp; Key Changes</th>
+              <th style="padding: 16px 20px; font-family: var(--font-mono); color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Size</th>
+              <th style="padding: 16px 20px; font-family: var(--font-mono); color: var(--accent-secondary); font-size: 0.8rem; text-transform: uppercase; text-align: right;">Binary</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- v2.3.1 -->
+            <tr style="border-bottom: 1px solid var(--border); background: rgba(6, 182, 212, 0.07);">
+              <td style="padding: 18px 20px; vertical-align: top;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <strong style="color: var(--text-primary); font-size: 1rem;">v2.3.1</strong>
+                  <span class="status-pill" style="font-size: 0.68rem; padding: 2px 6px;"><span class="status-dot"></span> LATEST</span>
+                </div>
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">October 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                <strong>Playlists Tab Upgrade &amp; Suggestion Filter:</strong> Automated Most Played &amp; Least Played listening intelligence in Room DB with instant smart playlists and sub-filter tabs. Rigorous filtering of full albums/mixes from song suggestions. Added dedicated "Play" buttons alongside "Shuffle" in all Discover feeds. Cleaned UI frequency Hz badges while preserving the audio DSP engine.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">16.9 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v2.3.1.apk" class="btn btn-primary btn-sm" download>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 3px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  APK
+                </a>
+              </td>
+            </tr>
+
+            <!-- v2.3 -->
+            <tr style="border-bottom: 1px solid var(--border); background: rgba(6, 182, 212, 0.03);">
+              <td style="padding: 18px 20px; vertical-align: top;">
+                <strong style="color: var(--text-primary); font-size: 1rem;">v2.3</strong>
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Echo-Music inspired UI redesign: Nothing OS fluid glassmorphism, dynamic blurred artwork backdrop, real-time LrcLib time-synchronized lyrics with offline caching &amp; micro-calibration (±0.5s), floating capsule mini-player island with horizontal swipe gestures, floating pill navigation dock, lifestyle mood discovery pills, and 2-column quick action library grid.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">24.1 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v2.3.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v2.2 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v2.2</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Trending 100 shuffle queue, customizable color accent picker, 1-click full playlist batch downloader with real-time progress notification, dynamic 3-button &amp; gesture navigation bar auto-adaptation.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">23.9 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v2.2.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v2.1 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v2.1</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Multi-genre combined shuffle engine, separate Spotify &amp; YouTube account sync, clean dashboard decluttering, fast track skipping with pre-warmed audio cache.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">23.8 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v2.1.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v2.0 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v2.0</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Instant cache-first launch (0ms cold start latency), sub-second search with LRU memory cache, global Shuffle All action, and pull-to-refresh feed rotation.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">23.8 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v2.0.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.9 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.9</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Local storage scanner with SAF permissions, offline MP3/FLAC playback, custom audio tags editor, embedded album art extraction.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">24.0 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v1.9.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.8 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.8</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Bass boost &amp; 3D virtualizer DSP integration, customizable frequency presets (432Hz, 528Hz, 639Hz, 741Hz), hardware audio effects session attach.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">24.0 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v1.8.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.7 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.7</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Lock screen media notifications with dynamic playback controls, Android Auto preliminary profile, Bluetooth metadata sync (AVRCP).
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">24.0 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v1.7.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.6 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.6</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Room DB schema migration v3 with full ACID transactions, favorites sync, discovery history timeline, and database export/import.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">24.0 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v1.6.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.5 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.5</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Dynamic theme engine with AMOLED pure black mode, neon cyberpunk accents, system dynamic color (Material You), and responsive orientation layouts.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">23.9 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v1.5.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.4 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.4</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Smart queue recommendation engine with cosine genre similarity, auto-queue endless stream, duplicate track suppression.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">24.0 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v1.4.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.3 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.3</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Curated frequency packs expansion (120+ tracks across 8 Solfeggio bands), audio wave visualizer canvas with real-time FFT animation.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">23.8 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v1.3.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.2 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.2</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Audio playback resilience improvements: auto-reconnect on network switch, exponential backoff retry, audio focus loss auto-pause/resume.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">23.8 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v1.2.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.1 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.1</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Performance optimization: 40% memory reduction during audio decoding, memory leak fixes in WebView lifecycle, battery-saver background mode.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">23.7 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v1.1.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+
+            <!-- v1.0 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 18px 20px; vertical-align: top;"><strong style="color: var(--text-primary);">v1.0</strong></td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top; white-space: nowrap;">September 2026</td>
+              <td style="padding: 18px 20px; color: var(--text-secondary); vertical-align: top;">
+                Initial release: Jetpack Compose cyberpunk interface, YouTube IFrame audio streaming bridge, 10-band equalizer presets, picture-in-picture &amp; background service.
+              </td>
+              <td style="padding: 18px 20px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; vertical-align: top; white-space: nowrap;">23.8 MB</td>
+              <td style="padding: 18px 20px; text-align: right; vertical-align: top; white-space: nowrap;">
+                <a href="downloads/gamma/GAMA-v1.0.apk" class="btn btn-secondary btn-sm" download>APK</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <span class="mono-label" style="color: var(--text-dim);">REPOSITORY: SUDOVU/PROJECT_GAMA // ARCHIVE HASHES VERIFIED</span>
+        <a href="https://github.com/sudovu/Project_gama/tree/main/versions" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+          Browse Git Release Tree &rarr;
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+  <!-- Global Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="brand-link" style="margin-bottom: 14px;">
+            <div class="brand-badge">VM</div>
+            <div class="brand-text">
+              <span class="brand-name">VHUWON MATHERS</span>
+              <span class="brand-sub">SYS // NETWORKS // INFRA</span>
+            </div>
+          </div>
+          <p class="body-sm" style="color: var(--text-muted); max-width: 320px; line-height: 1.6;">
+            Network &amp; Systems Professional specializing in enterprise routing topologies, hardened web infrastructure, container deployments, and cybernetic software platforms.
+          </p>
+          <div style="margin-top: 16px;">
+            <span class="status-pill"><span class="status-dot"></span> AVAILABLE FOR NEW ROLES</span>
+          </div>
+        </div>
+
+        <div class="footer-nav-col">
+          <div class="mono-label" style="color: var(--accent-secondary); margin-bottom: 16px;">NAVIGATION</div>
+          <ul class="footer-links">
+            <li><a href="index.html" class="footer-link">Home</a></li>
+            <li><a href="about.html" class="footer-link">About &amp; Background</a></li>
+            <li><a href="skills.html" class="footer-link">Technical Skills</a></li>
+            <li><a href="services.html" class="footer-link">Services</a></li>
+            <li><a href="projects.html" class="footer-link">Projects</a></li>
+            <li><a href="labs.html" class="footer-link">Labs</a></li>
+            <li><a href="developments.html" class="footer-link active">Developments</a></li>
+            <li><a href="experience.html" class="footer-link">Experience</a></li>
+            <li><a href="resume.html" class="footer-link">Resume</a></li>
+            <li><a href="blog.html" class="footer-link">Blog</a></li>
+            <li><a href="contact.html" class="footer-link">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-nav-col">
+          <div class="mono-label" style="color: var(--accent-secondary); margin-bottom: 16px;">CONNECT</div>
+          <ul class="footer-links">
+            <li><a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub: @sudovu</a></li>
+            <li><a href="https://linkedin.com/in/gautambhuwan" target="_blank" rel="noopener noreferrer" class="footer-link">LinkedIn: /in/gautambhuwan</a></li>
+            <li><a href="https://x.com/sudovu_" target="_blank" rel="noopener noreferrer" class="footer-link">X / Twitter: @sudovu_</a></li>
+            <li><a href="mailto:contact@gautambhuwan.com.np" class="footer-link">contact@gautambhuwan.com.np</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-nav-col">
+          <div class="mono-label" style="color: var(--accent-secondary); margin-bottom: 16px;">OPERATIONAL STATUS</div>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 12px; line-height: 1.6;">
+            All laboratory environments and production web services operational. Verified against RFC standards.
+          </p>
+          <div class="terminal-card" style="padding: 10px 14px; font-size: 0.78rem;">
+            <div style="color: var(--success); font-family: var(--font-mono);">● ALL NODES HEALTHY</div>
+            <div style="color: var(--text-dim); font-family: var(--font-mono); margin-top: 4px;">UPTIME: 99.98%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="body-sm" style="color: var(--text-dim); margin: 0;">
+          &copy; 2026 Vhuwon Mathers. Engineered with strict standards. All rights reserved.
+        </p>
+        <div style="display: flex; gap: 20px; align-items: center;">
+          <a href="privacy.html" class="footer-link" style="font-size: 0.8rem;">Privacy Policy</a>
+          <a href="sitemap.xml" class="footer-link" style="font-size: 0.8rem;">Sitemap</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" aria-label="Back to Top" title="Back to top">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/animations.js"></script>
+</body>
+</html>
