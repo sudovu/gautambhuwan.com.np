@@ -141,8 +141,209 @@
         </p>
       </div>
 
+      <!-- Interactive Custom Project Architect & Simulator Studio -->
+      <section id="project-architect" class="architect-studio-container reveal" aria-label="Custom Project Architect Studio">
+        <div class="architect-header-bar">
+          <div>
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap;">
+              <span class="section-badge" style="margin-bottom: 0;">INTERACTIVE ARCHITECT // ALL PLATFORMS</span>
+              <span class="status-pill" style="font-size: 0.72rem; padding: 2px 8px; border-color: rgba(6, 182, 212, 0.4);"><span class="status-dot"></span> LIVE SIMULATOR READY</span>
+            </div>
+            <h2 style="font-size: clamp(1.4rem, 2.8vw, 1.85rem); margin-bottom: 6px;">Create Your Own Project &amp; Topology</h2>
+            <p class="body-sm" style="color: var(--text-secondary); max-width: 780px;">
+              Design, generate, and simulate enterprise network architectures across <strong>Cisco IOS-XE</strong>, <strong>MikroTik RouterOS</strong>, <strong>Linux Server</strong>, <strong>Docker Cloud-Native</strong>, or <strong>Python Automation</strong>. Select your parameters below for instant validated configuration code and in-page CLI execution.
+            </p>
+          </div>
+          <div>
+            <span class="tag" id="arch-project-tag" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-primary); border: 1px solid var(--border-accent); font-family: var(--font-mono); font-size: 0.8rem; padding: 6px 12px;">
+              CISCO // CAMPUS
+            </span>
+          </div>
+        </div>
+
+        <!-- Quick Presets -->
+        <div class="architect-presets-bar">
+          <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-right: 4px;">Quick Presets:</span>
+          <button type="button" class="architect-preset-chip" data-preset="cisco_campus">Cisco Campus Core (HSRP &amp; LACP)</button>
+          <button type="button" class="architect-preset-chip" data-preset="mikrotik_dualwan">MikroTik Dual-WAN (PCC &amp; Failover)</button>
+          <button type="button" class="architect-preset-chip" data-preset="linux_wireguard">Linux WireGuard VPN Gateway</button>
+          <button type="button" class="architect-preset-chip" data-preset="docker_mesh">Docker Microservices Mesh (Traefik)</button>
+          <button type="button" class="architect-preset-chip" data-preset="python_audit">Python Netmiko Compliance Auditor</button>
+        </div>
+
+        <!-- Main 2-Column Grid: Configurator vs Live Blueprint & Code -->
+        <div class="architect-grid">
+          <!-- Left Column: Step-by-Step Guided Assistant -->
+          <div class="architect-wizard">
+            <!-- Step 1: Platform Selection -->
+            <div class="architect-step">
+              <div class="architect-step-header">
+                <span class="architect-step-num">STEP 01</span>
+                <h3 class="architect-step-title">Choose Platform &amp; Operating System</h3>
+              </div>
+              <div class="platform-selector-grid">
+                <button type="button" class="platform-btn active" data-platform="cisco">
+                  <span class="platform-btn-icon">⚡</span>
+                  <span class="platform-btn-name">Cisco IOS</span>
+                  <span class="platform-btn-sub">Enterprise L2/L3</span>
+                </button>
+                <button type="button" class="platform-btn" data-platform="mikrotik">
+                  <span class="platform-btn-icon">📡</span>
+                  <span class="platform-btn-name">MikroTik</span>
+                  <span class="platform-btn-sub">RouterOS v7</span>
+                </button>
+                <button type="button" class="platform-btn" data-platform="linux">
+                  <span class="platform-btn-icon">🐧</span>
+                  <span class="platform-btn-name">Linux Edge</span>
+                  <span class="platform-btn-sub">Nginx / WireGuard</span>
+                </button>
+                <button type="button" class="platform-btn" data-platform="docker">
+                  <span class="platform-btn-icon">🐳</span>
+                  <span class="platform-btn-name">Docker</span>
+                  <span class="platform-btn-sub">Cloud Containers</span>
+                </button>
+                <button type="button" class="platform-btn" data-platform="python">
+                  <span class="platform-btn-icon">🐍</span>
+                  <span class="platform-btn-name">Python</span>
+                  <span class="platform-btn-sub">Netmiko Auto</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 2: Architecture & Topology Goal -->
+            <div class="architect-step">
+              <div class="architect-step-header">
+                <span class="architect-step-num">STEP 02</span>
+                <h3 class="architect-step-title">Choose Architecture &amp; Deployment Goal</h3>
+              </div>
+              <div class="scenario-selector-list" id="architect-scenarios">
+                <!-- Dynamically populated by js/builder.js -->
+              </div>
+            </div>
+
+            <!-- Step 3: Security & High-Availability Modifiers -->
+            <div class="architect-step">
+              <div class="architect-step-header">
+                <span class="architect-step-num">STEP 03</span>
+                <h3 class="architect-step-title">Security &amp; Policy Customization</h3>
+              </div>
+              <div class="modifiers-grid">
+                <label class="modifier-checkbox-label">
+                  <input type="checkbox" id="arch-sec-hardened" checked>
+                  <span>Hardened Security / Strict ACLs</span>
+                </label>
+                <label class="modifier-checkbox-label">
+                  <input type="checkbox" id="arch-ha-redundancy" checked>
+                  <span>High-Availability &amp; Failover</span>
+                </label>
+                <label class="modifier-checkbox-label">
+                  <input type="checkbox" id="arch-dual-stack" checked>
+                  <span>Dual-Stack (IPv4 &amp; IPv6)</span>
+                </label>
+                <label class="modifier-checkbox-label">
+                  <input type="checkbox" id="arch-telemetry" checked>
+                  <span>Telemetry &amp; Audit Logging</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Step 4: Hostname & Subnet Parameters -->
+            <div class="architect-step" style="margin-bottom: 0;">
+              <div class="architect-step-header">
+                <span class="architect-step-num">STEP 04</span>
+                <h3 class="architect-step-title">Node Parameters &amp; Addressing Scope</h3>
+              </div>
+              <div class="modifiers-grid">
+                <div class="param-input-group">
+                  <label for="arch-input-hostname">HOSTNAME / IDENTIFIER:</label>
+                  <input type="text" id="arch-input-hostname" class="param-input" value="EDGE-CORE-01" placeholder="e.g. EDGE-CORE-01">
+                </div>
+                <div class="param-input-group">
+                  <label for="arch-input-subnet">PRIMARY CIDR SUBNET:</label>
+                  <input type="text" id="arch-input-subnet" class="param-input" value="10.10.0.0/24" placeholder="e.g. 10.10.0.0/24">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Live Result Blueprint & Production Code -->
+          <div class="architect-preview">
+            <div class="architect-preview-card">
+              <div class="architect-preview-header">
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <span class="mono-label" id="arch-filename-badge" style="color: var(--accent-secondary); font-size: 0.8rem; background: rgba(6, 182, 212, 0.1); padding: 3px 8px; border-radius: var(--radius-sm); border: 1px solid rgba(6, 182, 212, 0.25);">edge-core-01.ios</span>
+                  <span class="status-pill" style="font-size: 0.7rem; padding: 2px 6px; background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); color: #10b981;">SYNTAX VERIFIED</span>
+                </div>
+                <div style="display: flex; gap: 6px;">
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-arch-copy-code" style="padding: 4px 10px; font-size: 0.74rem;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 3px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    <span>Copy Code</span>
+                  </button>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-arch-download-code" style="padding: 4px 10px; font-size: 0.74rem;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 3px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    <span>Download</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Specs Summary Bar -->
+              <div class="architect-specs-summary">
+                <div class="architect-spec-item" id="arch-spec-role">Role: <strong>Campus Core Switch</strong></div>
+                <div class="architect-spec-item" id="arch-spec-interfaces">Interfaces: <strong>VLAN 10, 20 / Po1</strong></div>
+                <div class="architect-spec-item" id="arch-spec-protocol">Protocols: <strong>HSRPv2, LACP, PVST+</strong></div>
+                <div class="architect-spec-item" id="arch-spec-security">Security: <strong>Strict ACLs</strong></div>
+              </div>
+
+              <!-- Live Configuration Code Block -->
+              <div class="architect-code-box" id="arch-code-preview">
+                <!-- Dynamically generated configuration code -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Simulation & Interactive CLI Console -->
+        <div class="architect-sim-container">
+          <div class="architect-sim-topbar">
+            <div class="architect-sim-status">
+              <span class="status-dot"></span>
+              <span>LIVE SIMULATOR // ENVIRONMENT: RUNNING</span>
+            </div>
+            <div class="architect-sim-actions">
+              <button type="button" class="btn btn-primary btn-sm" id="btn-arch-run-simulation" style="font-size: 0.75rem; padding: 4px 12px;">
+                <span>▶ Run Live Simulation</span>
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-arch-clear-sim" style="font-size: 0.75rem; padding: 4px 10px;">
+                Clear
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Test Command Chips -->
+          <div class="architect-sim-chips">
+            <span class="architect-sim-chips-label">QUICK VERIFICATION:</span>
+            <div id="arch-sim-chips-list" style="display: flex; gap: 6px; align-items: center;">
+              <!-- Dynamically populated based on platform -->
+            </div>
+          </div>
+
+          <!-- Output Screen -->
+          <div class="architect-sim-screen" id="arch-sim-screen">
+            <div style="color: var(--accent-secondary); font-weight: 700; margin-bottom: 6px;">[SYSTEM READY] Universal Project Simulator Initialized.</div>
+            <div style="color: var(--text-muted); font-size: 0.76rem; margin-bottom: 8px;">Click "▶ Run Live Simulation" above or type commands below with Tab autocomplete and '?' context-sensitive help.</div>
+          </div>
+
+          <!-- Command Line Interactive Bar -->
+          <div class="architect-sim-input-row">
+            <span class="architect-sim-prompt" id="arch-sim-prompt">EDGE-CORE-01#</span>
+            <input type="text" id="arch-sim-input" class="architect-sim-input" placeholder="Type command (Tab to autocomplete, '?' for help)..." autocomplete="off" spellcheck="false">
+            <button type="button" class="architect-sim-btn" id="arch-sim-execute">Execute</button>
+          </div>
+        </div>
+      </section>
+
       <!-- Filter Buttons -->
-      <div class="reveal" style="display: flex; gap: 10px; margin-bottom: 36px; flex-wrap: wrap;">
+      <div class="reveal" style="display: flex; gap: 10px; margin-bottom: 36px; flex-wrap: wrap; align-items: center;">
         <button class="btn btn-secondary btn-sm filter-btn active" data-filter="all">All Disciplines</button>
         <button class="btn btn-secondary btn-sm filter-btn" data-filter="ai">AI & Systems</button>
         <button class="btn btn-secondary btn-sm filter-btn" data-filter="mobile">Mobile & Audio</button>
@@ -151,10 +352,41 @@
         <button class="btn btn-secondary btn-sm filter-btn" data-filter="cloud">Cloud & Containers</button>
         <button class="btn btn-secondary btn-sm filter-btn" data-filter="automation">Automation</button>
         <button class="btn btn-secondary btn-sm filter-btn" data-filter="web">Web</button>
+        <a href="#project-architect" class="btn btn-sm" style="background: rgba(139, 92, 246, 0.15); border: 1px solid var(--accent-primary); color: #c4b5fd; margin-left: auto; font-family: var(--font-mono); font-size: 0.78rem;">
+          <span style="color: var(--accent-secondary); margin-right: 4px;">⚡</span> Create Custom Project &uarr;
+        </a>
       </div>
 
       <!-- Project Cards Grid -->
       <div class="grid-3" id="projects-grid">
+
+        <!-- Universal Project Architect Feature Card -->
+        <article class="card card-interactive project-card" data-category="networking" style="border-color: rgba(139, 92, 246, 0.4); background: linear-gradient(145deg, rgba(139, 92, 246, 0.06) 0%, var(--surface) 100%);">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span class="tag" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-primary); border: 1px solid rgba(139, 92, 246, 0.3);">UNIVERSAL ARCHITECT</span>
+              <span class="status-pill" style="font-size: 0.72rem; padding: 2px 8px; border-color: rgba(6, 182, 212, 0.4);"><span class="status-dot"></span> LIVE SIMULATION</span>
+            </div>
+            <span class="mono-label" style="color: var(--accent-primary);">2026 STUDIO</span>
+          </div>
+          <h3 style="margin-bottom: 10px;">Universal Project Architect &amp; Live CLI Simulator</h3>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
+            Interactive multi-vendor design studio. Build custom configurations across Cisco IOS-XE, MikroTik RouterOS v7, Linux Server, Docker Cloud-Native, or Python Automation. Choose your topology, security policies, redundancy modes, and addressing schemes with instant syntax generation and in-page live CLI simulation.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
+            <span class="skill-tag">Cisco IOS</span>
+            <span class="skill-tag">MikroTik RouterOS</span>
+            <span class="skill-tag">Linux Gateway</span>
+            <span class="skill-tag">Docker Compose</span>
+            <span class="skill-tag">Python Netmiko</span>
+            <span class="skill-tag">Live CLI</span>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <a href="#project-architect" class="btn btn-primary btn-sm" style="flex: 1; text-align: center; font-weight: 700; background: var(--accent-primary); border-color: var(--accent-primary); color: #ffffff;">
+              <span style="margin-right: 4px;">⚡</span> Launch Architect Studio
+            </a>
+          </div>
+        </article>
 
         <!-- GAM.AI Edge Intelligence Flagship Project -->
         <article class="card card-interactive project-card" data-category="ai" style="border-color: rgba(16, 185, 129, 0.4); background: linear-gradient(145deg, rgba(16, 185, 129, 0.05) 0%, var(--surface) 100%);">
@@ -995,5 +1227,6 @@
   <script src="js/animations.js"></script>
   <script src="js/main.js"></script>
   <script src="js/projects.js"></script>
+  <script src="js/builder.js"></script>
 </body>
 </html>

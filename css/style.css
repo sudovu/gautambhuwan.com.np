@@ -1230,3 +1230,472 @@ img, svg {
 .terminal-session-log.has-entries {
   display: block;
 }
+
+/* ==========================================================================
+   Custom Project Architect Studio & Universal Simulator
+   ========================================================================== */
+.architect-studio-container {
+  background: linear-gradient(160deg, rgba(20, 27, 45, 0.95) 0%, rgba(10, 14, 26, 0.98) 100%);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 30px rgba(139, 92, 246, 0.15);
+  margin-bottom: 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.architect-studio-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--success));
+}
+
+.architect-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.architect-presets-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 24px;
+}
+
+.architect-preset-chip {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+  font-family: var(--font-mono);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.architect-preset-chip:hover {
+  border-color: var(--accent-secondary);
+  color: #ffffff;
+  background: rgba(6, 182, 212, 0.15);
+}
+
+.architect-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 992px) {
+  .architect-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Steps in Wizard */
+.architect-step {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  margin-bottom: 16px;
+}
+
+.architect-step-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.architect-step-num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  background: rgba(139, 92, 246, 0.2);
+  color: var(--accent-primary);
+  border: 1px solid var(--border-accent);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+}
+
+.architect-step-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* Platform Selector Pills */
+.platform-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.platform-btn {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 10px;
+  cursor: pointer;
+  text-align: center;
+  transition: all var(--transition-fast);
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.platform-btn:hover {
+  border-color: var(--accent-secondary);
+  background: rgba(6, 182, 212, 0.08);
+  color: var(--text-primary);
+}
+
+.platform-btn.active {
+  border-color: var(--accent-secondary);
+  background: rgba(6, 182, 212, 0.16);
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(6, 182, 212, 0.25);
+}
+
+.platform-btn-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.platform-btn-name {
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+
+.platform-btn-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+/* Scenario Cards */
+.scenario-selector-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.scenario-card {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.scenario-card:hover {
+  border-color: var(--accent-primary);
+  background: rgba(139, 92, 246, 0.08);
+}
+
+.scenario-card.active {
+  border-color: var(--accent-primary);
+  background: rgba(139, 92, 246, 0.16);
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.2);
+}
+
+.scenario-indicator {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--text-dim);
+  margin-top: 3px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scenario-card.active .scenario-indicator {
+  border-color: var(--accent-primary);
+  background: var(--accent-primary);
+}
+
+.scenario-info {
+  flex: 1;
+}
+
+.scenario-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.scenario-desc {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* Modifiers & Parameters */
+.modifiers-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 600px) {
+  .modifiers-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.modifier-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.modifier-checkbox-label:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.modifier-checkbox-label input[type="checkbox"] {
+  accent-color: var(--accent-secondary);
+  width: 15px;
+  height: 15px;
+}
+
+.param-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.param-input-group label {
+  font-size: 0.74rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.param-input {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.param-input:focus {
+  border-color: var(--accent-secondary);
+}
+
+/* Right Column: Code & Specs Preview */
+.architect-preview-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+}
+
+.architect-preview-header {
+  padding: 16px 20px;
+  background: var(--surface-elevated);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.architect-specs-summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding: 12px 18px;
+  background: rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.76rem;
+  font-family: var(--font-mono);
+}
+
+.architect-spec-item {
+  color: var(--text-muted);
+}
+
+.architect-spec-item strong {
+  color: var(--text-primary);
+}
+
+.architect-code-box {
+  flex: 1;
+  background: #04060c;
+  padding: 16px 18px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: #d1d5db;
+  overflow-y: auto;
+  max-height: 480px;
+  white-space: pre;
+  tab-size: 2;
+}
+
+/* Bottom Simulation Container */
+.architect-sim-container {
+  background: #04060a;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+.architect-sim-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 18px;
+  background: #090e18;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.architect-sim-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.76rem;
+  font-family: var(--font-mono);
+  color: var(--accent-secondary);
+}
+
+.architect-sim-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.architect-sim-chips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #070b14;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.architect-sim-chips-label {
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  color: var(--text-dim);
+  margin-right: 4px;
+}
+
+.architect-sim-screen {
+  padding: 16px 20px;
+  background: #020306;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: #cbd5e1;
+  min-height: 180px;
+  max-height: 320px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.architect-sim-input-row {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: #080c16;
+  border-top: 1px solid var(--border);
+  gap: 10px;
+}
+
+.architect-sim-prompt {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-secondary);
+  white-space: nowrap;
+}
+
+.architect-sim-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.architect-sim-input:focus {
+  border-color: var(--accent-secondary);
+  background: rgba(6, 182, 212, 0.05);
+}
+
+.architect-sim-btn {
+  background: rgba(6, 182, 212, 0.18);
+  border: 1px solid var(--accent-secondary);
+  color: var(--accent-secondary);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.architect-sim-btn:hover {
+  background: var(--accent-secondary);
+  color: #000000;
+}
+

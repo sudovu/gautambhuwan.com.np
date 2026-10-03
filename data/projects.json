@@ -26,6 +26,18 @@
     "download": "downloads/gamma/GAMA-v2.2.apk"
   },
   {
+    "id": "proj-architect",
+    "title": "Universal Project Architect & Live Simulation Studio",
+    "category": "networking",
+    "categoryLabel": "Networking & Multi-Platform",
+    "year": "2026",
+    "status": "Interactive Studio",
+    "description": "Interactive multi-vendor design studio. Build custom configurations across Cisco IOS-XE, MikroTik RouterOS v7, Linux Server, Docker Cloud-Native, or Python Automation. Choose your topology, security policies, redundancy modes, and addressing schemes with instant syntax generation and in-page live CLI simulation.",
+    "technologies": ["Cisco IOS-XE", "MikroTik RouterOS", "Linux Gateway", "Docker Compose", "Python Netmiko", "CLI Simulator"],
+    "github": "https://github.com/sudovu",
+    "demo": "projects.html#project-architect"
+  },
+  {
     "id": "proj-01",
     "title": "Enterprise Multi-Area OSPF Network Simulation",
     "category": "networking",
