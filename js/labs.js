@@ -1,7 +1,7 @@
 /**
  * VHUWON MATHERS — Interactive Labs Command Line Simulator
  * Domain: gautambhuwan.com.np
- * Provides a client-side network CLI emulator and per-lab simulation runner
+ * Provides a client-side network CLI emulator and interactive type-in terminals for all labs
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -11,29 +11,38 @@ document.addEventListener('DOMContentLoaded', () => {
   [Cisco IOS Routing & High Availability]
     show ip ospf neighbor        - Inspect OSPFv2 neighbor state & dead timers (Lab #001)
     show ip route ospf           - Display OSPF learned route table & summary masks (Lab #001)
+    show ip ospf database        - Link-State Database (LSDB) summary
     show standby brief           - Verify HSRPv2 active/standby state & tracking (Lab #004)
     show etherchannel summary    - Check LACP 802.3ad port-channel trunk bundle (Lab #004)
+    show spanning-tree vlan 10   - Verify Rapid-PVST+ root bridge priority & ports
     show crypto session detail   - Inspect IPsec VTI phase 1/2 cryptographic tunnels (Lab #005)
     show ip bgp summary          - Verify eBGP dynamic neighbor peering across VTI (Lab #005)
     show ip route summary        - Display contiguous hierarchical route summarization (Lab #007)
     show ip interface brief      - List router subinterfaces, status & IP assignments (Lab #007)
+    show running-config          - Display device configuration
 
   [MikroTik RouterOS Edge Gateway]
     /ip route print              - Inspect recursive check-gateway multi-WAN routing (Lab #006)
     /queue tree print            - View Per-Connection Queue (PCQ) bandwidth shaping (Lab #006)
     /ip firewall mangle print    - Inspect Per-Connection Classifier (PCC) marks (Lab #006)
+    /ping 1.1.1.1                - Ping primary ISP recursive gateway target
 
   [Linux Systems & Container Architecture]
     nginx -t                     - Validate Nginx reverse proxy syntax & upstream conf (Lab #002)
     curl -I https://gautambhuwan.com.np - Probe HTTP/2 headers & TLS 1.3 handshakes (Lab #002)
+    systemctl status nginx       - Check Nginx service unit status
+    cat /etc/nginx/sites-available/production.conf - Inspect Nginx proxy pass block
     docker network inspect app_net - Inspect isolated bridge namespace & container IPs (Lab #003)
     docker ps                    - View running microservice containers (Lab #003)
+    docker logs secure_gateway   - Inspect container startup logs & HTTP hits
 
   [Utilities & Diagnostics]
     subnet 172.16.0.0/23         - Run live VLSM CIDR calculation engine (Lab #007)
     ping 10.255.255.2            - Transmit ICMP echo packets across IPsec VTI tunnel
+    ping 10.0.0.2                - Ping OSPF neighbor router
     ping 8.8.8.8                 - Probe recursive failover public DNS gateway
     uname -a                     - Inspect host kernel & architecture
+    whoami                       - Display authenticated user identity
     clear                        - Clear simulator screen`,
 
     'show ip ospf neighbor': `Neighbor ID     Pri   State           Dead Time   Address         Interface
@@ -50,6 +59,19 @@ O IA  192.168.0.0/16 [110/20] via 10.0.0.2, 02:41:18, GigabitEthernet0/0/0
 O     10.0.0.4/30 [110/2] via 10.0.0.6, 02:41:18, GigabitEthernet0/0/1
 O IA  192.168.20.0/24 [110/11] via 10.0.0.2, 02:39:04, GigabitEthernet0/0/0`,
 
+    'show ip ospf database': `            OSPF Router with ID (1.1.1.1) (Process ID 1)
+
+                Router Link States (Area 0)
+
+Link ID         ADV Router      Age         Seq#       Checksum Link count
+1.1.1.1         1.1.1.1         312         0x80000004 0x00A123 2
+2.2.2.2         2.2.2.2         289         0x80000003 0x00B412 2
+
+                Summary Net Link States (Area 0)
+
+Link ID         ADV Router      Age         Seq#       Checksum
+192.168.0.0     1.1.1.1         312         0x80000001 0x005E21`,
+
     'show standby brief': `                     P indicates configured to preempt.
                      |
 Interface   Grp  Pri P State   Active          Standby         Virtual IP
@@ -57,6 +79,19 @@ Vlan10      10   110 P Active  local           192.168.10.3    192.168.10.1
 Vlan20      20   110 P Active  local           192.168.20.3    192.168.20.1
 DSW1# %HSRP-5-STATECHANGE: Vlan10 Grp 10 state Standby -> Active (Preempted)
 DSW1# Tracking Gi0/0 state UP, decrement 20`,
+
+    'show standby': `Vlan10 - Group 10 (version 2)
+  State is Active
+    5 state changes, last state change 01:14:02
+  Virtual IP address is 192.168.10.1
+  Active virtual MAC address is 0000.0c9f.f00a (local)
+  Local virtual MAC address is 0000.0c9f.f00a (v2 default)
+  Hello time 1 sec, hold time 3 sec
+  Preemption enabled
+  Active router is local
+  Standby router is 192.168.10.3, priority 100 (expires in 2.816 sec)
+  Priority 110 (configured 110)
+  Track interface GigabitEthernet0/0 state UP decrement 20`,
 
     'show etherchannel summary': `Flags:  D - down        P - bundled in port-channel
         I - stand-alone s - suspended
@@ -66,6 +101,22 @@ Group  Port-channel  Protocol    Ports
 ------+-------------+-----------+-----------------------------------------------
 1      Po1(SU)         LACP      Gi0/1(P)    Gi0/2(P)
 DSW1# Port-Channel 1 Status: Operational (2 Gbps Aggregate Bandwidth Full-Duplex)`,
+
+    'show spanning-tree vlan 10': `VLAN0010
+  Spanning tree enabled protocol rstp
+  Root ID    Priority    24586 (sys-id-ext 10)
+             Address     0001.42a1.d800
+             This bridge is the root
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    24586 (priority 24576 sys-id-ext 10)
+             Address     0001.42a1.d800
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Po1                 Desg FWD 9         128.56   P2p
+Gi0/3               Desg FWD 19        128.3    P2p Edge (PortFast: ACTIVE)`,
 
     'show crypto session detail': `Crypto session current status: UP-ACTIVE
 
@@ -125,6 +176,40 @@ x-xss-protection: 1; mode=block
 access-control-allow-origin: *
 cache-control: public, max-age=600`,
 
+    'systemctl status nginx': `● nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+     Active: active (running) since Tue 2026-09-22 08:14:02 UTC; 1 weeks 4 days ago
+    Process: 1240 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+   Main PID: 1241 (nginx)
+      Tasks: 3 (limit: 4612)
+     Memory: 28.4M
+        CPU: 18.291s
+     CGroup: /system.slice/nginx.service
+             ├─1241 "nginx: master process /usr/sbin/nginx -g daemon on; master_process on;"
+             ├─1242 "nginx: worker process"
+             └─1243 "nginx: worker process"`,
+
+    'cat /etc/nginx/sites-available/production.conf': `server {
+    listen 443 ssl http2;
+    server_name gautambhuwan.com.np;
+
+    ssl_certificate /etc/ssl/certs/fullchain.pem;
+    ssl_certificate_key /etc/ssl/private/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}`,
+
     'docker network inspect app_net': `[
   {
     "Name": "app_net",
@@ -152,6 +237,10 @@ cache-control: public, max-age=600`,
 
     'docker ps': `CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS                  NAMES
 3a4b5c6d7e8f   nginx:alpine   "/docker-entrypoint.…"   4 days ago      Up 4 days      0.0.0.0:8080->80/tcp   secure_gateway`,
+
+    'docker logs secure_gateway': `172.28.0.1 - - [03/Oct/2026:14:48:11 +0000] "GET / HTTP/1.1" 200 615 "-" "Mozilla/5.0 NetProbe"
+172.28.0.1 - - [03/Oct/2026:14:48:15 +0000] "GET /healthz HTTP/1.1" 200 18 "-" "HealthAudit/2.1"
+2026/10/03 14:48:20 [notice] 1#1: Configuration reloaded successfully via SIGUP`,
 
     'show ip route summary': `IP routing table name is default (0x0)
 Route Source    Networks    Subnets     Replicates  Overhead    Memory (bytes)
@@ -189,108 +278,223 @@ Tunnel0                10.255.255.1    YES manual up                    up`,
 !!!!!
 Success rate is 100 percent (5/5), round-trip min/avg/max = 14/18/24 ms (Encrypted over IPsec VTI)`,
 
+    'ping 10.0.0.2': `Sending 5, 100-byte ICMP Echos to 10.0.0.2 (Core ABR Neighbor), timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 2/4/6 ms`,
+
     'ping 8.8.8.8': `Sending 5, 64-byte ICMP Echos to 8.8.8.8 (Google Anycast DNS via ISP1):
 !!!!!
 Success rate is 100 percent (5/5), round-trip min/avg/max = 9/12/17 ms (Recursive Check-Gateway: OK)`,
+
+    '/ping 1.1.1.1': `  SEQ HOST                                     SIZE TTL TIME  STATUS
+    0 1.1.1.1                                    56  58 11ms  echo reply
+    1 1.1.1.1                                    56  58 10ms  echo reply
+    2 1.1.1.1                                    56  58 12ms  echo reply
+    sent=3 received=3 packet-loss=0% min-rtt=10ms avg-rtt=11ms max-rtt=12ms`,
 
     'uname -a': `Linux vm-primary 6.8.0-45-generic #45-Ubuntu SMP PREEMPT_DYNAMIC x86_64 GNU/Linux`,
 
     'whoami': `neteng@gautambhuwan.com.np (Vhuwon Mathers - NetEng Node #01)`
   };
 
-  // Map each lab to its verification command
-  const LAB_VERIFICATIONS = {
-    'lab-001': 'show ip ospf neighbor',
-    'lab-002': 'curl -I https://gautambhuwan.com.np',
-    'lab-003': 'docker network inspect app_net',
-    'lab-004': 'show standby brief',
-    'lab-005': 'show crypto session detail',
-    'lab-006': '/ip route print',
-    'lab-007': 'subnet 172.16.0.0/23'
+  // Lab Device Configurations
+  const LAB_CONFIGS = {
+    'lab-001': {
+      prompt: 'Core-ABR#',
+      device: 'Cisco IOS Core ABR',
+      defaultCmd: 'show ip ospf neighbor',
+      helpCmds: ['show ip ospf neighbor', 'show ip route ospf', 'show ip ospf database', 'ping 10.0.0.2', 'show running-config', 'help', 'clear']
+    },
+    'lab-002': {
+      prompt: 'root@web-gw:~#',
+      device: 'Ubuntu Linux 24.04 LTS Gateway',
+      defaultCmd: 'nginx -t',
+      helpCmds: ['nginx -t', 'curl -I https://gautambhuwan.com.np', 'systemctl status nginx', 'cat /etc/nginx/sites-available/production.conf', 'help', 'clear']
+    },
+    'lab-003': {
+      prompt: 'sysadmin@docker-host:~$',
+      device: 'Linux Microservice Host',
+      defaultCmd: 'docker network inspect app_net',
+      helpCmds: ['docker network inspect app_net', 'docker ps', 'docker logs secure_gateway', 'ip addr show', 'help', 'clear']
+    },
+    'lab-004': {
+      prompt: 'DSW1#',
+      device: 'Cisco Catalyst 3850 Core Switch',
+      defaultCmd: 'show standby brief',
+      helpCmds: ['show standby brief', 'show etherchannel summary', 'show spanning-tree vlan 10', 'show running-config', 'help', 'clear']
+    },
+    'lab-005': {
+      prompt: 'HQ-Core#',
+      device: 'Cisco ISR 4451 Edge Gateway',
+      defaultCmd: 'show crypto session detail',
+      helpCmds: ['show crypto session detail', 'show ip bgp summary', 'ping 10.255.255.2', 'show running-config', 'help', 'clear']
+    },
+    'lab-006': {
+      prompt: '[admin@MikroTik-Edge] >',
+      device: 'MikroTik RouterOS v7.14',
+      defaultCmd: '/ip route print',
+      helpCmds: ['/ip route print', '/queue tree print', '/ip firewall mangle print', '/ping 1.1.1.1', 'help', 'clear']
+    },
+    'lab-007': {
+      prompt: 'Core-RTR#',
+      device: 'Cisco ASR 1001-X Enterprise Router',
+      defaultCmd: 'subnet 172.16.0.0/23',
+      helpCmds: ['subnet 172.16.0.0/23', 'show ip route summary', 'show ip interface brief', 'show running-config', 'help', 'clear']
+    }
   };
 
-  // 1. Initialize Interactive CLI Sandbox
+  // Helper: Match and execute command in database
+  function resolveCommandOutput(cmd, labId = null) {
+    const raw = cmd.trim();
+    if (!raw) return '';
+
+    const lower = raw.toLowerCase();
+
+    if (lower === 'clear') {
+      return '__CLEAR__';
+    }
+
+    if (lower === 'help' || lower === '?') {
+      if (labId && LAB_CONFIGS[labId]) {
+        return `Commands for ${LAB_CONFIGS[labId].device}:\n  ${LAB_CONFIGS[labId].helpCmds.join('\n  ')}\n\nType 'clear' to reset console.`;
+      }
+      return SIMULATOR_COMMANDS['help'];
+    }
+
+    // Check show running-config or show run
+    if (lower === 'show running-config' || lower === 'show run' || lower === 'sh run') {
+      if (labId) {
+        const article = document.getElementById(labId);
+        const codeElem = article ? article.querySelector('.terminal-body code') : null;
+        if (codeElem) {
+          return `! Current configuration on ${LAB_CONFIGS[labId].device}:\n` + codeElem.innerText;
+        }
+      }
+      return '! Current active running-configuration loaded and verified.';
+    }
+
+    // Exact match in database
+    const exact = Object.keys(SIMULATOR_COMMANDS).find(k => k.toLowerCase() === lower);
+    if (exact) {
+      return SIMULATOR_COMMANDS[exact];
+    }
+
+    // Heuristic partial matching
+    if (lower.startsWith('ping')) {
+      const parts = raw.split(/\s+/);
+      const target = parts[1] || '10.255.255.2';
+      return `Sending 5, 100-byte ICMP Echos to ${target}, timeout is 2 seconds:\n!!!!!\nSuccess rate is 100 percent (5/5), round-trip min/avg/max = 12/16/22 ms`;
+    }
+
+    if (lower.startsWith('subnet')) {
+      return SIMULATOR_COMMANDS['subnet 172.16.0.0/23'];
+    }
+
+    if (lower.includes('ospf')) {
+      return lower.includes('route') ? SIMULATOR_COMMANDS['show ip route ospf'] : SIMULATOR_COMMANDS['show ip ospf neighbor'];
+    }
+
+    if (lower.includes('standby') || lower.includes('hsrp')) {
+      return SIMULATOR_COMMANDS['show standby brief'];
+    }
+
+    if (lower.includes('bgp')) {
+      return SIMULATOR_COMMANDS['show ip bgp summary'];
+    }
+
+    if (lower.includes('etherchannel') || lower.includes('lacp')) {
+      return SIMULATOR_COMMANDS['show etherchannel summary'];
+    }
+
+    if (lower.includes('crypto') || lower.includes('ipsec') || lower.includes('vti')) {
+      return SIMULATOR_COMMANDS['show crypto session detail'];
+    }
+
+    if (lower.includes('/ip route') || (labId === 'lab-006' && lower.includes('route'))) {
+      return SIMULATOR_COMMANDS['/ip route print'];
+    }
+
+    if (lower.includes('queue') || (labId === 'lab-006' && lower.includes('pcq'))) {
+      return SIMULATOR_COMMANDS['/queue tree print'];
+    }
+
+    if (lower.includes('mangle')) {
+      return SIMULATOR_COMMANDS['/ip firewall mangle print'];
+    }
+
+    if (lower.includes('nginx')) {
+      return SIMULATOR_COMMANDS['nginx -t'];
+    }
+
+    if (lower.includes('curl')) {
+      return SIMULATOR_COMMANDS['curl -I https://gautambhuwan.com.np'];
+    }
+
+    if (lower.includes('docker') && lower.includes('ps')) {
+      return SIMULATOR_COMMANDS['docker ps'];
+    }
+
+    if (lower.includes('docker')) {
+      return SIMULATOR_COMMANDS['docker network inspect app_net'];
+    }
+
+    // Default error formats depending on device OS
+    if (labId === 'lab-002' || labId === 'lab-003') {
+      return `bash: ${raw}: command not found\nType 'help' to see available commands.`;
+    } else if (labId === 'lab-006') {
+      return `bad command name ${raw} (line 1 column 1)\nType 'help' to see RouterOS commands.`;
+    } else {
+      return `% Invalid input detected at '^' marker.\nType 'help' or '?' to inspect valid Cisco IOS commands.`;
+    }
+  }
+
+  // 1. Initialize Master CLI Sandbox at Top
   const sandboxScreen = document.getElementById('sandbox-screen');
   const sandboxInput = document.getElementById('sandbox-input');
   const sandboxChips = document.querySelectorAll('.sandbox-chip');
-  const commandHistory = [];
-  let historyIndex = -1;
+  const masterHistory = [];
+  let masterHistoryIdx = -1;
 
-  function printToSandbox(cmdText, outputText, isError = false) {
+  function appendMasterSandbox(cmd, output, isError = false) {
     if (!sandboxScreen) return;
-    const outputGroup = document.createElement('div');
-    outputGroup.style.marginBottom = '14px';
+    const group = document.createElement('div');
+    group.style.marginBottom = '14px';
 
-    if (cmdText) {
+    if (cmd) {
       const promptLine = document.createElement('div');
-      promptLine.innerHTML = `<span style="color: var(--accent-secondary); font-weight: 700;">VM-Gateway#</span> <span style="color: #f8fafc;">${escapeHtml(cmdText)}</span>`;
-      outputGroup.appendChild(promptLine);
+      promptLine.innerHTML = `<span style="color: var(--accent-secondary); font-weight: 700;">VM-Gateway#</span> <span style="color: #f8fafc;">${escapeHtml(cmd)}</span>`;
+      group.appendChild(promptLine);
     }
 
-    const resultPre = document.createElement('pre');
-    resultPre.style.color = isError ? '#ef4444' : '#a5f3fc';
-    resultPre.style.marginTop = '4px';
-    resultPre.textContent = outputText;
-    outputGroup.appendChild(resultPre);
+    const pre = document.createElement('pre');
+    pre.style.color = isError ? '#ef4444' : '#a5f3fc';
+    pre.style.marginTop = '4px';
+    pre.textContent = output;
+    group.appendChild(pre);
 
-    sandboxScreen.appendChild(outputGroup);
+    sandboxScreen.appendChild(group);
     sandboxScreen.scrollTop = sandboxScreen.scrollHeight;
   }
 
-  function executeSandboxCommand(rawCmd) {
-    const cmd = rawCmd.trim();
-    if (!cmd) return;
+  function runMasterCommand(cmd) {
+    const trimmed = cmd.trim();
+    if (!trimmed) return;
 
-    commandHistory.push(cmd);
-    historyIndex = commandHistory.length;
+    masterHistory.push(trimmed);
+    masterHistoryIdx = masterHistory.length;
 
-    const lowerCmd = cmd.toLowerCase();
-
-    if (lowerCmd === 'clear') {
+    const res = resolveCommandOutput(trimmed);
+    if (res === '__CLEAR__') {
       if (sandboxScreen) {
         sandboxScreen.innerHTML = `
           <div style="color: var(--text-dim); margin-bottom: 12px; font-size: 0.78rem;">
-            [VM-NETOS v2.6.4 // RECONFIGURED & READY] Type 'help' to inspect command catalog.
+            [VM-NETOS v2.6.4 // MULTI-VENDOR LAB EMULATOR ONLINE] Screen cleared. Type 'help' for commands.
           </div>
         `;
       }
-      return;
-    }
-
-    // Match exact or case-insensitive command
-    let matchedKey = Object.keys(SIMULATOR_COMMANDS).find(k => k.toLowerCase() === lowerCmd);
-
-    // Fallback partial matching
-    if (!matchedKey) {
-      if (lowerCmd.startsWith('ping')) {
-        matchedKey = 'ping 10.255.255.2';
-      } else if (lowerCmd.startsWith('subnet')) {
-        matchedKey = 'subnet 172.16.0.0/23';
-      } else if (lowerCmd.includes('ospf')) {
-        matchedKey = 'show ip ospf neighbor';
-      } else if (lowerCmd.includes('standby') || lowerCmd.includes('hsrp')) {
-        matchedKey = 'show standby brief';
-      } else if (lowerCmd.includes('bgp')) {
-        matchedKey = 'show ip bgp summary';
-      } else if (lowerCmd.includes('etherchannel') || lowerCmd.includes('lacp')) {
-        matchedKey = 'show etherchannel summary';
-      } else if (lowerCmd.includes('docker')) {
-        matchedKey = 'docker network inspect app_net';
-      } else if (lowerCmd.includes('nginx')) {
-        matchedKey = 'nginx -t';
-      } else if (lowerCmd.includes('route')) {
-        matchedKey = 'show ip route ospf';
-      }
-    }
-
-    if (matchedKey && SIMULATOR_COMMANDS[matchedKey]) {
-      printToSandbox(cmd, SIMULATOR_COMMANDS[matchedKey]);
     } else {
-      printToSandbox(
-        cmd,
-        `% Command unrecognized: "${cmd}".\nType 'help' to view all supported Cisco IOS, MikroTik, Linux, and VLSM commands.`,
-        true
-      );
+      const isErr = res.startsWith('% Invalid') || res.startsWith('bash:') || res.startsWith('bad command');
+      appendMasterSandbox(trimmed, res, isErr);
     }
   }
 
@@ -299,25 +503,35 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 9/12/17 ms (Recursiv
       if (e.key === 'Enter') {
         const val = sandboxInput.value;
         sandboxInput.value = '';
-        executeSandboxCommand(val);
+        runMasterCommand(val);
       } else if (e.key === 'ArrowUp') {
-        if (historyIndex > 0) {
-          historyIndex--;
-          sandboxInput.value = commandHistory[historyIndex] || '';
+        if (masterHistoryIdx > 0) {
+          masterHistoryIdx--;
+          sandboxInput.value = masterHistory[masterHistoryIdx] || '';
         }
       } else if (e.key === 'ArrowDown') {
-        if (historyIndex < commandHistory.length - 1) {
-          historyIndex++;
-          sandboxInput.value = commandHistory[historyIndex] || '';
+        if (masterHistoryIdx < masterHistory.length - 1) {
+          masterHistoryIdx++;
+          sandboxInput.value = masterHistory[masterHistoryIdx] || '';
         } else {
-          historyIndex = commandHistory.length;
+          masterHistoryIdx = masterHistory.length;
           sandboxInput.value = '';
         }
       }
     });
+
+    // Click anywhere on sandbox screen to focus input
+    const sandboxCard = document.getElementById('interactive-sandbox');
+    if (sandboxCard) {
+      sandboxCard.addEventListener('click', (e) => {
+        if (!e.target.closest('.sandbox-chips')) {
+          sandboxInput.focus();
+        }
+      });
+    }
   }
 
-  // Quick Chips in Sandbox
+  // Quick Chips in Master Sandbox
   sandboxChips.forEach(chip => {
     chip.addEventListener('click', () => {
       const cmd = chip.getAttribute('data-cmd') || chip.textContent.trim();
@@ -325,15 +539,22 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 9/12/17 ms (Recursiv
         sandboxInput.value = cmd;
         sandboxInput.focus();
       }
-      executeSandboxCommand(cmd);
+      runMasterCommand(cmd);
     });
   });
 
-  // 2. Per-Lab Card Simulation Runners
+  // 2. Initialize Per-Lab Interactive Typing Terminals
   const labArticles = document.querySelectorAll('article[id^="lab-"]');
 
   labArticles.forEach(article => {
     const labId = article.id;
+    const cfg = LAB_CONFIGS[labId] || {
+      prompt: 'Device#',
+      device: 'Network Device',
+      defaultCmd: 'show ip route',
+      helpCmds: ['help', 'clear']
+    };
+
     const terminalCard = article.querySelector('.terminal-card');
     if (!terminalCard) return;
 
@@ -341,83 +562,171 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 9/12/17 ms (Recursiv
     const terminalBody = terminalCard.querySelector('.terminal-body');
     if (!terminalHeader || !terminalBody) return;
 
-    // Check if toolbar already injected
-    if (terminalHeader.querySelector('.terminal-actions')) return;
+    // A. Add Quick-Actions to Terminal Header
+    if (!terminalHeader.querySelector('.terminal-actions')) {
+      const actionsGroup = document.createElement('div');
+      actionsGroup.className = 'terminal-actions';
 
-    // Create action buttons in header
-    const actionsGroup = document.createElement('div');
-    actionsGroup.className = 'terminal-actions';
+      const runBtn = document.createElement('button');
+      runBtn.type = 'button';
+      runBtn.className = 'terminal-btn btn-run';
+      runBtn.innerHTML = `<span>▶ Run Live Test</span>`;
+      runBtn.title = `Simulate live verification on ${cfg.device}`;
 
-    const runBtn = document.createElement('button');
-    runBtn.type = 'button';
-    runBtn.className = 'terminal-btn btn-run';
-    runBtn.innerHTML = `<span>▶ Run Live Test</span>`;
-    runBtn.title = 'Simulate and verify configuration output';
+      const copyBtn = document.createElement('button');
+      copyBtn.type = 'button';
+      copyBtn.className = 'terminal-btn';
+      copyBtn.innerHTML = `<span>📋 Copy</span>`;
+      copyBtn.title = 'Copy configuration';
 
-    const copyBtn = document.createElement('button');
-    copyBtn.type = 'button';
-    copyBtn.className = 'terminal-btn';
-    copyBtn.innerHTML = `<span>📋 Copy</span>`;
-    copyBtn.title = 'Copy configuration';
+      actionsGroup.appendChild(runBtn);
+      actionsGroup.appendChild(copyBtn);
+      terminalHeader.appendChild(actionsGroup);
 
-    actionsGroup.appendChild(runBtn);
-    actionsGroup.appendChild(copyBtn);
-    terminalHeader.appendChild(actionsGroup);
+      // Copy listener
+      copyBtn.addEventListener('click', () => {
+        const codeText = terminalBody.innerText;
+        if (window.AppData && typeof window.AppData.copyToClipboard === 'function') {
+          window.AppData.copyToClipboard(codeText, copyBtn);
+        } else if (navigator.clipboard) {
+          navigator.clipboard.writeText(codeText).then(() => {
+            const orig = copyBtn.innerHTML;
+            copyBtn.innerHTML = `<span>✓ Copied!</span>`;
+            setTimeout(() => { copyBtn.innerHTML = orig; }, 2000);
+          });
+        }
+      });
+    }
 
-    // Create output container
-    const outputContainer = document.createElement('div');
-    outputContainer.className = 'terminal-output-view';
-    outputContainer.innerHTML = `
-      <div class="terminal-live-badge">
-        <span class="status-dot" style="background: #10b981;"></span> VERIFICATION PASS // SIMULATION RESULT
-      </div>
-      <pre style="margin: 0; color: #a5f3fc; font-family: inherit; font-size: inherit;"></pre>
-    `;
-    terminalCard.appendChild(outputContainer);
+    // B. Create Interactive Session Output Log Window
+    let sessionLog = terminalCard.querySelector('.terminal-session-log');
+    if (!sessionLog) {
+      sessionLog = document.createElement('div');
+      sessionLog.className = 'terminal-session-log';
+      sessionLog.setAttribute('role', 'region');
+      sessionLog.setAttribute('aria-label', `Interactive terminal output for ${cfg.device}`);
+      terminalCard.appendChild(sessionLog);
+    }
 
-    // Copy event
-    copyBtn.addEventListener('click', () => {
-      const codeText = terminalBody.innerText;
-      if (window.AppData && typeof window.AppData.copyToClipboard === 'function') {
-        window.AppData.copyToClipboard(codeText, copyBtn);
-      } else if (navigator.clipboard) {
-        navigator.clipboard.writeText(codeText).then(() => {
-          const original = copyBtn.innerHTML;
-          copyBtn.innerHTML = `<span>✓ Copied!</span>`;
-          setTimeout(() => { copyBtn.innerHTML = original; }, 2000);
-        });
+    // C. Create Interactive Command Prompt Input Bar
+    let interactiveBar = terminalCard.querySelector('.terminal-interactive-bar');
+    if (!interactiveBar) {
+      interactiveBar = document.createElement('div');
+      interactiveBar.className = 'terminal-interactive-bar';
+      interactiveBar.innerHTML = `
+        <span class="terminal-interactive-prompt">${escapeHtml(cfg.prompt)}</span>
+        <input 
+          type="text" 
+          class="terminal-interactive-input" 
+          placeholder="Type command here (e.g. ${escapeHtml(cfg.defaultCmd)}, help)..." 
+          autocomplete="off" 
+          spellcheck="false"
+          aria-label="Execute command on ${escapeHtml(cfg.device)}"
+        >
+        <button type="button" class="terminal-interactive-btn">Enter ↵</button>
+      `;
+      terminalCard.appendChild(interactiveBar);
+    }
+
+    const cardInput = interactiveBar.querySelector('.terminal-interactive-input');
+    const cardSubmit = interactiveBar.querySelector('.terminal-interactive-btn');
+    const cardRunHeaderBtn = terminalHeader.querySelector('.btn-run');
+
+    const cardHistory = [];
+    let cardHistoryIdx = -1;
+
+    function executeCardCommand(commandText) {
+      const trimmed = commandText.trim();
+      if (!trimmed) return;
+
+      cardHistory.push(trimmed);
+      cardHistoryIdx = cardHistory.length;
+
+      const res = resolveCommandOutput(trimmed, labId);
+
+      if (res === '__CLEAR__') {
+        sessionLog.innerHTML = '';
+        sessionLog.classList.remove('has-entries');
+        return;
       }
-    });
 
-    // Run / Toggle event
-    runBtn.addEventListener('click', () => {
-      const isShowingOutput = outputContainer.classList.contains('is-visible');
+      sessionLog.classList.add('has-entries');
 
-      if (isShowingOutput) {
-        // Toggle back to config view
-        outputContainer.classList.remove('is-visible');
-        terminalBody.style.display = 'block';
-        runBtn.innerHTML = `<span>▶ Run Live Test</span>`;
-        runBtn.classList.remove('btn-reset');
-        runBtn.classList.add('btn-run');
-      } else {
-        // Run live simulation
-        const testCmd = LAB_VERIFICATIONS[labId] || 'show ip route summary';
-        const simulatedOutput = SIMULATOR_COMMANDS[testCmd] || 'Verification pass: Status UP/UP';
+      const entry = document.createElement('div');
+      entry.style.marginBottom = '12px';
 
-        const pre = outputContainer.querySelector('pre');
-        pre.innerHTML = `<span style="color: var(--accent-secondary); font-weight: 700;">Device#</span> <span style="color: #f8fafc;">${escapeHtml(testCmd)}</span>\n\n${escapeHtml(simulatedOutput)}`;
+      const promptDiv = document.createElement('div');
+      promptDiv.innerHTML = `<span style="color: var(--accent-secondary); font-weight: 700;">${escapeHtml(cfg.prompt)}</span> <span style="color: #f8fafc;">${escapeHtml(trimmed)}</span>`;
+      entry.appendChild(promptDiv);
 
-        terminalBody.style.display = 'none';
-        outputContainer.classList.add('is-visible');
-        runBtn.innerHTML = `<span>◀ Show Config</span>`;
-        runBtn.classList.remove('btn-run');
-        runBtn.classList.add('btn-reset');
-      }
+      const outPre = document.createElement('pre');
+      const isErr = res.startsWith('% Invalid') || res.startsWith('bash:') || res.startsWith('bad command');
+      outPre.style.color = isErr ? '#ef4444' : '#a5f3fc';
+      outPre.style.margin = '4px 0 0 0';
+      outPre.style.whiteSpace = 'pre-wrap';
+      outPre.style.wordBreak = 'break-word';
+      outPre.textContent = res;
+      entry.appendChild(outPre);
+
+      sessionLog.appendChild(entry);
+      sessionLog.scrollTop = sessionLog.scrollHeight;
+    }
+
+    // Input keydown listener
+    if (cardInput) {
+      cardInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const val = cardInput.value;
+          cardInput.value = '';
+          executeCardCommand(val);
+        } else if (e.key === 'ArrowUp') {
+          if (cardHistoryIdx > 0) {
+            cardHistoryIdx--;
+            cardInput.value = cardHistory[cardHistoryIdx] || '';
+          }
+        } else if (e.key === 'ArrowDown') {
+          if (cardHistoryIdx < cardHistory.length - 1) {
+            cardHistoryIdx++;
+            cardInput.value = cardHistory[cardHistoryIdx] || '';
+          } else {
+            cardHistoryIdx = cardHistory.length;
+            cardInput.value = '';
+          }
+        }
+      });
+    }
+
+    // Button submit listener
+    if (cardSubmit) {
+      cardSubmit.addEventListener('click', () => {
+        if (cardInput) {
+          const val = cardInput.value;
+          cardInput.value = '';
+          executeCardCommand(val);
+          cardInput.focus();
+        }
+      });
+    }
+
+    // Header "Run Live Test" button types in default command and executes
+    if (cardRunHeaderBtn) {
+      cardRunHeaderBtn.addEventListener('click', () => {
+        if (cardInput) {
+          cardInput.value = cfg.defaultCmd;
+          executeCardCommand(cfg.defaultCmd);
+          cardInput.focus();
+        }
+      });
+    }
+
+    // Clicking anywhere on the session log focuses the input
+    sessionLog.addEventListener('click', () => {
+      if (cardInput) cardInput.focus();
     });
   });
 
   function escapeHtml(str) {
+    if (!str) return '';
     return str
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
