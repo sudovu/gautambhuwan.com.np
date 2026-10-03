@@ -290,6 +290,203 @@ ip addr show dev br-$(docker network inspect app_net -f '{{.Id}}' | cut -c1-12)<
         </div>
       </article>
 
+      <!-- LAB // 004 -->
+      <article id="lab-004" class="card reveal" style="margin-bottom: 48px; border-left: 4px solid var(--accent-secondary);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+          <div>
+            <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.85rem;">LAB // 004</span>
+            <h2 style="font-size: 1.6rem; margin-top: 4px;">Enterprise Campus LAN: HSRP Gateway Redundancy &amp; LACP EtherChannel</h2>
+          </div>
+          <span class="status-pill"><span class="status-dot"></span> VERIFIED LAB</span>
+        </div>
+
+        <p class="body-sm" style="margin-bottom: 20px;">
+          <strong>Objective:</strong> Deploy a high-availability dual-core campus network with Distribution Switch 1 &amp; 2 (DSW1 &amp; DSW2). Configure Hot Standby Router Protocol (HSRPv2) with interface tracking for seamless gateway failover, bundle multi-link trunks with LACP (802.3ad) EtherChannel, and align Rapid-PVST+ root bridge priority with HSRP active states.
+        </p>
+
+        <div class="terminal-card" style="margin-bottom: 20px;">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="terminal-dot dot-red"></span>
+              <span class="terminal-dot dot-yellow"></span>
+              <span class="terminal-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">cisco-ios // dsw1-core-redundancy.ios</span>
+          </div>
+          <pre class="terminal-body"><code>! 1. Configure LACP EtherChannel Trunk between Distribution Switches
+DSW1(config)# interface range GigabitEthernet0/1 - 2
+DSW1(config-if-range)# channel-group 1 mode active
+DSW1(config-if-range)# exit
+DSW1(config)# interface Port-channel 1
+DSW1(config-if)# switchport trunk encapsulation dot1q
+DSW1(config-if)# switchport mode trunk
+DSW1(config-if)# switchport trunk allowed vlan 10,20,99
+
+! 2. Configure HSRPv2 with Priority, Preemption &amp; Uplink Tracking
+DSW1(config)# interface Vlan10
+DSW1(config-if)# ip address 192.168.10.2 255.255.255.0
+DSW1(config-if)# standby version 2
+DSW1(config-if)# standby 10 ip 192.168.10.1
+DSW1(config-if)# standby 10 priority 110
+DSW1(config-if)# standby 10 preempt
+DSW1(config-if)# standby 10 track GigabitEthernet0/0 20
+DSW1(config-if)# exit
+
+! 3. Align Spanning Tree Root with HSRP Active Node
+DSW1(config)# spanning-tree mode rapid-pvst
+DSW1(config)# spanning-tree vlan 10 root primary
+DSW1(config)# spanning-tree portfast default
+DSW1(config)# spanning-tree portfast bpduguard default
+DSW1# show standby brief
+DSW1# show etherchannel summary</code></pre>
+        </div>
+
+        <div class="grid-2" style="background: var(--surface-elevated); padding: 20px; border-radius: var(--radius-sm); font-size: 0.9rem;">
+          <div>
+            <strong>Problem Diagnosed:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Uplink loss on primary DSW1 resulted in blackholed traffic because downstream access switches continued forwarding packets to DSW1 due to static default gateway pointers.</p>
+          </div>
+          <div>
+            <strong>Resolution &amp; Takeaway:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Configuring HSRP interface tracking (<code>standby 10 track Gi0/0 20</code>) with preemption immediately reduced DSW1's priority from 110 to 90, triggering seamless sub-second failover to standby DSW2.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- LAB // 005 -->
+      <article id="lab-005" class="card reveal" style="margin-bottom: 48px; border-left: 4px solid var(--accent-primary);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+          <div>
+            <span class="mono-label" style="color: var(--accent-primary); font-size: 0.85rem;">LAB // 005</span>
+            <h2 style="font-size: 1.6rem; margin-top: 4px;">Route-Based Site-to-Site IPsec VTI VPN with Dynamic BGP</h2>
+          </div>
+          <span class="status-pill"><span class="status-dot"></span> OPERATIONAL</span>
+        </div>
+
+        <p class="body-sm" style="margin-bottom: 20px;">
+          <strong>Objective:</strong> Establish an encrypted route-based IPsec Virtual Tunnel Interface (VTI) between Corporate HQ (AS 65001) and Remote Branch (AS 65002) over an untrusted WAN. Configure hardened IKEv2 cryptographic suites, enable Dead Peer Detection (DPD), and establish dynamic eBGP routing for zero-touch subnet convergence.
+        </p>
+
+        <div class="terminal-card" style="margin-bottom: 20px;">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="terminal-dot dot-red"></span>
+              <span class="terminal-dot dot-yellow"></span>
+              <span class="terminal-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">cisco-ios // hq-vpn-vti-bgp.ios</span>
+          </div>
+          <pre class="terminal-body"><code>! 1. Hardened IKEv2 Proposal &amp; Keyring
+crypto ikev2 proposal IKEV2-SEC-PROP
+ encryption aes-gcm-256
+ prf sha256
+ group 19
+crypto ikev2 policy IKEV2-POLICY
+ proposal IKEV2-SEC-PROP
+crypto ikev2 keyring BRANCH-KEYRING
+ peer BRANCH-ROUTER
+  address 203.0.113.2
+  pre-shared-key SuperSecretVpnKey2026
+
+! 2. IPsec Profile &amp; Virtual Tunnel Interface (VTI)
+crypto ipsec transform-set TS-GCM esp-gcm 256
+ mode transport
+crypto ipsec profile IPSEC-VTI-PROF
+ set transform-set TS-GCM
+ set ikev2-profile IKEV2-PROFILE
+
+interface Tunnel0
+ ip address 10.255.255.1 255.255.255.252
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source GigabitEthernet0/0
+ tunnel destination 203.0.113.2
+ tunnel mode ipsec ipv4
+ tunnel protection ipsec profile IPSEC-VTI-PROF
+
+! 3. Dynamic eBGP Peering across Encrypted Tunnel
+router bgp 65001
+ neighbor 10.255.255.2 remote-as 65002
+ neighbor 10.255.255.2 timers 5 15
+ address-family ipv4 unicast
+  network 192.168.10.0 mask 255.255.255.0
+  neighbor 10.255.255.2 activate
+HQ-RTR# show crypto session detail
+HQ-RTR# show ip bgp summary</code></pre>
+        </div>
+
+        <div class="grid-2" style="background: var(--surface-elevated); padding: 20px; border-radius: var(--radius-sm); font-size: 0.9rem;">
+          <div>
+            <strong>Problem Diagnosed:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Legacy policy-based IPsec crypto maps required continuous manual ACL edits on both ends whenever new subnets were provisioned, and 1500-byte packets caused silent fragmentation packet drops.</p>
+          </div>
+          <div>
+            <strong>Resolution &amp; Takeaway:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Route-based VTI provides a clean virtual interface supporting multicast and dynamic BGP routing, while <code>ip tcp adjust-mss 1360</code> completely resolved TCP window fragmentation drops.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- LAB // 006 -->
+      <article id="lab-006" class="card reveal" style="margin-bottom: 48px; border-left: 4px solid var(--accent-tertiary);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+          <div>
+            <span class="mono-label" style="color: var(--accent-tertiary); font-size: 0.85rem;">LAB // 006</span>
+            <h2 style="font-size: 1.6rem; margin-top: 4px;">MikroTik Dual-WAN PCC Balancing with Recursive Failover &amp; PCQ QoS</h2>
+          </div>
+          <span class="status-pill"><span class="status-dot"></span> PRODUCTION CONFIG</span>
+        </div>
+
+        <p class="body-sm" style="margin-bottom: 20px;">
+          <strong>Objective:</strong> Architect a redundant multi-homed edge gateway on MikroTik RouterOS. Implement Per-Connection Classifier (PCC) dual-WAN load balancing, target-scope recursive routing checks to detect upstream ISP backhaul blackouts, and Per-Connection Queue (PCQ) dynamic bandwidth shaping to eliminate bufferbloat.
+        </p>
+
+        <div class="terminal-card" style="margin-bottom: 20px;">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="terminal-dot dot-red"></span>
+              <span class="terminal-dot dot-yellow"></span>
+              <span class="terminal-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">routeros // edge-gateway-pcc-qos.rsc</span>
+          </div>
+          <pre class="terminal-body"><code># 1. Multi-Hop Recursive Route Failover via Public DNS
+/ip route
+add dst-address=1.1.1.1/32 gateway=192.168.1.1 scope=10 comment="Host-Route-ISP1"
+add dst-address=8.8.8.8/32 gateway=192.168.2.1 scope=10 comment="Host-Route-ISP2"
+add distance=1 gateway=1.1.1.1 check-gateway=ping target-scope=11 comment="Default-ISP1-Recursive"
+add distance=2 gateway=8.8.8.8 check-gateway=ping target-scope=11 comment="Default-ISP2-Recursive"
+
+# 2. Firewall Mangle Rules for PCC Load Balancing
+/ip firewall mangle
+add chain=prerouting dst-address-type=!local in-interface=bridge-lan \
+    per-connection-classifier=both-addresses:2/0 action=mark-connection new-connection-mark=ISP1_conn passthrough=yes
+add chain=prerouting dst-address-type=!local in-interface=bridge-lan \
+    per-connection-classifier=both-addresses:2/1 action=mark-connection new-connection-mark=ISP2_conn passthrough=yes
+add chain=prerouting in-interface=bridge-lan connection-mark=ISP1_conn action=mark-routing new-routing-mark=to_ISP1
+add chain=prerouting in-interface=bridge-lan connection-mark=ISP2_conn action=mark-routing new-routing-mark=to_ISP2
+
+# 3. Dynamic Bandwidth Fairness via PCQ (Per-Connection Queue)
+/queue type
+add name=pcq-download kind=pcq pcq-classifier=dst-address pcq-rate=30M
+add name=pcq-upload kind=pcq pcq-classifier=src-address pcq-rate=15M
+/queue tree
+add name=Total-Download parent=bridge-lan queue=pcq-download priority=1
+add name=Total-Upload parent=ether1-wan1 queue=pcq-upload priority=1</code></pre>
+        </div>
+
+        <div class="grid-2" style="background: var(--surface-elevated); padding: 20px; border-radius: var(--radius-sm); font-size: 0.9rem;">
+          <div>
+            <strong>Problem Diagnosed:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Local ISP gateways remained link-UP during optical upstream fibre breaks, rendering standard default route metric failover useless. Heavy single-user downloads also choked real-time VoIP packets.</p>
+          </div>
+          <div>
+            <strong>Resolution &amp; Takeaway:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Recursive routing with <code>target-scope=11</code> pings public Anycast DNS through respective gateways, triggering automated reroutes on genuine WAN loss, while PCQ queues dynamically enforce per-host bandwidth limits.</p>
+          </div>
+        </div>
+      </article>
+
     </div>
   </section>
 

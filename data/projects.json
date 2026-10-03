@@ -71,7 +71,7 @@
     "description": "Implemented automated probe mechanisms and bash alerting scripts to audit domain records, name server latency, and HTTP endpoint availability in real-time.",
     "technologies": ["Bash", "ClouDNS API", "cURL", "Cron", "Linux"],
     "github": "https://github.com/sudovu",
-    "demo": "labs.html#lab-004"
+    "demo": "https://github.com/sudovu"
   },
   {
     "id": "proj-05",
@@ -95,6 +95,42 @@
     "description": "Formulated a structured IPv4/IPv6 address allocation framework for scalable branch networks, minimizing broadcast domains and maximizing routing table efficiency.",
     "technologies": ["IPv4", "IPv6", "VLSM", "IPAM", "CIDR"],
     "github": "https://github.com/sudovu",
+    "demo": "https://github.com/sudovu"
+  },
+  {
+    "id": "proj-07",
+    "title": "Enterprise Campus LAN: HSRP Gateway Redundancy & LACP EtherChannel",
+    "category": "networking",
+    "categoryLabel": "Networking",
+    "year": "2026",
+    "status": "Verified Lab",
+    "description": "Engineered a dual-core enterprise campus topology featuring First Hop Redundancy Protocol (HSRPv2) with interface tracking, multi-chassis LACP (802.3ad) link bundling, Rapid-PVST+ root priority tuning, and Layer 3 SVI routing with ACL segment isolation.",
+    "technologies": ["Cisco IOS", "HSRPv2", "LACP (802.3ad)", "Rapid-PVST+", "Inter-VLAN SVI", "PortFast / BPDU Guard"],
+    "github": "https://github.com/sudovu",
+    "demo": "labs.html#lab-004"
+  },
+  {
+    "id": "proj-08",
+    "title": "Route-Based Site-to-Site IPsec VTI VPN with Dynamic BGP Peering",
+    "category": "networking",
+    "categoryLabel": "Networking",
+    "year": "2026",
+    "status": "Operational Lab",
+    "description": "Constructed a route-based IPsec Virtual Tunnel Interface (VTI) between HQ and Branch gateways. Configured IKEv2 proposal suites (AES-256-GCM / SHA-256 / DH Group 19), dynamic eBGP peering for instantaneous route redistribution, and Dead Peer Detection (DPD).",
+    "technologies": ["Cisco IOS", "IPsec VTI", "IKEv2", "eBGP Peering", "Crypto Policies", "Dead Peer Detection"],
+    "github": "https://github.com/sudovu",
     "demo": "labs.html#lab-005"
+  },
+  {
+    "id": "proj-09",
+    "title": "MikroTik Dual-WAN Load Balancing (PCC) & PCQ Dynamic Bandwidth QoS",
+    "category": "networking",
+    "categoryLabel": "Networking",
+    "year": "2026",
+    "status": "Production Config",
+    "description": "Architected an edge gateway running MikroTik RouterOS with 2x ISP uplinks. Configured Per-Connection Classifier (PCC) load balancing, multi-hop recursive routing checks to public DNS to detect silent ISP blackouts, Mangle QoS packet tagging, and Per-Connection Queue (PCQ) to prevent bufferbloat.",
+    "technologies": ["MikroTik RouterOS", "Dual-WAN PCC", "Recursive Failover", "PCQ Queue Trees", "Mangle QoS", "Winbox CLI"],
+    "github": "https://github.com/sudovu",
+    "demo": "labs.html#lab-006"
   }
 ]
