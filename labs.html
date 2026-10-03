@@ -141,6 +141,46 @@
         </p>
       </div>
 
+      <!-- Interactive Topology Command Line Simulator -->
+      <div class="sandbox-card reveal" id="interactive-sandbox">
+        <div class="terminal-header" style="background: #090e18;">
+          <div class="terminal-dots">
+            <span class="terminal-dot dot-red"></span>
+            <span class="terminal-dot dot-yellow"></span>
+            <span class="terminal-dot dot-green"></span>
+          </div>
+          <span class="terminal-title">LIVE CLI SIMULATOR // VM-NETOS-v2.6 // MULTI-VENDOR SHELL</span>
+          <span class="status-pill" style="font-size: 0.7rem; padding: 2px 8px; border-color: rgba(16, 185, 129, 0.4);"><span class="status-dot" style="background: #10b981;"></span> INTERACTIVE TERMINAL</span>
+        </div>
+
+        <div class="sandbox-screen" id="sandbox-screen" role="region" aria-label="Interactive Terminal Output">
+          <div style="color: var(--text-dim); margin-bottom: 12px; font-size: 0.78rem;">
+            [VM-NETOS v2.6.4 // MULTI-VENDOR LAB EMULATOR ONLINE]<br>
+            Connected to virtual enterprise gateway. Test and execute live network commands directly below.<br>
+            Type <strong style="color: var(--accent-secondary);">'help'</strong> to inspect all commands, or click any quick-run chip.
+          </div>
+        </div>
+
+        <div class="sandbox-chips">
+          <span class="sandbox-chip-label">Quick Commands:</span>
+          <button type="button" class="sandbox-chip" data-cmd="show standby brief">show standby brief</button>
+          <button type="button" class="sandbox-chip" data-cmd="show ip bgp summary">show ip bgp summary</button>
+          <button type="button" class="sandbox-chip" data-cmd="show ip ospf neighbor">show ip ospf neighbor</button>
+          <button type="button" class="sandbox-chip" data-cmd="/ip route print">/ip route print</button>
+          <button type="button" class="sandbox-chip" data-cmd="subnet 172.16.0.0/23">subnet 172.16.0.0/23</button>
+          <button type="button" class="sandbox-chip" data-cmd="ping 10.255.255.2">ping 10.255.255.2</button>
+          <button type="button" class="sandbox-chip" data-cmd="docker network inspect app_net">docker network</button>
+          <button type="button" class="sandbox-chip" data-cmd="curl -I https://gautambhuwan.com.np">curl HTTP/2</button>
+          <button type="button" class="sandbox-chip" data-cmd="help">help</button>
+          <button type="button" class="sandbox-chip" data-cmd="clear" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">clear</button>
+        </div>
+
+        <div class="sandbox-input-row">
+          <span class="sandbox-prompt">VM-Gateway#</span>
+          <input type="text" id="sandbox-input" class="sandbox-input" placeholder="Type a command (e.g., show standby brief, /ip route print, ping 10.255.255.2)..." autocomplete="off" spellcheck="false" aria-label="Terminal command input">
+        </div>
+      </div>
+
       <!-- LAB // 001 -->
       <article id="lab-001" class="card reveal" style="margin-bottom: 48px; border-left: 4px solid var(--accent-secondary);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
@@ -719,6 +759,6 @@ Core-RTR# show ip route summary</code></pre>
   <script src="js/navigation.js"></script>
   <script src="js/animations.js"></script>
   <script src="js/main.js"></script>
-  
+  <script src="js/labs.js"></script>
 </body>
 </html>
