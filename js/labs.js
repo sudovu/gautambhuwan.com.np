@@ -1,10 +1,238 @@
 /**
  * VHUWON MATHERS — Interactive Labs Command Line Simulator
  * Domain: gautambhuwan.com.np
- * Provides a client-side network CLI emulator and interactive type-in terminals for all labs
+ * Provides a client-side network CLI emulator with Tab autocomplete and Cisco-style '?' context help
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Comprehensive Hierarchical Command & Help Tree
+  const CLI_HELP_CATALOG = {
+    'show': {
+      desc: 'Show running system information',
+      sub: {
+        'ip': {
+          desc: 'IP information',
+          sub: {
+            'ospf': {
+              desc: 'Open Shortest Path First (OSPF)',
+              sub: {
+                'neighbor': { desc: 'Neighbor list, states and dead timers' },
+                'database': { desc: 'Link-State Database (LSDB) summary' }
+              }
+            },
+            'route': {
+              desc: 'IP routing table',
+              sub: {
+                'ospf': { desc: 'OSPF learned routes and cost metrics' },
+                'summary': { desc: 'Contiguous route summarization boundaries' }
+              }
+            },
+            'bgp': {
+              desc: 'Border Gateway Protocol (BGP)',
+              sub: {
+                'summary': { desc: 'BGP neighbor status and prefix counts' }
+              }
+            },
+            'interface': {
+              desc: 'IP interface status and configuration',
+              sub: {
+                'brief': { desc: 'Brief summary of IP status and configuration' }
+              }
+            }
+          }
+        },
+        'standby': {
+          desc: 'Hot Standby Router Protocol (HSRP)',
+          sub: {
+            'brief': { desc: 'HSRP group state, priority, and active/standby router' }
+          }
+        },
+        'etherchannel': {
+          desc: 'EtherChannel information',
+          sub: {
+            'summary': { desc: 'Port-channel status, protocol, and bundled ports' }
+          }
+        },
+        'spanning-tree': {
+          desc: 'Spanning Tree Protocol (STP)',
+          sub: {
+            'vlan': {
+              desc: 'Spanning tree details for specific VLAN',
+              sub: {
+                '10': { desc: 'VLAN 10 Rapid-PVST+ root and port states' }
+              }
+            }
+          }
+        },
+        'crypto': {
+          desc: 'Cryptographic subsystems',
+          sub: {
+            'session': {
+              desc: 'Crypto session status',
+              sub: {
+                'detail': { desc: 'Detailed IPsec VTI and IKEv2 session parameters' }
+              }
+            },
+            'ikev2': {
+              desc: 'IKEv2 parameters',
+              sub: {
+                'sa': { desc: 'IKEv2 Security Associations' }
+              }
+            },
+            'ipsec': {
+              desc: 'IPsec parameters',
+              sub: {
+                'sa': { desc: 'IPsec Security Associations' }
+              }
+            }
+          }
+        },
+        'running-config': { desc: 'Current active operating configuration' },
+        'version': { desc: 'System hardware and software version' }
+      }
+    },
+    'ping': {
+      desc: 'Send ICMP echo messages',
+      sub: {
+        '10.0.0.2': { desc: 'Ping OSPF neighbor router' },
+        '10.255.255.2': { desc: 'Ping remote IPsec VTI endpoint' },
+        '8.8.8.8': { desc: 'Ping recursive gateway via ISP1' }
+      }
+    },
+    'subnet': {
+      desc: 'VLSM hierarchical calculation engine',
+      sub: {
+        '172.16.0.0/23': { desc: 'Calculate 172.16.0.0/23 VLSM allocation matrix' }
+      }
+    },
+    'clear': { desc: 'Reset and clear the console session' },
+    'help': { desc: 'Description of the interactive help system' },
+
+    // Linux Commands
+    'nginx': {
+      desc: 'Nginx reverse proxy control',
+      sub: {
+        '-t': { desc: 'Test Nginx configuration syntax and exit' }
+      }
+    },
+    'curl': {
+      desc: 'Transfer data from or to a server',
+      sub: {
+        '-I': {
+          desc: 'Fetch HTTP response headers only',
+          sub: {
+            'https://gautambhuwan.com.np': { desc: 'Inspect production site HTTP/2 response headers' }
+          }
+        }
+      }
+    },
+    'systemctl': {
+      desc: 'Control systemd system and service manager',
+      sub: {
+        'status': {
+          desc: 'Show runtime status information about units',
+          sub: {
+            'nginx': { desc: 'Show status of Nginx web service' }
+          }
+        }
+      }
+    },
+    'cat': {
+      desc: 'Concatenate files and print on the standard output',
+      sub: {
+        '/etc/nginx/sites-available/production.conf': { desc: 'Display Nginx virtual host configuration' }
+      }
+    },
+    'docker': {
+      desc: 'Docker container management tool',
+      sub: {
+        'network': {
+          desc: 'Manage Docker networks',
+          sub: {
+            'inspect': {
+              desc: 'Display detailed network information',
+              sub: {
+                'app_net': { desc: 'Inspect isolated bridge network app_net' }
+              }
+            }
+          }
+        },
+        'ps': { desc: 'List running containers' },
+        'logs': {
+          desc: 'Fetch the logs of a container',
+          sub: {
+            'secure_gateway': { desc: 'View logs for container secure_gateway' }
+          }
+        }
+      }
+    },
+    'uname': {
+      desc: 'Print system information',
+      sub: {
+        '-a': { desc: 'Print all operating system and architecture information' }
+      }
+    },
+    'whoami': { desc: 'Print effective user name' },
+
+    // MikroTik RouterOS Commands
+    '/ip': {
+      desc: 'IP configuration menu',
+      sub: {
+        'route': {
+          desc: 'Routing table management',
+          sub: {
+            'print': { desc: 'Print IP routing table with recursive gateways' }
+          }
+        },
+        'firewall': {
+          desc: 'Firewall rules and filters',
+          sub: {
+            'mangle': {
+              desc: 'Packet marking and PCC load balancing',
+              sub: {
+                'print': { desc: 'Print PCC mangle rules' }
+              }
+            }
+          }
+        }
+      }
+    },
+    '/queue': {
+      desc: 'Bandwidth queue and QoS management',
+      sub: {
+        'tree': {
+          desc: 'Hierarchical queue tree',
+          sub: {
+            'print': { desc: 'Print PCQ queue bandwidth shaping rules' }
+          }
+        }
+      }
+    },
+    '/ping': {
+      desc: 'Send ICMP echo packets',
+      sub: {
+        '1.1.1.1': { desc: 'Ping primary ISP DNS target' }
+      }
+    }
+  };
+
+  // Flattened List of Full Commands for Autocomplete
+  function getAllCommands(node = CLI_HELP_CATALOG, prefix = '') {
+    let list = [];
+    for (const [key, val] of Object.entries(node)) {
+      const full = prefix ? `${prefix} ${key}` : key;
+      if (val.sub && Object.keys(val.sub).length > 0) {
+        list.push(full);
+        list = list.concat(getAllCommands(val.sub, full));
+      } else {
+        list.push(full);
+      }
+    }
+    return list;
+  }
+
+  const ALL_FLAT_COMMANDS = getAllCommands();
+
   // Command Output Database
   const SIMULATOR_COMMANDS = {
     'help': `Available Simulation Commands:
@@ -43,7 +271,9 @@ document.addEventListener('DOMContentLoaded', () => {
     ping 8.8.8.8                 - Probe recursive failover public DNS gateway
     uname -a                     - Inspect host kernel & architecture
     whoami                       - Display authenticated user identity
-    clear                        - Clear simulator screen`,
+    clear                        - Clear simulator screen
+
+Tip: Press TAB to autocomplete commands. Type '?' at any time for context-sensitive help.`,
 
     'show ip ospf neighbor': `Neighbor ID     Pri   State           Dead Time   Address         Interface
 2.2.2.2           1   FULL/BDR        00:00:34    10.0.0.2        GigabitEthernet0/0/0
@@ -343,6 +573,103 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 9/12/17 ms (Recursiv
     }
   };
 
+  // Helper: Find Longest Common Prefix of an array of strings
+  function getLongestCommonPrefix(strings) {
+    if (!strings.length) return '';
+    let prefix = strings[0];
+    for (let i = 1; i < strings.length; i++) {
+      while (!strings[i].toLowerCase().startsWith(prefix.toLowerCase())) {
+        prefix = prefix.slice(0, -1);
+        if (!prefix) return '';
+      }
+    }
+    return prefix;
+  }
+
+  // Context-Sensitive Help Generator (triggered by '?')
+  function generateContextHelp(inputVal, labId = null) {
+    const raw = inputVal.trim();
+    const endsWithSpace = inputVal.endsWith(' ');
+    const tokens = raw ? raw.split(/\s+/) : [];
+
+    let currentLevel = CLI_HELP_CATALOG;
+    let path = [];
+
+    // Traverse down catalog tree
+    for (let i = 0; i < tokens.length; i++) {
+      const token = tokens[i].toLowerCase();
+      // If we are at the last token and there's no trailing space, it's partially typed
+      if (i === tokens.length - 1 && !endsWithSpace) {
+        break;
+      }
+      if (currentLevel[token] && currentLevel[token].sub) {
+        currentLevel = currentLevel[token].sub;
+        path.push(token);
+      } else if (currentLevel[token]) {
+        return `  <cr>           Execute command`;
+      } else {
+        return `% Unrecognized command at '${token}'. Type 'help' for full catalog.`;
+      }
+    }
+
+    // Filter available options at current level
+    const lastToken = (!endsWithSpace && tokens.length > 0) ? tokens[tokens.length - 1].toLowerCase() : '';
+    const entries = Object.entries(currentLevel).filter(([key]) => {
+      return !lastToken || key.toLowerCase().startsWith(lastToken);
+    });
+
+    if (entries.length === 0) {
+      return `  <cr>           Execute command`;
+    }
+
+    // Format like authentic Cisco IOS '?' output
+    const maxLen = Math.max(...entries.map(([k]) => k.length));
+    const lines = entries.map(([key, item]) => {
+      const padding = ' '.repeat(Math.max(2, maxLen - key.length + 4));
+      return `  ${key}${padding}${item.desc || ''}`;
+    });
+
+    return lines.join('\n');
+  }
+
+  // Autocomplete Engine (triggered by 'Tab')
+  function handleTabCompletion(inputElem, labId = null, outputCallback = null) {
+    const originalVal = inputElem.value;
+    const currentVal = originalVal.trimStart();
+    if (!currentVal) {
+      // Empty input Tab: show root commands
+      if (outputCallback) {
+        outputCallback(generateContextHelp('', labId));
+      }
+      return;
+    }
+
+    // Get candidate commands
+    const matches = ALL_FLAT_COMMANDS.filter(cmd => {
+      return cmd.toLowerCase().startsWith(currentVal.toLowerCase());
+    });
+
+    if (matches.length === 0) {
+      // No matches found
+      return;
+    }
+
+    if (matches.length === 1) {
+      // Exactly one completion
+      inputElem.value = matches[0] + ' ';
+    } else {
+      // Multiple matches: find longest common prefix
+      const lcp = getLongestCommonPrefix(matches);
+      if (lcp.length > currentVal.length) {
+        inputElem.value = lcp;
+      } else if (outputCallback) {
+        // Output all candidate completions like Bash/IOS double-tab
+        const formatted = matches.slice(0, 12).map(m => `  ${m}`).join('\n');
+        outputCallback(`Possible completions:\n${formatted}`);
+      }
+    }
+  }
+
   // Helper: Match and execute command in database
   function resolveCommandOutput(cmd, labId = null) {
     const raw = cmd.trim();
@@ -356,7 +683,7 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 9/12/17 ms (Recursiv
 
     if (lower === 'help' || lower === '?') {
       if (labId && LAB_CONFIGS[labId]) {
-        return `Commands for ${LAB_CONFIGS[labId].device}:\n  ${LAB_CONFIGS[labId].helpCmds.join('\n  ')}\n\nType 'clear' to reset console.`;
+        return `Commands for ${LAB_CONFIGS[labId].device}:\n  ${LAB_CONFIGS[labId].helpCmds.join('\n  ')}\n\nTip: Press TAB to autocomplete. Type '?' after any word for contextual help.`;
       }
       return SIMULATOR_COMMANDS['help'];
     }
@@ -367,7 +694,7 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 9/12/17 ms (Recursiv
         const article = document.getElementById(labId);
         const codeElem = article ? article.querySelector('.terminal-body code') : null;
         if (codeElem) {
-          return `! Current configuration on ${LAB_CONFIGS[labId].device}:\n` + codeElem.innerText;
+          return `! Current active configuration on ${LAB_CONFIGS[labId].device}:\n` + codeElem.innerText;
         }
       }
       return '! Current active running-configuration loaded and verified.';
@@ -499,8 +826,19 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 9/12/17 ms (Recursiv
   }
 
   if (sandboxInput) {
+    sandboxInput.setAttribute('placeholder', "Type a command (Press TAB to complete, '?' for help)...");
+
     sandboxInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        handleTabCompletion(sandboxInput, null, (helpText) => {
+          appendMasterSandbox(sandboxInput.value, helpText);
+        });
+      } else if (e.key === '?') {
+        e.preventDefault();
+        const helpText = generateContextHelp(sandboxInput.value);
+        appendMasterSandbox(`${sandboxInput.value}?`, helpText);
+      } else if (e.key === 'Enter') {
         const val = sandboxInput.value;
         sandboxInput.value = '';
         runMasterCommand(val);
@@ -618,7 +956,7 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 9/12/17 ms (Recursiv
         <input 
           type="text" 
           class="terminal-interactive-input" 
-          placeholder="Type command here (e.g. ${escapeHtml(cfg.defaultCmd)}, help)..." 
+          placeholder="Type command (Tab to autocomplete, '?' for help)..." 
           autocomplete="off" 
           spellcheck="false"
           aria-label="Execute command on ${escapeHtml(cfg.device)}"
@@ -635,6 +973,28 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 9/12/17 ms (Recursiv
     const cardHistory = [];
     let cardHistoryIdx = -1;
 
+    function appendCardSession(cmd, output, isError = false) {
+      sessionLog.classList.add('has-entries');
+
+      const entry = document.createElement('div');
+      entry.style.marginBottom = '12px';
+
+      const promptDiv = document.createElement('div');
+      promptDiv.innerHTML = `<span style="color: var(--accent-secondary); font-weight: 700;">${escapeHtml(cfg.prompt)}</span> <span style="color: #f8fafc;">${escapeHtml(cmd)}</span>`;
+      entry.appendChild(promptDiv);
+
+      const outPre = document.createElement('pre');
+      outPre.style.color = isError ? '#ef4444' : '#a5f3fc';
+      outPre.style.margin = '4px 0 0 0';
+      outPre.style.whiteSpace = 'pre-wrap';
+      outPre.style.wordBreak = 'break-word';
+      outPre.textContent = output;
+      entry.appendChild(outPre);
+
+      sessionLog.appendChild(entry);
+      sessionLog.scrollTop = sessionLog.scrollHeight;
+    }
+
     function executeCardCommand(commandText) {
       const trimmed = commandText.trim();
       if (!trimmed) return;
@@ -650,32 +1010,23 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 9/12/17 ms (Recursiv
         return;
       }
 
-      sessionLog.classList.add('has-entries');
-
-      const entry = document.createElement('div');
-      entry.style.marginBottom = '12px';
-
-      const promptDiv = document.createElement('div');
-      promptDiv.innerHTML = `<span style="color: var(--accent-secondary); font-weight: 700;">${escapeHtml(cfg.prompt)}</span> <span style="color: #f8fafc;">${escapeHtml(trimmed)}</span>`;
-      entry.appendChild(promptDiv);
-
-      const outPre = document.createElement('pre');
       const isErr = res.startsWith('% Invalid') || res.startsWith('bash:') || res.startsWith('bad command');
-      outPre.style.color = isErr ? '#ef4444' : '#a5f3fc';
-      outPre.style.margin = '4px 0 0 0';
-      outPre.style.whiteSpace = 'pre-wrap';
-      outPre.style.wordBreak = 'break-word';
-      outPre.textContent = res;
-      entry.appendChild(outPre);
-
-      sessionLog.appendChild(entry);
-      sessionLog.scrollTop = sessionLog.scrollHeight;
+      appendCardSession(trimmed, res, isErr);
     }
 
-    // Input keydown listener
+    // Input keydown listener (Enter, Tab, ?, ArrowUp, ArrowDown)
     if (cardInput) {
       cardInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Tab') {
+          e.preventDefault();
+          handleTabCompletion(cardInput, labId, (helpText) => {
+            appendCardSession(cardInput.value, helpText);
+          });
+        } else if (e.key === '?') {
+          e.preventDefault();
+          const helpText = generateContextHelp(cardInput.value, labId);
+          appendCardSession(`${cardInput.value}?`, helpText);
+        } else if (e.key === 'Enter') {
           const val = cardInput.value;
           cardInput.value = '';
           executeCardCommand(val);
