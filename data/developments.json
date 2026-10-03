@@ -1,5 +1,18 @@
 [
   {
+    "id": "dev-gam-ai",
+    "title": "GAM.AI: Edge AI & Universal Offline Intelligence Platform",
+    "category": "ai",
+    "categoryLabel": "AI & Systems",
+    "year": "2026",
+    "status": "Production Release (v1.5.1)",
+    "description": "Zero-dependency Edge AI platform and local-first universal assistant. Operates 100% air-gapped on under 120MB RAM or transitions seamlessly to Hybrid Online Intelligence with Wikipedia REST and DuckDuckGo Lite live web research without external API keys. Features 3 tailored personas (General, Student, NetEng), multi-vendor router provisioning (Cisco, Huawei, FortiGate, MikroTik, Hikvision, OLT/ONT), continuous token safety, and cross-platform native binaries for Android, Linux, Windows, and Web PWA.",
+    "technologies": ["Python", "Android WebView", "Edge AI", "SQLite", "Smart Cache", "Wikipedia REST API", "PWA"],
+    "github": "https://github.com/sudovu/GAM.AI",
+    "demo": "developments.html#gam-ai",
+    "download": "downloads/gam-ai/gam-ai-v1.5.1.apk"
+  },
+  {
     "id": "dev-gama",
     "title": "GAMA: Cybernetic Music & Frequency Audio Platform",
     "category": "mobile",
@@ -9,7 +22,20 @@
     "description": "Native Android audio streaming and frequency manipulation suite built with Jetpack Compose. Inspired by Echo-Music with Nothing OS fluid glassmorphism, real-time LrcLib time-synchronized lyrics with offline caching & micro-calibration, floating capsule mini-player island with horizontal swipe gestures, floating pill navigation dock, lifestyle mood discovery pills, 2-column quick action library grid, trending music instant shuffle, relatable playlists search, automatic Most & Least Played smart playlists, and 432Hz/528Hz biological harmonic frequency tuning.",
     "technologies": ["Kotlin", "Jetpack Compose", "LrcLib Synced Lyrics", "DSP Equalizer", "YouTube IFrame", "Material 3", "Room DB", "Android MediaSession"],
     "github": "https://github.com/sudovu/Project_gama",
-    "demo": "developments.html",
+    "demo": "developments.html#gamma",
     "download": "downloads/gamma/GAMA-v2.3.1.apk"
+  },
+  {
+    "id": "dev-ielts-by-gama",
+    "title": "IELTS by GAMA: Hybrid Online + Offline AI English & IELTS Tutor",
+    "category": "education",
+    "categoryLabel": "AI & Education",
+    "year": "2026",
+    "status": "Active Development (v1.0.0-rc1)",
+    "description": "Hybrid Online + Offline AI English learning and IELTS preparation platform. Operates 100% offline with local AI, local SQLite knowledge base, local RAG retrieval, Dr. Harrison Cambridge-certified 3-Part Speaking Examiner simulation with natural British English speech, 4-criterion Formative Writing Studio, Spaced Repetition vocabulary, and native Android APK for phones and tablets.",
+    "technologies": ["Python", "Android 11+ Native", "Edge AI", "Offline SQLite", "Local RAG", "Natural TTS Prosody", "PWA"],
+    "github": "https://github.com/sudovu/IELTS-by-GAMA",
+    "demo": "developments.html#ielts-by-gama",
+    "download": "downloads/ielts-by-gama/ielts-by-gama-release.apk"
   }
 ]
