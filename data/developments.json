@@ -5,12 +5,12 @@
     "category": "mobile",
     "categoryLabel": "Video & Multi-Platform",
     "year": "2026",
-    "status": "Production Release (v1.0.0)",
-    "description": "Standalone, lightweight, privacy-conscious video platform client engineered with Flutter & Dart. Strictly compliant with official YouTube Data API v3 endpoints and OAuth 2.0 PKCE with zero reliance on microG, ReVanced, root, or unauthorized scraping. Features thread-safe LRU caching, privacy-preserving AI video summary generation, 4 accessible themes (Dark Slate, AMOLED Pure Black, Clean Light, High Contrast), and multi-platform compilation across Android (APK & AAB), Web, and Windows desktop.",
-    "technologies": ["Flutter 3.47", "Dart 3.13", "YouTube Data API v3", "OAuth 2.0 PKCE", "Material 3", "Multi-Platform", "LRU Cache", "AI Summarizer"],
+    "status": "Production Release (v1.1.0)",
+    "description": "Standalone, lightweight, privacy-conscious video platform client engineered with Flutter & Dart. Strictly compliant with official YouTube Data API v3 endpoints and OAuth 2.0 PKCE with zero reliance on microG, ReVanced, root, or unauthorized scraping. Features full YouTube signature UI aesthetics, crimson play-pill launcher icon, Shorts shelf and vertical player, segmented action pills, high-contrast Subscribe buttons, thread-safe LRU caching, privacy AI summary generation, and multi-platform compilation.",
+    "technologies": ["Flutter 3.47", "Dart 3.13", "YouTube Data API v3", "OAuth 2.0 PKCE", "Material 3", "YouTube Lookalike UI", "Shorts Engine", "LRU Cache", "AI Summarizer"],
     "github": "https://github.com/sudovu/gamatube",
     "demo": "developments.html#gamatube",
-    "download": "downloads/gamatube/GAMATUBE-v1.0.0.apk"
+    "download": "downloads/gamatube/GAMATUBE-v1.1.0.apk"
   },
   {
     "id": "dev-gam-ai",
