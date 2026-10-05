@@ -1,5 +1,18 @@
 [
   {
+    "id": "dev-gamatube",
+    "title": "GAMATUBE: Clean, Multi-Platform Privacy Video Platform",
+    "category": "mobile",
+    "categoryLabel": "Video & Multi-Platform",
+    "year": "2026",
+    "status": "Production Release (v1.0.0)",
+    "description": "Standalone, lightweight, privacy-conscious video platform client engineered with Flutter & Dart. Strictly compliant with official YouTube Data API v3 endpoints and OAuth 2.0 PKCE with zero reliance on microG, ReVanced, root, or unauthorized scraping. Features thread-safe LRU caching, privacy-preserving AI video summary generation, 4 accessible themes (Dark Slate, AMOLED Pure Black, Clean Light, High Contrast), and multi-platform compilation across Android (APK & AAB), Web, and Windows desktop.",
+    "technologies": ["Flutter 3.47", "Dart 3.13", "YouTube Data API v3", "OAuth 2.0 PKCE", "Material 3", "Multi-Platform", "LRU Cache", "AI Summarizer"],
+    "github": "https://github.com/sudovu/gamatube",
+    "demo": "developments.html#gamatube",
+    "download": "downloads/gamatube/GAMATUBE-v1.0.0.apk"
+  },
+  {
     "id": "dev-gam-ai",
     "title": "GAM.AI: Edge AI & Universal Offline Intelligence Platform",
     "category": "ai",
@@ -37,5 +50,18 @@
     "github": "https://github.com/sudovu/IELTS-by-GAMA",
     "demo": "developments.html#ielts-by-gama",
     "download": "downloads/ielts-by-gama/ielts-by-gama-release.apk"
+  },
+  {
+    "id": "dev-social-hub",
+    "title": "Social Automation Hub: Multi-Platform Automation, AI Scheduling & Unified Inbox",
+    "category": "automation",
+    "categoryLabel": "Automation & Cloud",
+    "year": "2026",
+    "status": "Production Release (v1.0.0)",
+    "description": "Centralized, enterprise-grade multi-platform social media automation hub supporting 11 official APIs: Facebook Pages, Instagram Professional, X/Twitter, LinkedIn, YouTube, TikTok, Telegram Channels, WhatsApp Business, Reddit, Pinterest, and Meta Threads. Features automated post scheduling, recurring cron queues, AI-assisted content generation & sentiment replying, unified inbox (DMs & comments), proactive token refresh, and emergency freeze killswitches. 100% compliant with platform policies and rate limits.",
+    "technologies": ["FastAPI", "React 18", "Python 3.11", "SQLAlchemy 2.0 Async", "PostgreSQL", "Docker Compose", "Tailwind CSS", "Alembic", "11 Platform Connectors"],
+    "github": "https://github.com/sudovu/automation_social_media",
+    "demo": "https://sudovu.github.io/automation_social_media/",
+    "download": "https://github.com/sudovu/automation_social_media/archive/refs/heads/main.zip"
   }
 ]
