@@ -45,6 +45,28 @@ document.addEventListener('DOMContentLoaded', () => {
         desc: 'Enterprise zone security (INSIDE, OUTSIDE, DMZ) with deep stateful packet inspection (CBAR) and overload NAT translation.'
       }
     ],
+    juniper: [
+      {
+        id: 'juniper-srx',
+        title: 'Juniper SRX Security Gateway & IPsec Policy VPN',
+        desc: 'Security zones (trust/untrust), address-books, stateful security policies, IKEv2 Phase 1/2 proposals, st0.0 bind, and interface-NAT.'
+      },
+      {
+        id: 'juniper-ospf',
+        title: 'Juniper Multi-Area OSPFv3 Core & Route Policies',
+        desc: 'OSPFv2 and OSPFv3 multi-area design on ge-0/0/0 interfaces, policy-statement export filters, reference-bandwidth, and authentication.'
+      },
+      {
+        id: 'juniper-bgp',
+        title: 'Juniper Edge BGP Peering & Prefix Filtering',
+        desc: 'Carrier-grade eBGP multihop peering, local-as/peer-as, community tags, prefix-list policy-statement validation, and graceful restart.'
+      },
+      {
+        id: 'juniper-vlan',
+        title: 'Juniper EX Switch L2/L3 IRB & 802.1Q Trunking',
+        desc: 'Enterprise Layer 2 ethernet-switching with multi-VLAN tagged trunks, IRB (Integrated Routing & Bridging) gateways, and RSTP.'
+      }
+    ],
     mikrotik: [
       {
         id: 'mikrotik-dualwan',
@@ -136,6 +158,16 @@ document.addEventListener('DOMContentLoaded', () => {
       telemetryLogging: true,
       hostname: 'DSW-CORE-01',
       subnet: '10.10.0.0/24'
+    },
+    juniper_srx: {
+      platform: 'juniper',
+      scenario: 'juniper-srx',
+      securityHardened: true,
+      haRedundancy: true,
+      dualStackIPv6: true,
+      telemetryLogging: true,
+      hostname: 'SRX-GW-01',
+      subnet: '10.50.0.0/24'
     },
     mikrotik_dualwan: {
       platform: 'mikrotik',
@@ -268,6 +300,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (p === 'cisco') {
         state.hostname = 'EDGE-CORE-01';
         state.subnet = '10.10.0.0/24';
+      } else if (p === 'juniper') {
+        state.hostname = 'SRX-GW-01';
+        state.subnet = '10.50.0.0/24';
       } else if (p === 'mikrotik') {
         state.hostname = 'MikroTik-Border-01';
         state.subnet = '192.168.88.0/24';
@@ -641,6 +676,470 @@ ip nat inside source list NAT_LAN_PERMIT interface GigabitEthernet0/0 overload
 !
 end`;
       }
+    } else if (platform === 'juniper') {
+      filename = `${hostname.toLowerCase()}.conf`;
+      if (scenario === 'juniper-srx') {
+        roleText = 'Juniper SRX Security Gateway & IPsec';
+        interfacesText = 'ge-0/0/0.0 (Untrust), ge-0/0/1.0 (Trust), st0.0 (VTI)';
+        protocolText = 'Junos Security Policy, IKEv2, Interface NAT';
+
+        code = `/*
+ * ====================================================================
+ * JUNIPER JUNOS OS PRODUCTION CONFIGURATION
+ * Device: ${hostname} (Junos SRX Series)
+ * Target Subnet: ${subnet} ${dualStackIPv6 ? '& 2001:db8:acad::/48' : ''}
+ * Architecture: Stateful Security Zones & Route-Based IPsec VPN
+ * Security Posture: ${securityText} | HA Mode: ${haRedundancy ? 'Chassis Cluster Redundant' : 'Standalone'}
+ * ====================================================================
+ */
+
+system {
+    host-name ${hostname};
+    time-zone UTC;
+    services {
+        ssh {
+            protocol-version v2;
+            connection-limit 10;
+        }
+    }
+    syslog {
+        archive size 100k files 3;
+        user * {
+            any emergency;
+        }
+        file messages {
+            any notice;
+            authorization info;
+        }
+        file interactive-commands {
+            interactive-commands any;
+        }
+    }
+}
+
+interfaces {
+    /* WAN Gateway Uplink */
+    ge-0/0/0 {
+        description "WAN_UPLINK_TO_INTERNET";
+        unit 0 {
+            family inet {
+                address 203.0.113.2/30;
+            }
+            ${dualStackIPv6 ? 'family inet6 {\n                address 2001:db8:wan::2/64;\n            }' : ''}
+        }
+    }
+    /* Enterprise LAN Protected Subnet */
+    ge-0/0/1 {
+        description "PROTECTED_LAN_GATEWAY";
+        unit 0 {
+            family inet {
+                address ${baseIP}.1/24;
+            }
+            ${dualStackIPv6 ? `family inet6 {\n                address 2001:db8:acad:10::1/64;\n            }` : ''}
+        }
+    }
+    /* Route-Based IPsec Tunnel Interface */
+    st0 {
+        description "IPSEC_VTI_TUNNEL_ENDPOINT";
+        unit 0 {
+            family inet {
+                address 10.255.0.1/30;
+            }
+        }
+    }
+}
+
+routing-options {
+    static {
+        route 0.0.0.0/0 next-hop 203.0.113.1;
+        route 192.168.100.0/24 next-hop st0.0;
+    }
+}
+
+security {
+    ike {
+        proposal IKE-PROP-AES256-GCM {
+            authentication-method pre-shared-keys;
+            dh-group group19;
+            authentication-algorithm sha-384;
+            encryption-algorithm aes-256-gcm;
+            lifetime-seconds 28800;
+        }
+        policy IKE-POLICY-ENTERPRISE {
+            mode main;
+            proposals IKE-PROP-AES256-GCM;
+            pre-shared-key ascii-text "EnterpriseJuniperKey2026!";
+        }
+        gateway IKE-GW-REMOTE-DC {
+            ike-policy IKE-POLICY-ENTERPRISE;
+            address 198.51.100.2;
+            external-interface ge-0/0/0.0;
+            version v2-only;
+        }
+    }
+    ipsec {
+        proposal IPSEC-PROP-AES-GCM {
+            protocol esp;
+            encryption-algorithm aes-256-gcm;
+            lifetime-seconds 3600;
+        }
+        policy IPSEC-POLICY-ENTERPRISE {
+            perfect-forward-secrecy {
+                keys group19;
+            }
+            proposals IPSEC-PROP-AES-GCM;
+        }
+        vpn IPSEC-VPN-REMOTE-DC {
+            bind-interface st0.0;
+            ike {
+                gateway IKE-GW-REMOTE-DC;
+                ipsec-policy IPSEC-POLICY-ENTERPRISE;
+            }
+            establish-tunnels immediately;
+        }
+    }
+    zones {
+        security-zone trust {
+            address-book {
+                address LAN-CORPORATE ${subnet};
+            }
+            host-inbound-traffic {
+                system-services {
+                    ping;
+                    ssh;
+                    traceroute;
+                }
+                protocols {
+                    ospf;
+                }
+            }
+            interfaces {
+                ge-0/0/1.0;
+            }
+        }
+        security-zone untrust {
+            host-inbound-traffic {
+                system-services {
+                    ike;
+                    ping;
+                }
+            }
+            interfaces {
+                ge-0/0/0.0;
+                st0.0;
+            }
+        }
+    }
+    policies {
+        from-zone trust to-zone untrust {
+            policy allow-lan-to-wan {
+                match {
+                    source-address any;
+                    destination-address any;
+                    application any;
+                }
+                then {
+                    permit;
+                    ${telemetryLogging ? 'log {\n                        session-close;\n                    }' : ''}
+                }
+            }
+        }
+        ${securityHardened ? `from-zone untrust to-zone trust {
+            policy default-deny-untrust {
+                match {
+                    source-address any;
+                    destination-address any;
+                    application any;
+                }
+                then {
+                    reject;
+                    log {
+                        session-init;
+                    }
+                }
+            }
+        }` : ''}
+    }
+    nat {
+        source {
+            rule-set TRUST-TO-UNTRUST-NAT {
+                from zone trust;
+                to zone untrust;
+                rule SRC-NAT-RULE1 {
+                    match {
+                        source-address ${subnet};
+                    }
+                    then {
+                        source-nat {
+                            interface;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}`;
+      } else if (scenario === 'juniper-ospf') {
+        roleText = 'Juniper Enterprise Core Router';
+        interfacesText = 'ge-0/0/0.0 (Area 0), ge-0/0/1.0 (Area 10), lo0.0';
+        protocolText = 'Multi-Area OSPFv2/OSPFv3, Policy Export';
+
+        code = `/*
+ * ====================================================================
+ * JUNIPER JUNOS OS MULTI-AREA OSPF WITH POLICY SUMMARIZATION
+ * Device: ${hostname} | Router ID: ${baseIP}.1
+ * ====================================================================
+ */
+
+system {
+    host-name ${hostname};
+}
+
+interfaces {
+    ge-0/0/0 {
+        description "UPLINK_CORE_BACKBONE_AREA0";
+        unit 0 {
+            family inet {
+                address 10.0.0.1/30;
+            }
+            ${dualStackIPv6 ? 'family inet6 {\n                address 2001:db8:bbbb::1/64;\n            }' : ''}
+        }
+    }
+    ge-0/0/1 {
+        description "ACCESS_BRANCH_AREA10";
+        unit 0 {
+            family inet {
+                address ${baseIP}.1/24;
+            }
+            ${dualStackIPv6 ? 'family inet6 {\n                address 2001:db8:acad:10::1/64;\n            }' : ''}
+        }
+    }
+    lo0 {
+        unit 0 {
+            family inet {
+                address ${baseIP}.1/32;
+            }
+            ${dualStackIPv6 ? 'family inet6 {\n                address 2001:db8:ffff::1/128;\n            }' : ''}
+        }
+    }
+}
+
+routing-options {
+    router-id ${baseIP}.1;
+    autonomous-system 65001;
+}
+
+protocols {
+    ospf {
+        reference-bandwidth 100g;
+        area 0.0.0.0 {
+            interface ge-0/0/0.0 {
+                interface-type p2p;
+                authentication {
+                    md5 1 key "OspfJuniperPass2026!";
+                }
+            }
+            interface lo0.0 {
+                passive;
+            }
+        }
+        area 0.0.0.10 {
+            area-range ${subnet.split('/')[0]}/23;
+            interface ge-0/0/1.0;
+        }
+    }
+    ${dualStackIPv6 ? `ospf3 {
+        reference-bandwidth 100g;
+        area 0.0.0.0 {
+            interface ge-0/0/0.0 {
+                interface-type p2p;
+            }
+            interface lo0.0 {
+                passive;
+            }
+        }
+        area 0.0.0.10 {
+            interface ge-0/0/1.0;
+        }
+    }` : ''}
+}
+
+policy-options {
+    policy-statement EXPORT-DIRECT-ROUTES {
+        term 1 {
+            from protocol direct;
+            then accept;
+        }
+    }
+}`;
+      } else if (scenario === 'juniper-bgp') {
+        roleText = 'Juniper Border Router / Carrier BGP';
+        interfacesText = 'ge-0/0/0.0 (Transit Uplink), lo0.0';
+        protocolText = 'eBGP AS 65001, Prefix Lists, Route Policy';
+
+        code = `/*
+ * ====================================================================
+ * JUNIPER JUNOS OS CARRIER-GRADE eBGP PEERING & FILTERING
+ * Device: ${hostname} | Local AS: 65001 | Peer AS: 65000
+ * ====================================================================
+ */
+
+system {
+    host-name ${hostname};
+}
+
+interfaces {
+    ge-0/0/0 {
+        description "TRANSIT_ISP_UPLINK";
+        unit 0 {
+            family inet {
+                address 203.0.113.2/30;
+            }
+            ${dualStackIPv6 ? 'family inet6 {\n                address 2001:db8:wan::2/64;\n            }' : ''}
+        }
+    }
+    lo0 {
+        unit 0 {
+            family inet {
+                address ${baseIP}.1/32;
+            }
+        }
+    }
+}
+
+routing-options {
+    autonomous-system 65001;
+    router-id ${baseIP}.1;
+}
+
+protocols {
+    bgp {
+        group UPSTREAM-TRANSIT {
+            type external;
+            description "PEER_TO_TIER1_ISP";
+            multihop {
+                ttl 64;
+            }
+            local-address 203.0.113.2;
+            import BGP-IMPORT-TIER1;
+            export BGP-EXPORT-POLICY;
+            peer-as 65000;
+            neighbor 203.0.113.1 {
+                authentication-key "BgpSecretAuth2026#";
+                log-updown;
+            }
+        }
+    }
+}
+
+policy-options {
+    prefix-list ADVERTISED-NETWORKS {
+        ${subnet};
+        ${dualStackIPv6 ? '2001:db8:acad::/48;' : ''}
+    }
+    policy-statement BGP-EXPORT-POLICY {
+        term PERMIT-LOCAL-PREFIXES {
+            from {
+                prefix-list-filter ADVERTISED-NETWORKS exact;
+            }
+            then {
+                community add COMM-ORIGIN-ENTERPRISE;
+                next-hop self;
+                accept;
+            }
+        }
+        term REJECT-OTHERS {
+            then reject;
+        }
+    }
+    policy-statement BGP-IMPORT-TIER1 {
+        term ACCEPT-DEFAULT {
+            from {
+                route-filter 0.0.0.0/0 exact;
+            }
+            then accept;
+        }
+        term REJECT-MARTIANS {
+            then reject;
+        }
+    }
+    community COMM-ORIGIN-ENTERPRISE members 65001:100;
+}`;
+      } else {
+        roleText = 'Juniper EX Enterprise Switch L2/L3';
+        interfacesText = 'ge-0/0/0 (Trunk), ge-0/0/1-10 (Access), irb.10';
+        protocolText = 'Ethernet-Switching, IRB Gateways, RSTP';
+
+        code = `/*
+ * ====================================================================
+ * JUNIPER EX SWITCH L2/L3 INTER-VLAN ROUTING & 802.1Q TRUNKING
+ * Device: ${hostname} (EX Series) | Subnet: ${subnet}
+ * ====================================================================
+ */
+
+system {
+    host-name ${hostname};
+}
+
+interfaces {
+    /* Upstream 802.1Q Trunk Port */
+    ge-0/0/0 {
+        unit 0 {
+            family ethernet-switching {
+                interface-mode trunk;
+                vlan {
+                    members [ vlan-corp vlan-mgmt ];
+                }
+            }
+        }
+    }
+    /* Access Ports for Workstations */
+    interface-range ACCESS-PORTS {
+        member-range ge-0/0/1 to ge-0/0/10;
+        unit 0 {
+            family ethernet-switching {
+                interface-mode access;
+                vlan {
+                    members vlan-corp;
+                }
+            }
+        }
+    }
+    /* Integrated Routing and Bridging (IRB) Gateways */
+    irb {
+        unit 10 {
+            description "CORP_DEFAULT_GATEWAY";
+            family inet {
+                address ${baseIP}.1/24;
+            }
+            ${dualStackIPv6 ? 'family inet6 {\n                address 2001:db8:acad:10::1/64;\n            }' : ''}
+        }
+        unit 20 {
+            description "MGMT_DEFAULT_GATEWAY";
+            family inet {
+                address ${baseIP.split('.').slice(0, 2).join('.')}.20.1/24;
+            }
+        }
+    }
+}
+
+vlans {
+    vlan-corp {
+        vlan-id 10;
+        l3-interface irb.10;
+    }
+    vlan-mgmt {
+        vlan-id 20;
+        l3-interface irb.20;
+    }
+}
+
+protocols {
+    rstp {
+        interface all;
+    }
+}`;
+      }
     } else if (platform === 'mikrotik') {
       filename = `${hostname.toLowerCase()}.rsc`;
       if (scenario === 'mikrotik-dualwan') {
@@ -1013,6 +1512,18 @@ if __name__ == "__main__":
         'show running-config',
         'ping 8.8.8.8'
       ]);
+    } else if (platform === 'juniper') {
+      simPrompt.textContent = `admin@${hostname}>`;
+      renderChips([
+        'show route',
+        'show interfaces terse',
+        'show security policies',
+        'show ospf neighbor',
+        'show bgp summary',
+        'show security ike security-associations',
+        'show configuration',
+        'ping 8.8.8.8 count 3'
+      ]);
     } else if (platform === 'mikrotik') {
       simPrompt.textContent = `[admin@${hostname}] >`;
       renderChips([
@@ -1194,6 +1705,73 @@ if __name__ == "__main__":
       } else {
         appendLog(`% Unrecognized command "${raw}". Type '?' or check quick chips.`, false, false, true);
       }
+    } else if (platform === 'juniper') {
+      if (lower.startsWith('show route')) {
+        appendLog(`inet.0: 4 destinations, 4 routes (4 active, 0 holddown, 0 hidden)`);
+        appendLog(`+ = Active Route, - = Last Active, * = Both`);
+        appendLog(``);
+        appendLog(`0.0.0.0/0          *[Static/5] via 203.0.113.1`);
+        appendLog(`${subnet}       *[Direct/0] via ge-0/0/1.0`);
+        appendLog(`${baseIP}.1/32       *[Local/0] via ge-0/0/1.0`);
+        appendLog(`192.168.100.0/24   *[Static/5] via st0.0`, false, true);
+      } else if (lower.startsWith('show interfaces terse')) {
+        appendLog(`Interface               Admin Link Proto    Local                 Remote`);
+        appendLog(`ge-0/0/0                up    up`);
+        appendLog(`ge-0/0/0.0              up    up   inet     203.0.113.2/30`);
+        appendLog(`ge-0/0/1                up    up`);
+        appendLog(`ge-0/0/1.0              up    up   inet     ${baseIP}.1/24`);
+        if (state.dualStackIPv6) {
+          appendLog(`                                   inet6    2001:db8:acad:10::1/64`);
+        }
+        appendLog(`st0.0                   up    up   inet     10.255.0.1/30`);
+        appendLog(`lo0.0                   up    up   inet     ${baseIP}.1/32`, false, true);
+      } else if (lower.startsWith('show security policies')) {
+        appendLog(`Default policy: deny-all`);
+        appendLog(`From zone: trust, To zone: untrust`);
+        appendLog(`  Policy: allow-lan-to-wan, State: enabled, Index: 4, Scope: 0, Action-type: permit`);
+        appendLog(`    Source addresses: any`);
+        appendLog(`    Destination addresses: any`);
+        appendLog(`    Applications: any`);
+        if (state.securityHardened) {
+          appendLog(`From zone: untrust, To zone: trust`);
+          appendLog(`  Policy: default-deny-untrust, State: enabled, Action-type: reject`, false, true);
+        }
+      } else if (lower.startsWith('show ospf neighbor')) {
+        appendLog(`Address          Interface              State     ID               Pri  Dead`);
+        appendLog(`10.0.0.2         ge-0/0/0.0             Full      10.0.0.2         128    36`);
+        appendLog(`[OK] OSPF neighbor adjacency is in Full state across Area 0.`, false, true);
+      } else if (lower.startsWith('show bgp summary')) {
+        appendLog(`Groups: 1 Peers: 1 Down peers: 0`);
+        appendLog(`Table          Tot Paths  Act Paths Suppressed    History Damp State    Pending`);
+        appendLog(`inet.0                 2          2          0          0          0          0`);
+        appendLog(`Peer                     AS      InPkt     OutPkt    OutQ   Flaps Last Up/Dwn State|#Active/Received/Accepted/Damped...`);
+        appendLog(`203.0.113.1           65000       1204       1198       0       0    04:12:00 Establ`);
+        appendLog(`  inet.0: 2/2/2/0`, false, true);
+      } else if (lower.startsWith('show security ike security-associations') || lower.startsWith('show security ipsec')) {
+        appendLog(`Index   State  Initiator cookie  Responder cookie  Mode           Remote Address`);
+        appendLog(`10842   UP     a3b2c1d0e4f5a6b7  9f8e7d6c5b4a3a2b  IKEv2          198.51.100.2`);
+        appendLog(`[OK] IPsec Security Associations established with tunnel endpoint st0.0`, false, true);
+      } else if (lower.startsWith('show configuration')) {
+        appendLog(`## Last commit: 2026-10-05 23:15:00 UTC by admin`);
+        appendLog(`version 23.4R1.9;`);
+        appendLog(`system {`);
+        appendLog(`    host-name ${hostname};`);
+        appendLog(`}`);
+        appendLog(`## (Active verified Junos syntax matches preview panel)`, false, true);
+      } else if (lower.startsWith('commit check')) {
+        appendLog(`configuration check succeeds`, false, true);
+      } else if (lower.startsWith('ping')) {
+        appendLog(`PING 8.8.8.8 (8.8.8.8): 56 data bytes`);
+        appendLog(`64 bytes from 8.8.8.8: icmp_seq=0 ttl=116 time=2.144 ms`);
+        appendLog(`64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=1.892 ms`);
+        appendLog(`64 bytes from 8.8.8.8: icmp_seq=2 ttl=116 time=2.010 ms`);
+        appendLog(``);
+        appendLog(`--- 8.8.8.8 ping statistics ---`);
+        appendLog(`3 packets transmitted, 3 packets received, 0% packet loss`);
+        appendLog(`round-trip min/avg/max/stddev = 1.892/2.015/2.144/0.103 ms`, false, true);
+      } else {
+        appendLog(`syntax error, unknown command: "${raw}". Type '?' or check quick chips.`, false, false, true);
+      }
     } else if (platform === 'mikrotik') {
       if (lower.startsWith('/ip route print')) {
         appendLog(`Flags: D - DYNAMIC; A - ACTIVE; c - CONNECT, s - STATIC, r - RECURSIVE`);
@@ -1359,6 +1937,8 @@ if __name__ == "__main__":
 
     if (platform === 'cisco') {
       list = ['show ip route', 'show standby brief', 'show etherchannel summary', 'show ip interface brief', 'show running-config', 'ping 8.8.8.8', 'clear', 'help'];
+    } else if (platform === 'juniper') {
+      list = ['show route', 'show interfaces terse', 'show security policies', 'show ospf neighbor', 'show bgp summary', 'show security ike security-associations', 'show configuration', 'ping 8.8.8.8 count 3', 'commit check', 'clear', 'help'];
     } else if (platform === 'mikrotik') {
       list = ['/ip route print', '/ip firewall mangle print', '/ip firewall nat print', '/interface wireguard print', '/system resource print', 'ping 8.8.8.8', 'clear', 'help'];
     } else if (platform === 'linux') {

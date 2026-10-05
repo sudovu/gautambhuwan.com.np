@@ -153,7 +153,7 @@
             </div>
             <h2 style="font-size: clamp(1.4rem, 2.8vw, 1.85rem); margin-bottom: 6px;">Create Your Own Project &amp; Topology</h2>
             <p class="body-sm" style="color: var(--text-secondary); max-width: 780px;">
-              Design, generate, and simulate enterprise network architectures across <strong>Cisco IOS-XE</strong>, <strong>MikroTik RouterOS</strong>, <strong>Linux Server</strong>, <strong>Docker Cloud-Native</strong>, or <strong>Python Automation</strong>. Select your parameters below for instant validated configuration code and in-page CLI execution.
+              Design, generate, and simulate enterprise network architectures across <strong>Cisco IOS-XE</strong>, <strong>Juniper Junos OS</strong>, <strong>MikroTik RouterOS</strong>, <strong>Linux Server</strong>, <strong>Docker Cloud-Native</strong>, or <strong>Python Automation</strong>. Select your parameters below for instant validated configuration code and in-page CLI execution.
             </p>
           </div>
           <div>
@@ -167,6 +167,7 @@
         <div class="architect-presets-bar">
           <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-right: 4px;">Quick Presets:</span>
           <button type="button" class="architect-preset-chip" data-preset="cisco_campus">Cisco Campus Core (HSRP &amp; LACP)</button>
+          <button type="button" class="architect-preset-chip" data-preset="juniper_srx">Juniper SRX Security &amp; BGP</button>
           <button type="button" class="architect-preset-chip" data-preset="mikrotik_dualwan">MikroTik Dual-WAN (PCC &amp; Failover)</button>
           <button type="button" class="architect-preset-chip" data-preset="linux_wireguard">Linux WireGuard VPN Gateway</button>
           <button type="button" class="architect-preset-chip" data-preset="docker_mesh">Docker Microservices Mesh (Traefik)</button>
@@ -188,6 +189,11 @@
                   <span class="platform-btn-icon">⚡</span>
                   <span class="platform-btn-name">Cisco IOS</span>
                   <span class="platform-btn-sub">Enterprise L2/L3</span>
+                </button>
+                <button type="button" class="platform-btn" data-platform="juniper">
+                  <span class="platform-btn-icon">🌲</span>
+                  <span class="platform-btn-name">Juniper Junos</span>
+                  <span class="platform-btn-sub">SRX / MX / EX</span>
                 </button>
                 <button type="button" class="platform-btn" data-platform="mikrotik">
                   <span class="platform-btn-icon">📡</span>
@@ -372,10 +378,11 @@
           </div>
           <h3 style="margin-bottom: 10px;">Universal Project Architect &amp; Live CLI Simulator</h3>
           <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
-            Interactive multi-vendor design studio. Build custom configurations across Cisco IOS-XE, MikroTik RouterOS v7, Linux Server, Docker Cloud-Native, or Python Automation. Choose your topology, security policies, redundancy modes, and addressing schemes with instant syntax generation and in-page live CLI simulation.
+            Interactive multi-vendor design studio. Build custom configurations across Cisco IOS-XE, Juniper Junos OS, MikroTik RouterOS v7, Linux Server, Docker Cloud-Native, or Python Automation. Choose your topology, security policies, redundancy modes, and addressing schemes with instant syntax generation and in-page live CLI simulation.
           </p>
           <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
             <span class="skill-tag">Cisco IOS</span>
+            <span class="skill-tag">Juniper Junos</span>
             <span class="skill-tag">MikroTik RouterOS</span>
             <span class="skill-tag">Linux Gateway</span>
             <span class="skill-tag">Docker Compose</span>
