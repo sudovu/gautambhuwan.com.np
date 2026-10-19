@@ -36,3 +36,27 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Submit URLs to IndexNow (Bing & Search Engines)
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" -X POST "https://api.indexnow.org/indexnow" \
+            -H "Content-Type: application/json; charset=utf-8" \
+            -d '{
+              "host": "gautambhuwan.com.np",
+              "key": "68b31a29f8c04975871239c8942b0e61",
+              "keyLocation": "https://gautambhuwan.com.np/68b31a29f8c04975871239c8942b0e61.txt",
+              "urlList": [
+                "https://gautambhuwan.com.np/",
+                "https://gautambhuwan.com.np/about.html",
+                "https://gautambhuwan.com.np/projects.html",
+                "https://gautambhuwan.com.np/labs.html",
+                "https://gautambhuwan.com.np/developments.html",
+                "https://gautambhuwan.com.np/skills.html",
+                "https://gautambhuwan.com.np/resume.html",
+                "https://gautambhuwan.com.np/experience.html",
+                "https://gautambhuwan.com.np/services.html",
+                "https://gautambhuwan.com.np/blog.html",
+                "https://gautambhuwan.com.np/contact.html",
+                "https://gautambhuwan.com.np/privacy.html"
+              ]
+            }' || true
