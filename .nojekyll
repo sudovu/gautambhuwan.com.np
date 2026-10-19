@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 # Disable Jekyll for GitHub Pages
+=======
+# Disables Jekyll on GitHub Pages
+>>>>>>> d13fe5f (fix(ci): add .nojekyll, modernize GitHub Pages deployment workflow, and escape Liquid template braces in labs.html)
