@@ -10,7 +10,7 @@
     "technologies": ["Flutter 3.47", "Dart 3.13", "YouTube Data API v3", "OAuth 2.0 PKCE", "Material 3", "YouTube Lookalike UI", "Shorts Engine", "LRU Cache", "AI Summarizer"],
     "github": "https://github.com/sudovu/gamatube",
     "demo": "developments.html#gamatube",
-    "download": "downloads/gamatube/GAMATUBE-v1.1.0.apk"
+    "download": "downloads/gamatube/GAMATUBE-v1.1.0-arm64.apk"
   },
   {
     "id": "dev-gam-ai",

@@ -317,7 +317,7 @@ docker network create --driver bridge --subnet 172.28.0.0/16 app_net
 docker run -d --name secure_gateway   --network app_net   --ip 172.28.0.10   -v /var/data/app:/app/data:ro   -p 8080:80   nginx:alpine
 
 # Verify bridge interface on host
-ip addr show dev br-$(docker network inspect app_net -f '{{.Id}}' | cut -c1-12)</code></pre>
+ip addr show dev br-$(docker network inspect app_net -f '&#123;&#123;.Id&#125;&#125;' | cut -c1-12)</code></pre>
         </div>
 
         <div class="grid-2" style="background: var(--surface-elevated); padding: 20px; border-radius: var(--radius-sm); font-size: 0.9rem;">
