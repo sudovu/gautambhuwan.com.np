@@ -1,4 +1,20 @@
 User-agent: *
 Allow: /
+Disallow: /private/
+Disallow: /downloads/tmp/
 
+# Major Search Engine Sitemaps
 Sitemap: https://gautambhuwan.com.np/sitemap.xml
+
+# Search Crawlers Directives
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
