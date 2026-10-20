@@ -715,6 +715,329 @@ Core-RTR# show ip route summary</code></pre>
         </div>
       </article>
 
+      <!-- Lab 008: Carrier GPON/EPON OLT Configuration & FTTH Provisioning -->
+      <article id="lab-008" class="card reveal" style="margin-bottom: 48px; border-left: 4px solid var(--accent-secondary);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <span class="mono-label" style="color: var(--accent-secondary);">LAB // 008</span>
+            <h2 style="font-size: 1.45rem; margin-top: 4px;">Carrier GPON/EPON OLT Deployment &amp; FTTH Provisioning</h2>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <span class="tag">Huawei SmartAX</span>
+            <span class="tag">ZTE C320</span>
+            <span class="tag">GPON / EPON</span>
+            <span class="tag">QinQ (802.1ad)</span>
+          </div>
+        </div>
+
+        <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
+          Carrier-grade optical line terminal (OLT) commissioning and Fiber-to-the-Home (FTTH) service profiling. Configured Type 4 Dynamic Bandwidth Allocation (DBA) profiles, mapped Transmission Containers (T-CONTs) to GEM ports, bound service-ports with outer SVLAN and inner CVLAN QinQ tagging, and executed automated optical power diagnostics to maintain strict optical margin thresholds (-8 dBm to -27 dBm).
+        </p>
+
+        <div class="terminal-card" style="margin-bottom: 20px;">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="terminal-dot dot-red"></span>
+              <span class="terminal-dot dot-yellow"></span>
+              <span class="terminal-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">huawei-olt // ma5608t-ftth-service-provisioning.txt</span>
+          </div>
+          <pre class="terminal-body"><code>! Huawei SmartAX MA5608T GPON Service Provisioning
+MA5608T(config)# dba-profile add profile-id 15 profile-name "100M_BIZ" type4 max 102400
+MA5608T(config)# ont-lineprofile gpon profile-id 20 profile-name "FTTH_INTERNET"
+MA5608T(config-gpon-lineprofile-20)# tcont 1 dba-profile-id 15
+MA5608T(config-gpon-lineprofile-20)# gem add 1 eth tcont 1
+MA5608T(config-gpon-lineprofile-20)# gem mapping 1 0 vlan 100
+MA5608T(config-gpon-lineprofile-20)# commit
+MA5608T(config-gpon-lineprofile-20)# exit
+
+! Define Service Profile for 4-port Gigabit Ethernet ONT
+MA5608T(config)# ont-srvprofile gpon profile-id 20 profile-name "4GE_WIFI_ONT"
+MA5608T(config-gpon-srvprofile-20)# ont-port eth 4
+MA5608T(config-gpon-srvprofile-20)# port vlan eth 1 translation 100 user-vlan 100
+MA5608T(config-gpon-srvprofile-20)# commit
+MA5608T(config-gpon-srvprofile-20)# exit
+
+! Auto-Discovery &amp; Authorization on GPON Port 0/1/0
+MA5608T(config)# interface gpon 0/1
+MA5608T(config-if-gpon-0/1)# ont add 0 1 sn-auth "48575443B1A2C3D4" omci ont-lineprofile-id 20 ont-srvprofile-id 20 desc "CUST_FIBER_ENTERPRISE_01"
+MA5608T(config-if-gpon-0/1)# exit
+
+! QinQ Service Port Tagging (Outer S-VLAN 200, Inner C-VLAN 100)
+MA5608T(config)# service-port 10 vlan 200 gpon 0/1/0 ont 1 gemport 1 multi-service user-vlan 100 tag-transform translate-and-add inner-vlan 100 inbound traffic-table index 6 outbound traffic-table index 6
+
+! Diagnostic &amp; Optical Power Budget Verification
+MA5608T# display ont optical-info 0/1 0 1
+! Output verifies Rx Optical Power: -19.45 dBm (Within -8 to -27 dBm standard margin)</code></pre>
+        </div>
+
+        <div class="grid-2" style="background: var(--surface-elevated); padding: 20px; border-radius: var(--radius-sm); font-size: 0.9rem;">
+          <div>
+            <strong>Problem Diagnosed:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">High upstream jitter and intermittent fiber packet loss due to mismatched DBA profile allocation and rogue ONT uncalibrated Tx power jamming the shared 1310nm upstream PON wavelength.</p>
+          </div>
+          <div>
+            <strong>Resolution &amp; Takeaway:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Standardized Type 4 dynamic bandwidth allocation with strict assured/max bursting boundaries, isolated rogue ONTs with automated optical transceiver shutdown, and implemented dual-tag QinQ to isolate customer Layer 2 broadcast domains.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Lab 009: Metro & Enterprise L2/L3 Switching Fabric -->
+      <article id="lab-009" class="card reveal" style="margin-bottom: 48px; border-left: 4px solid var(--accent-primary);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <span class="mono-label" style="color: var(--accent-primary);">LAB // 009</span>
+            <h2 style="font-size: 1.45rem; margin-top: 4px;">Metro Ethernet L2/L3 Switching Fabric (Cisco &amp; Juniper EX)</h2>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <span class="tag">Cisco Catalyst</span>
+            <span class="tag">Juniper EX</span>
+            <span class="tag">MSTP (802.1s)</span>
+            <span class="tag">LACP (802.3ad)</span>
+            <span class="tag">DHCP Snooping</span>
+          </div>
+        </div>
+
+        <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
+          Designed a carrier metro Ethernet and enterprise campus switching ring. Deployed Multiple Spanning Tree (MSTP IEEE 802.1s) across diverse vendor boundaries, bundled dual 10G uplinks with dynamic LACP, configured DHCP Snooping with Option 82 circuit-id insertion, and enabled Dynamic ARP Inspection (DAI) to prevent ARP spoofing and man-in-the-middle attacks.
+        </p>
+
+        <div class="terminal-card" style="margin-bottom: 20px;">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="terminal-dot dot-red"></span>
+              <span class="terminal-dot dot-yellow"></span>
+              <span class="terminal-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">cisco-catalyst // metro-access-switch-security.ios</span>
+          </div>
+          <pre class="terminal-body"><code>! Cisco Catalyst 3850/9300 Metro Aggregation Hardening
+Cat-SW01(config)# spanning-tree mode mst
+Cat-SW01(config)# spanning-tree mst configuration
+Cat-SW01(config-mst)# name METRO-RING-01
+Cat-SW01(config-mst)# revision 1
+Cat-SW01(config-mst)# instance 1 vlan 10, 20, 30
+Cat-SW01(config-mst)# instance 2 vlan 100, 200, 300
+Cat-SW01(config-mst)# exit
+Cat-SW01(config)# spanning-tree mst 1 priority 4096
+
+! 802.3ad LACP Uplink Port-Channel to Distribution Switch
+Cat-SW01(config)# interface range TenGigabitEthernet1/1/1 - 2
+Cat-SW01(config-if-range)# switchport mode trunk
+Cat-SW01(config-if-range)# switchport trunk allowed vlan 10,20,30,100,200,300
+Cat-SW01(config-if-range)# channel-group 1 mode active
+Cat-SW01(config-if-range)# exit
+
+! Layer 2 Boundary Security: DHCP Snooping, Option 82 &amp; DAI
+Cat-SW01(config)# ip dhcp snooping
+Cat-SW01(config)# ip dhcp snooping vlan 10,20,30,100,200
+Cat-SW01(config)# ip dhcp snooping information option
+Cat-SW01(config)# interface Port-channel 1
+Cat-SW01(config-if)# ip dhcp snooping trust
+Cat-SW01(config-if)# ip arp inspection trust
+Cat-SW01(config-if)# exit
+
+! Edge Access Ports with DAI &amp; Storm Control
+Cat-SW01(config)# interface range GigabitEthernet1/0/1 - 24
+Cat-SW01(config-if-range)# switchport mode access
+Cat-SW01(config-if-range)# switchport port-security
+Cat-SW01(config-if-range)# switchport port-security maximum 2
+Cat-SW01(config-if-range)# switchport port-security violation restrict
+Cat-SW01(config-if-range)# ip arp inspection limit rate 15
+Cat-SW01(config-if-range)# storm-control broadcast level 1.00
+Cat-SW01(config-if-range)# spanning-tree portfast
+Cat-SW01(config-if-range)# spanning-tree bpduguard enable</code></pre>
+        </div>
+
+        <div class="grid-2" style="background: var(--surface-elevated); padding: 20px; border-radius: var(--radius-sm); font-size: 0.9rem;">
+          <div>
+            <strong>Problem Diagnosed:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Rogue customer DHCP servers on access switches causing gateway hijacking, while vendor-specific Spanning Tree (PVST+) failed to converge cleanly with Juniper EX switches in the metro ring.</p>
+          </div>
+          <div>
+            <strong>Resolution &amp; Takeaway:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Standardized on vendor-neutral MSTP (802.1s) across all Cisco and Juniper nodes, locked untrusted access ports with DHCP Snooping + DAI, and bounded broadcast storms to &lt;1% port bandwidth.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Lab 010: Juniper Junos Core BGP & Routing-Engine Protection -->
+      <article id="lab-010" class="card reveal" style="margin-bottom: 48px; border-left: 4px solid var(--accent-tertiary);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <span class="mono-label" style="color: var(--accent-tertiary);">LAB // 010</span>
+            <h2 style="font-size: 1.45rem; margin-top: 4px;">Juniper Junos Core BGP Edge &amp; RE Protection Firewall Filters</h2>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <span class="tag">Juniper Junos</span>
+            <span class="tag">MX204 / SRX345</span>
+            <span class="tag">eBGP Transit</span>
+            <span class="tag">BGP Communities</span>
+            <span class="tag">lo0.0 RE Filter</span>
+          </div>
+        </div>
+
+        <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
+          Hardened edge BGP border router configuration on Juniper MX204 and SRX345 platforms running Junos OS. Implemented multi-homed eBGP with dual upstream Tier-1 transit providers, applied BGP community tags for local-preference and MED manipulation, enforced route dampening on unstable peers, and applied a strict stateless packet filter to loopback interface <code>lo0.0</code> to defend the Routing Engine (RE) against denial-of-service floods.
+        </p>
+
+        <div class="terminal-card" style="margin-bottom: 20px;">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="terminal-dot dot-red"></span>
+              <span class="terminal-dot dot-yellow"></span>
+              <span class="terminal-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">juniper-junos // border-bgp-and-re-defense.set</span>
+          </div>
+          <pre class="terminal-body"><code># Juniper Junos Hierarchical eBGP Peering &amp; Loopback Defense
+set protocols bgp group UPSTREAM-TRANSIT type external
+set protocols bgp group UPSTREAM-TRANSIT peer-as 64500
+set protocols bgp group UPSTREAM-TRANSIT neighbor 198.51.100.1 description "PRIMARY_TRANSIT_ISP_A"
+set protocols bgp group UPSTREAM-TRANSIT neighbor 198.51.100.1 export BGP-EXPORT-POLICY
+set protocols bgp group UPSTREAM-TRANSIT neighbor 198.51.100.1 import BGP-IMPORT-POLICY
+set protocols bgp group UPSTREAM-TRANSIT neighbor 198.51.100.1 graceful-restart
+set protocols bgp group UPSTREAM-TRANSIT neighbor 198.51.100.1 family inet unicast
+
+# Routing Policies with Community Tagging &amp; Local Preference
+set policy-options policy-statement BGP-IMPORT-POLICY term PRIMARY-IN from community COMM-PREF-HIGH
+set policy-options policy-statement BGP-IMPORT-POLICY term PRIMARY-IN then local-preference 200
+set policy-options policy-statement BGP-IMPORT-POLICY term PRIMARY-IN then accept
+set policy-options policy-statement BGP-EXPORT-POLICY term ADVERTISE-OUR-PREFIX from route-filter 203.0.113.0/24 exact
+set policy-options policy-statement BGP-EXPORT-POLICY term ADVERTISE-OUR-PREFIX then accept
+set policy-options policy-statement BGP-EXPORT-POLICY then reject
+
+# Stateless Firewall Filter Protecting the Routing Engine (lo0.0)
+set firewall family inet filter PROTECT-ROUTING-ENGINE term ALLOW-BGP from source-prefix-list BGP-NEIGHBORS
+set firewall family inet filter PROTECT-ROUTING-ENGINE term ALLOW-BGP from protocol tcp
+set firewall family inet filter PROTECT-ROUTING-ENGINE term ALLOW-BGP from port bgp
+set firewall family inet filter PROTECT-ROUTING-ENGINE term ALLOW-BGP then accept
+
+set firewall family inet filter PROTECT-ROUTING-ENGINE term ALLOW-NOC-SSH from source-prefix-list NOC-MGMT-SUBNET
+set firewall family inet filter PROTECT-ROUTING-ENGINE term ALLOW-NOC-SSH from protocol tcp
+set firewall family inet filter PROTECT-ROUTING-ENGINE term ALLOW-NOC-SSH from destination-port 22
+set firewall family inet filter PROTECT-ROUTING-ENGINE term ALLOW-NOC-SSH then accept
+
+set firewall family inet filter PROTECT-ROUTING-ENGINE term RATE-LIMIT-ICMP from protocol icmp
+set firewall family inet filter PROTECT-ROUTING-ENGINE term RATE-LIMIT-ICMP then policer ICMP-100K-POLICER
+set firewall family inet filter PROTECT-ROUTING-ENGINE term RATE-LIMIT-ICMP then accept
+
+set firewall family inet filter PROTECT-ROUTING-ENGINE term DEFAULT-DISCARD-LOG then count RE-ATTACK-DROPS
+set firewall family inet filter PROTECT-ROUTING-ENGINE term DEFAULT-DISCARD-LOG then discard
+
+# Apply Filter to Loopback 0 Unit 0
+set interfaces lo0 unit 0 family inet filter input PROTECT-ROUTING-ENGINE
+commit confirmed 5</code></pre>
+        </div>
+
+        <div class="grid-2" style="background: var(--surface-elevated); padding: 20px; border-radius: var(--radius-sm); font-size: 0.9rem;">
+          <div>
+            <strong>Problem Diagnosed:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Unprotected Routing Engine CPU spikes (100% utilization) caused by external port scans and ICMP flood attacks directed at border router interface addresses, leading to BGP keepalive timeouts and session flapping.</p>
+          </div>
+          <div>
+            <strong>Resolution &amp; Takeaway:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Binding a stateless firewall filter to <code>lo0.0</code> filtered all traffic hitting the Routing Engine at hardware line rate, restricting BGP to verified peers and rate-limiting ICMP to prevent control-plane exhaustion.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Lab 011: Next-Generation Firewall & Carrier-Grade NAT (Fortinet FortiGate & pfSense HA) -->
+      <article id="lab-011" class="card reveal" style="margin-bottom: 48px; border-left: 4px solid var(--accent-secondary);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <span class="mono-label" style="color: var(--accent-secondary);">LAB // 011</span>
+            <h2 style="font-size: 1.45rem; margin-top: 4px;">Next-Gen Firewall (FortiGate &amp; pfSense HA) &amp; Deterministic CGNAT</h2>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <span class="tag">Fortinet FortiGate</span>
+            <span class="tag">pfSense HA</span>
+            <span class="tag">CGNAT (RFC 6598)</span>
+            <span class="tag">CARP Failover</span>
+            <span class="tag">IPsec IKEv2</span>
+          </div>
+        </div>
+
+        <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
+          Enterprise edge firewall cluster and large-scale subscriber address translation deployment. Built an active-passive High Availability (HA) firewall pair running Fortinet FortiOS and pfSense Plus CARP synchronization. Configured Carrier-Grade NAT (RFC 6598 shared address space <code>100.64.0.0/10</code>) with deterministic port block allocations of 2,000 ports per client to comply with ISP regulatory logging, coupled with policy-based routing (PBR) and hardware-accelerated IPsec IKEv2 tunnels.
+        </p>
+
+        <div class="terminal-card" style="margin-bottom: 20px;">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="terminal-dot dot-red"></span>
+              <span class="terminal-dot dot-yellow"></span>
+              <span class="terminal-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">fortigate // cgnat-and-zone-firewall-ha.conf</span>
+          </div>
+          <pre class="terminal-body"><code>! FortiGate Carrier-Grade NAT &amp; Zone Firewall Policy
+config firewall ippool
+    edit "CGNAT_SUBSCRIBER_POOL"
+        set type cgn-resource-allocation
+        set startip 198.51.100.10
+        set endip 198.51.100.20
+        set arp-reply enable
+        set cpa-port-block-size 2000
+        set cpa-max-port-blocks 2
+    next
+end
+
+! Define Security Zones for Micro-Segmentation
+config system zone
+    edit "ZONE_SUBSCRIBER_LAN"
+        set interface "vlan100" "vlan200" "vlan300"
+    next
+    edit "ZONE_WAN_UPSTREAMS"
+        set interface "port1" "port2"
+    next
+end
+
+! Carrier-Grade NAT Policy with Deep Inspection &amp; Session Limits
+config firewall policy
+    edit 101
+        set name "SUBSCRIBER_TO_INTERNET_CGNAT"
+        set srcintf "ZONE_SUBSCRIBER_LAN"
+        set dstintf "ZONE_WAN_UPSTREAMS"
+        set srcaddr "SUBSCRIBER_CGNAT_BLOCK_100.64.0.0_10"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set nat enable
+        set ippool enable
+        set poolname "CGNAT_SUBSCRIBER_POOL"
+        set tcp-mss-sender 1400
+        set tcp-mss-receiver 1400
+        set logtraffic all
+    next
+end
+
+! High Availability Heartbeat &amp; Session Sync
+config system ha
+    set group-name "NOC_CORE_FW_HA"
+    set mode a-p
+    set hbdev "port7" 50 "port8" 50
+    set session-pickup enable
+    set override disable
+    set priority 200
+end</code></pre>
+        </div>
+
+        <div class="grid-2" style="background: var(--surface-elevated); padding: 20px; border-radius: var(--radius-sm); font-size: 0.9rem;">
+          <div>
+            <strong>Problem Diagnosed:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Public IPv4 pool exhaustion across growing broadband subscribers, combined with massive centralized syslog storage bottlenecks caused by logging every individual NAT connection translation.</p>
+          </div>
+          <div>
+            <strong>Resolution &amp; Takeaway:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Implemented Deterministic CGNAT (RFC 6598) mapping fixed private IPs to predictable public IP + port block ranges (2,000 ports/subscriber), eliminating 99% of per-session log overhead while securing subscriber traffic behind stateful zone firewalls.</p>
+          </div>
+        </div>
+      </article>
+
     </div>
   </section>
 

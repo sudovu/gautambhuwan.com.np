@@ -199,6 +199,10 @@
           <button type="button" class="architect-preset-chip" data-preset="linux_wireguard">Linux WireGuard VPN Gateway</button>
           <button type="button" class="architect-preset-chip" data-preset="docker_mesh">Docker Microservices Mesh (Traefik)</button>
           <button type="button" class="architect-preset-chip" data-preset="python_audit">Python Netmiko Compliance Auditor</button>
+          <button type="button" class="architect-preset-chip" data-preset="carrier_olt">GPON/EPON OLT Service Provisioning</button>
+          <button type="button" class="architect-preset-chip" data-preset="metro_switch">Metro L2/L3 Switching Ring (QinQ &amp; MSTP)</button>
+          <button type="button" class="architect-preset-chip" data-preset="juniper_transit">Juniper Core BGP Transit &amp; Filter</button>
+          <button type="button" class="architect-preset-chip" data-preset="fortigate_firewall">Fortinet FortiGate &amp; CGNAT HA</button>
         </div>
 
         <!-- Main 2-Column Grid: Configurator vs Live Blueprint & Code -->
@@ -598,6 +602,106 @@
           </div>
           <div style="display: flex; gap: 10px;">
             <a href="labs.html#lab-005" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
+            <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
+          </div>
+        </article>
+
+        <!-- Project 10: Carrier GPON/EPON OLT Deployment -->
+        <article class="card card-interactive project-card" data-category="networking">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <span class="tag" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-secondary); border-color: rgba(6, 182, 212, 0.3);">CARRIER &amp; FTTH</span>
+            <span class="mono-label" style="color: var(--accent-secondary);">2026</span>
+          </div>
+          <h3 style="margin-bottom: 10px;">Carrier GPON/EPON OLT Deployment &amp; FTTH Provisioning</h3>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
+            Configured and deployed production Huawei SmartAX MA5608T &amp; ZTE C320 OLT chassis. Defined Type 1–5 Dynamic Bandwidth Allocation (DBA) profiles, mapped GEM ports to T-CONTs, implemented Service VLAN tagging (SVLAN 802.1ad QinQ), and automated ONT auto-discovery and optical link budget verification (-8 to -27 dBm).
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
+            <span class="skill-tag">Huawei MA5608T</span>
+            <span class="skill-tag">ZTE C320</span>
+            <span class="skill-tag">GPON / EPON</span>
+            <span class="skill-tag">DBA Profiles</span>
+            <span class="skill-tag">T-CONT / GEM</span>
+            <span class="skill-tag">QinQ (802.1ad)</span>
+            <span class="skill-tag">ONT Provisioning</span>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <a href="labs.html#lab-008" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
+            <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
+          </div>
+        </article>
+
+        <!-- Project 11: Metro & Enterprise L2/L3 Switching Fabric -->
+        <article class="card card-interactive project-card" data-category="networking">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <span class="tag" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-primary); border-color: rgba(139, 92, 246, 0.3);">METRO SWITCHING</span>
+            <span class="mono-label" style="color: var(--accent-secondary);">2026</span>
+          </div>
+          <h3 style="margin-bottom: 10px;">Metro Ethernet L2/L3 Switching Fabric (Cisco &amp; Juniper EX)</h3>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
+            Engineered high-density aggregation and distribution switching topology using Cisco Catalyst 3850/9300 and Juniper EX3400/4300. Deployed Multiple Spanning Tree (MSTP IEEE 802.1s), multi-chassis LACP (802.3ad) port-channels, DHCP Snooping with Option 82 circuit insertion, Dynamic ARP Inspection (DAI), and storm control thresholds.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
+            <span class="skill-tag">Cisco Catalyst</span>
+            <span class="skill-tag">Juniper EX</span>
+            <span class="skill-tag">MSTP (802.1s)</span>
+            <span class="skill-tag">LACP Port-Channel</span>
+            <span class="skill-tag">DHCP Snooping</span>
+            <span class="skill-tag">Option 82</span>
+            <span class="skill-tag">DAI &amp; Storm Control</span>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <a href="labs.html#lab-009" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
+            <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
+          </div>
+        </article>
+
+        <!-- Project 12: Juniper Junos Multi-Homed BGP Edge -->
+        <article class="card card-interactive project-card" data-category="networking">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3);">JUNIPER CORE</span>
+            <span class="mono-label" style="color: var(--accent-secondary);">2026</span>
+          </div>
+          <h3 style="margin-bottom: 10px;">Juniper Junos Multi-Homed BGP Edge &amp; RE Protection Filters</h3>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
+            Architected Internet border peering on Juniper MX204 / SRX345 running Junos OS. Configured dual-upstream eBGP with BGP community tagging for traffic engineering (Local-Pref &amp; AS-Path prepending), graceful restart, route dampening, and hardened stateless loopback firewall filters (lo0.0) protecting the Routing Engine against control-plane DDoS.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
+            <span class="skill-tag">Juniper Junos</span>
+            <span class="skill-tag">MX204 / SRX345</span>
+            <span class="skill-tag">eBGP Transit</span>
+            <span class="skill-tag">BGP Communities</span>
+            <span class="skill-tag">Routing Policies</span>
+            <span class="skill-tag">RE Filter (lo0.0)</span>
+            <span class="skill-tag">Commit Confirmed</span>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <a href="labs.html#lab-010" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
+            <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
+          </div>
+        </article>
+
+        <!-- Project 13: Next-Gen Firewall & CGNAT Gateway -->
+        <article class="card card-interactive project-card" data-category="networking">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <span class="tag" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">FIREWALL &amp; CGNAT</span>
+            <span class="mono-label" style="color: var(--accent-secondary);">2026</span>
+          </div>
+          <h3 style="margin-bottom: 10px;">Next-Gen Firewall (Fortinet FortiGate &amp; pfSense HA) with CGNAT</h3>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
+            Constructed carrier perimeter security and large-scale translation gateway using Fortinet FortiGate-100F and pfSense Plus HA. Deployed Zone-Based firewalls, Deterministic Carrier-Grade NAT (RFC 6598 100.64.0.0/10) with 2,000-port blocks per subscriber, active-passive CARP state sync, and hardware-accelerated IPsec IKEv2 site-to-site VPN tunnels.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
+            <span class="skill-tag">Fortinet FortiGate</span>
+            <span class="skill-tag">pfSense HA</span>
+            <span class="skill-tag">CGNAT (RFC 6598)</span>
+            <span class="skill-tag">CARP Failover</span>
+            <span class="skill-tag">IPsec IKEv2</span>
+            <span class="skill-tag">Zone Security</span>
+            <span class="skill-tag">QoS Traffic Shaping</span>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <a href="labs.html#lab-011" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
             <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
           </div>
         </article>
