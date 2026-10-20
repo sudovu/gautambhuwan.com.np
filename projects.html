@@ -455,21 +455,30 @@
   <!-- Background Canvas -->
   <rect width="100%" height="100%" fill="#070a14" rx="10" />
 
-  <!-- 1. Top Tier: ISP Optical Demarcation -->
-  <g transform="translate(370, 20)">
-    <rect width="240" height="42" rx="8" fill="url(#grad-isp)" stroke="#06b6d4" stroke-width="2" />
-    <text x="120" y="26" fill="#f8fafc" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">🌐 INTERNET (ISP DEMARCATION)</text>
-    <text x="120" y="38" fill="#e0f2fe" font-size="9.5" font-family="var(--font-mono)" text-anchor="middle">[SFP Optical Handoff]</text>
+  <!-- 1. Top Tier: Multiple WAN Links (WAN1 & WAN2) -->
+  <!-- WAN 1: Primary Link -->
+  <g transform="translate(255, 18)">
+    <rect width="215" height="46" rx="8" fill="url(#grad-isp)" stroke="#06b6d4" stroke-width="2" />
+    <text x="107" y="24" fill="#f8fafc" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">🌐 WAN1 (Primary ISP)</text>
+    <text x="107" y="38" fill="#e0f2fe" font-size="9.5" font-family="var(--font-mono)" text-anchor="middle">[Active &bull; SFP Optical]</text>
   </g>
 
-  <!-- Line: ISP to Gateway -->
-  <path d="M 490 62 L 490 95" stroke="#06b6d4" stroke-width="2.5" marker-end="url(#arrow-cyan)" />
+  <!-- WAN 2: Secondary / Backup Link -->
+  <g transform="translate(510, 18)">
+    <rect width="215" height="46" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2" />
+    <text x="107" y="24" fill="#f8fafc" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">📡 WAN2 (Secondary ISP)</text>
+    <text x="107" y="38" fill="#93c5fd" font-size="9.5" font-family="var(--font-mono)" text-anchor="middle">[Auto-Failover / Backup]</text>
+  </g>
+
+  <!-- Lines: WAN1 and WAN2 into Gateway Router -->
+  <path d="M 362 64 L 430 95" stroke="#06b6d4" stroke-width="2.5" marker-end="url(#arrow-cyan)" />
+  <path d="M 618 64 L 550 95" stroke="#3b82f6" stroke-width="2.5" stroke-dasharray="4,3" marker-end="url(#arrow-cyan)" />
 
   <!-- 2. Gateway Router Tier -->
   <g transform="translate(340, 95)">
     <rect width="300" height="58" rx="8" fill="url(#grad-gw)" stroke="#a855f7" stroke-width="2" />
-    <text x="150" y="26" fill="#f8fafc" font-size="14" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">🛡️ GATEWAY ROUTER</text>
-    <text x="150" y="44" fill="#e9d5ff" font-size="11" font-family="var(--font-mono)" text-anchor="middle">(Firewall &bull; NAT &bull; DHCP &bull; Bandwidth QoS)</text>
+    <text x="150" y="26" fill="#f8fafc" font-size="14" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">🛡️ GATEWAY ROUTER (DUAL-WAN)</text>
+    <text x="150" y="44" fill="#e9d5ff" font-size="11" font-family="var(--font-mono)" text-anchor="middle">(Dual-WAN Failover &bull; NAT &bull; DHCP &bull; QoS)</text>
   </g>
 
   <!-- Line: Gateway to Core Switch (Tagged Trunk) -->
@@ -738,11 +747,11 @@
   <!-- WAN Feeds (Top Left) -->
   <g transform="translate(40, 30)">
     <rect width="130" height="36" rx="6" fill="#1e293b" stroke="#64748b" stroke-width="1.5" />
-    <text x="65" y="22" fill="#94a3b8" font-size="12" font-family="var(--font-mono)" text-anchor="middle" font-weight="600">🌐 Fiber Link</text>
+    <text x="65" y="22" fill="#94a3b8" font-size="12" font-family="var(--font-mono)" text-anchor="middle" font-weight="600">🌐 WAN1</text>
   </g>
   <g transform="translate(40, 80)">
     <rect width="130" height="36" rx="6" fill="#1e293b" stroke="#64748b" stroke-width="1.5" />
-    <text x="65" y="22" fill="#94a3b8" font-size="12" font-family="var(--font-mono)" text-anchor="middle" font-weight="600">📡 Wireless Link</text>
+    <text x="65" y="22" fill="#94a3b8" font-size="12" font-family="var(--font-mono)" text-anchor="middle" font-weight="600">📡 WAN2</text>
   </g>
 
   <!-- Feeds to Gateway Lines -->
@@ -852,7 +861,7 @@
   <!-- Risk Callout Banner inside SVG -->
   <g transform="translate(80, 500)">
     <rect width="820" height="52" rx="8" fill="rgba(239, 68, 68, 0.12)" stroke="#ef4444" stroke-width="1.5" />
-    <text x="410" y="24" fill="#fca5a5" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">⚠️ AS-FOUND AUDIT: UNMANAGED FLAT NETWORK RISKS</text>
+    <text x="410" y="24" fill="#fca5a5" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">UNMANAGED FLAT NETWORK RISKS</text>
     <text x="410" y="42" fill="#cbd5e1" font-size="11.5" font-family="var(--font-mono)" text-anchor="middle">Single collision domain &bull; 100M daisy-chain video bottleneck &bull; Zero security separation between Wi-Fi, LAN &amp; CCTV</text>
   </g>
 </svg>
