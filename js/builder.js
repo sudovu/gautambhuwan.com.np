@@ -248,6 +248,26 @@ document.addEventListener('DOMContentLoaded', () => {
       telemetryLogging: true,
       hostname: 'FORTI-EDGE-HA01',
       subnet: '100.64.0.0/16'
+    },
+    enterprise_sdwan: {
+      platform: 'cisco',
+      scenario: 'cisco-ipsec',
+      securityHardened: true,
+      haRedundancy: true,
+      dualStackIPv6: true,
+      telemetryLogging: true,
+      hostname: 'SDWAN-HUB-CORP01',
+      subnet: '10.160.0.0/16'
+    },
+    campus_isolation: {
+      platform: 'cisco',
+      scenario: 'cisco-zbfw',
+      securityHardened: true,
+      haRedundancy: true,
+      dualStackIPv6: true,
+      telemetryLogging: true,
+      hostname: 'CAMPUS-MUNI-CORE01',
+      subnet: '172.24.0.0/16'
     }
   };
 

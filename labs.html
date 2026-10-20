@@ -1038,6 +1038,218 @@ end</code></pre>
         </div>
       </article>
 
+      <!-- Lab 12: Enterprise Multi-Site SD-WAN -->
+      <article class="card reveal" id="lab-012" style="margin-bottom: 48px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="mono-label" style="color: #10b981; font-weight: 700;">LAB // 012</span>
+            <span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3);">ENTERPRISE SD-WAN</span>
+          </div>
+          <span class="body-sm" style="color: var(--text-dim);">FORTINET / CISCO // MULTI-SITE HUBS</span>
+        </div>
+
+        <h2>Enterprise Multi-Site SD-WAN Hub-and-Spoke Topology</h2>
+        <p class="body-sm" style="color: var(--text-secondary); margin-bottom: 24px; line-height: 1.6;">
+          Engineered multi-branch SD-WAN architecture interconnecting corporate headquarters, school campuses, and municipal government ward offices. Configured dual-ISP active-active uplinks with continuous SLA health probing (latency, jitter, packet loss), sub-second failover, and quality-of-service (QoS) traffic prioritization for real-time applications.
+        </p>
+
+        <!-- Topology Diagram -->
+        <div class="code-block-header">
+          <span class="mono-label">TOPOLOGY BLUEPRINT // MULTI-SITE SD-WAN OVERLAY</span>
+        </div>
+        <pre class="code-terminal" style="margin-bottom: 24px;"><code>+-----------------------------------------------------------------------------------+
+|               CENTRAL HQ / MUNICIPAL CITY HALL DATA CENTER (HUB-01)               |
+|            Dual WAN: WAN-1 (Fiber Leased Line) + WAN-2 (Metro Broadband)          |
+|                   Fortinet / Cisco Secure SD-WAN Controller                       |
++-----------------------------------------------------------------------------------+
+                  |                                     |
+    [SD-WAN IPsec Overlay Tunnel A]       [SD-WAN IPsec Overlay Tunnel B]
+    Dynamic SLA: Loss &lt; 1%, Jitter &lt; 15ms  Dynamic SLA: Loss &lt; 1%, Jitter &lt; 15ms
+                  |                                     |
+                  v                                     v
++-----------------------------------+ +-----------------------------------+
+|     SPOKE 1: SCHOOL / CAMPUS      | |   SPOKE 2: MUNICIPAL WARD OFFICE  |
+| - Admin &amp; Student Labs LAN        | | - Citizen Service Kiosks LAN      |
+| - Dual-ISP Auto-Steering          | | - e-Governance Encrypted VPN      |
+| - VoIP &amp; LMS Traffic Prioritized  | | - Real-Time Biometric Sync        |
++-----------------------------------+ +-----------------------------------+</code></pre>
+
+        <div class="code-block-header">
+          <span class="mono-label">CLI CONFIGURATION // FORTINET &amp; CISCO SD-WAN SPECIFICATION</span>
+        </div>
+        <div style="position: relative; margin-bottom: 24px;">
+          <pre class="code-terminal"><code>! --- FortiOS SD-WAN Zone &amp; Performance SLA Configuration ---
+config system sdwan
+    set status enable
+    config zone
+        edit "SDWAN_INTERNET_ZONE"
+        next
+        edit "SDWAN_CORPORATE_OVERLAY"
+        next
+    end
+    config members
+        edit 1
+            set interface "wan1"
+            set zone "SDWAN_INTERNET_ZONE"
+            set gateway 198.51.100.1
+        next
+        edit 2
+            set interface "wan2"
+            set zone "SDWAN_INTERNET_ZONE"
+            set gateway 203.0.113.1
+            set cost 10
+        next
+        edit 3
+            set interface "vpn_hub_tun1"
+            set zone "SDWAN_CORPORATE_OVERLAY"
+        next
+        edit 4
+            set interface "vpn_hub_tun2"
+            set zone "SDWAN_CORPORATE_OVERLAY"
+            set cost 5
+        next
+    end
+    config health-check
+        edit "SLA_VOIP_AND_CRITICAL_ERP"
+            set server "10.100.0.1" "8.8.8.8"
+            set interval 500
+            set probe-timeout 300
+            set recoverytime 5
+            config sla
+                edit 1
+                    set latency-threshold 50
+                    set jitter-threshold 15
+                    set packetloss-threshold 1
+                next
+            end
+            set members 3 4
+        next
+    end
+    config service
+        edit 1
+            set name "STEER_VOIP_ERP_TO_BEST_SLA"
+            set mode priority
+            config sla
+                edit "SLA_VOIP_AND_CRITICAL_ERP"
+                    set id 1
+                next
+            end
+            set priority-members 3 4
+            set dst "CORPORATE_HQ_SUBNETS"
+            set service "SIP" "HTTPS" "CUSTOM_ERP"
+        next
+    end
+end</code></pre>
+        </div>
+
+        <div class="grid-2" style="background: var(--surface-elevated); padding: 20px; border-radius: var(--radius-sm); font-size: 0.9rem;">
+          <div>
+            <strong>Problem Diagnosed:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Branch school campuses and remote municipal ward offices experienced frequent packet loss and dropped VoIP / video conference calls during ISP brownouts on single broadband lines.</p>
+          </div>
+          <div>
+            <strong>Resolution &amp; Takeaway:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Deployed an automated SD-WAN overlay with real-time SLA health checks across dual uplinks, achieving seamless sub-second traffic re-steering to healthy paths with zero active call drops or data corruption.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Lab 13: Campus LAN Micro-Segmentation & Isolation -->
+      <article class="card reveal" id="lab-013" style="margin-bottom: 48px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="mono-label" style="color: var(--accent-primary); font-weight: 700;">LAB // 013</span>
+            <span class="tag" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-primary); border-color: rgba(139, 92, 246, 0.3);">ZERO-TRUST ISOLATION</span>
+          </div>
+          <span class="body-sm" style="color: var(--text-dim);">CISCO / JUNIPER // CAMPUS &amp; MUNICIPAL LAN</span>
+        </div>
+
+        <h2>Campus LAN Micro-Segmentation &amp; Zero-Trust Network Isolation</h2>
+        <p class="body-sm" style="color: var(--text-secondary); margin-bottom: 24px; line-height: 1.6;">
+          Engineered strict internal network isolation across multi-floor corporate headquarters, educational institutions (schools &amp; colleges), and municipal city offices. Utilized VRF-Lite Layer 3 routing domains, Private VLANs (PVLANs) to prevent lateral malware propagation, and stateful inter-VLAN firewall inspection.
+        </p>
+
+        <!-- Topology Diagram -->
+        <div class="code-block-header">
+          <span class="mono-label">TOPOLOGY BLUEPRINT // VRF-LITE &amp; PRIVATE VLAN SEGMENTATION</span>
+        </div>
+        <pre class="code-terminal" style="margin-bottom: 24px;"><code>+-----------------------------------------------------------------------------------+
+|             CAMPUS DISTRIBUTION CORE SWITCH (CISCO CATALYST / JUNIPER EX)        |
+|  VRF_ADMINISTRATION  |  VRF_ACADEMIC_LABS  |  VRF_MUNICIPAL_EGOV  |  VRF_SURVEILLANCE |
++-----------------------------------------------------------------------------------+
+           |                        |                       |               |
+           v                        v                       v               v
+  [VLAN 10: Admin Staff]   [VLAN 20: PVLAN Labs]   [VLAN 30: eGov Data]   [VLAN 40: CCTV]
+  - Community Ports:       - Isolated Ports:       - Non-routable to Net  - Dedicated DMZ
+    Staff inter-talk         Host-to-host BLOCKED  - Database Vault       - NVR Storage
+  - 802.1X NAC Authenticated - Promiscuous Uplink to Gateway Only         - Zero Internet</code></pre>
+
+        <div class="code-block-header">
+          <span class="mono-label">CLI CONFIGURATION // CISCO CATALYST &amp; JUNIPER VRF / PVLAN</span>
+        </div>
+        <div style="position: relative; margin-bottom: 24px;">
+          <pre class="code-terminal"><code>! --- Cisco Catalyst Switch: VRF-Lite &amp; Private VLAN Definition ---
+ip vrf VRF_ADMIN
+ rd 65000:10
+!
+ip vrf VRF_ACADEMIC_LABS
+ rd 65000:20
+!
+ip vrf VRF_MUNICIPAL_EGOV
+ rd 65000:30
+!
+! --- Private VLAN Configuration (Blocking Lateral Host Movement) ---
+vlan 201
+ name LAB_STUDENT_ISOLATED
+ private-vlan isolated
+!
+vlan 202
+ name LAB_FACULTY_COMMUNITY
+ private-vlan community
+!
+vlan 200
+ name LAB_PRIMARY_VLAN
+ private-vlan primary
+ private-vlan association 201,202
+!
+! --- Access Port Configuration: Student Lab (Completely Isolated) ---
+interface range GigabitEthernet1/0/1 - 24
+ description STUDENT_COMPUTER_LAB_ISOLATED_PORTS
+ switchport mode private-vlan host
+ switchport private-vlan host-association 200 201
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security violation restrict
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+! --- Promiscuous Uplink to Core Gateway / Firewall ---
+interface GigabitEthernet1/0/48
+ description PROMISCUOUS_UPLINK_TO_FIREWALL_GATEWAY
+ switchport mode private-vlan promiscuous
+ switchport private-vlan mapping 200 201,202
+!
+! --- Layer 3 SVI within VRF ---
+interface Vlan200
+ description DEFAULT_GATEWAY_ACADEMIC_LABS
+ ip vrf forwarding VRF_ACADEMIC_LABS
+ ip address 10.20.0.1 255.255.255.0
+ private-vlan mapping 201,202
+ no shutdown</code></pre>
+        </div>
+
+        <div class="grid-2" style="background: var(--surface-elevated); padding: 20px; border-radius: var(--radius-sm); font-size: 0.9rem;">
+          <div>
+            <strong>Problem Diagnosed:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">In legacy flat network setups, infected student laptops or compromised municipal service kiosk endpoints could laterally scan, sniff, and attack internal administrative accounting servers and CCTV cameras.</p>
+          </div>
+          <div>
+            <strong>Resolution &amp; Takeaway:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Enforced Private VLAN (PVLAN) isolated ports and Layer 3 VRF-Lite segregation. Host-to-host lateral traffic within the same subnet is blocked in switch ASIC hardware, securing critical assets with zero performance penalty.</p>
+          </div>
+        </div>
+      </article>
+
     </div>
   </section>
 

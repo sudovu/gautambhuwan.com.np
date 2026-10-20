@@ -529,6 +529,140 @@ commit confirmed 5</code></pre>
           <strong>Key Takeaway:</strong> The combination of Junos candidate configurations with atomic commits and hardware-rate <code>lo0.0</code> firewall filters provides unmatched operational safety for mission-critical core Internet edge routing.
         </div>
       `
+    },
+    'enterprise-sdwan-isolation': {
+      title: 'Enterprise Network Isolation & SD-WAN: Designing Zero-Trust Infrastructure for Schools, Corporations, and Municipalities',
+      category: 'ENTERPRISE & SD-WAN',
+      readTime: '10 MIN READ // OCT 2026',
+      author: 'Bhuwan Gautam (Vhuwon Mathers)',
+      role: 'Network & Systems Engineer',
+      summary: 'A comprehensive field guide to designing resilient, segmented campus and municipal infrastructures: eliminating flat-network security risks with VRF-Lite, blocking lateral movement in student/employee labs with Private VLANs (PVLANs), and orchestrating multi-site SD-WAN failover.',
+      html: `
+        <div class="article-header-meta">
+          <div class="article-author-pill">
+            <span class="status-dot" style="background: #10b981;"></span>
+            <span>By <strong>Bhuwan Gautam</strong> // Network &amp; Systems Engineer</span>
+          </div>
+          <div class="article-meta-badge">Fortinet SD-WAN &bull; Cisco Catalyst &bull; VRF-Lite &bull; Private VLANs</div>
+        </div>
+
+        <div class="article-callout" style="border-left-color: #10b981;">
+          <strong>The Real-World Dilemma:</strong> In many educational campuses, corporate business houses, and municipal local government bodies, networks are deployed "flat" — workstations, student BYOD devices, accounting servers, and IP CCTV cameras share a single broadcast domain. A single infected laptop or compromised kiosk can scan the entire subnet, perform ARP poisoning, and laterally compromise financial databases or video feeds.
+        </div>
+
+        <h3>1. The Three Pillars of Internal Network Isolation</h3>
+        <p>Enterprise and municipal network engineering demands strict separation across three distinct functional tiers:</p>
+        <ul style="list-style: square; margin-left: 20px; line-height: 1.7; color: var(--text-secondary);">
+          <li><strong>Layer 2 Isolation (Private VLANs):</strong> In high-density computer labs, student dorms, and municipal citizen service kiosks, workstations need internet and server gateway access, but must <em>never</em> be able to communicate with each other. Private VLANs (PVLANs) enforce this directly in the switch hardware ASIC.</li>
+          <li><strong>Layer 3 Virtualization (VRF-Lite):</strong> Separates the global routing table into isolated virtual routers (e.g. <code>VRF_ADMIN</code>, <code>VRF_STUDENTS</code>, <code>VRF_EGOV</code>, <code>VRF_CCTV</code>). Traffic between VRFs cannot cross unless explicitly passed through a stateful firewall.</li>
+          <li><strong>Stateful Zone Inspection:</strong> A next-generation firewall (e.g., Fortinet FortiGate) controls all inter-VLAN/inter-VRF flows, inspecting application Layer 7 signatures and blocking lateral port scanning.</li>
+        </ul>
+
+        <div class="terminal-card" style="margin: 20px 0;">
+          <div class="terminal-header">
+            <span class="terminal-title">ascii-architecture // zero-trust-campus-segmentation</span>
+          </div>
+          <pre class="terminal-body" style="font-size: 0.82rem; line-height: 1.4;">
+[ Administrative &amp; Executive VRF ]        [ Student &amp; Guest BYOD VRF ]        [ CCTV &amp; Facilities DMZ ]
+  (10.10.0.0/24 - Restricted Access)       (172.20.0.0/22 - PVLAN Isolated)     (192.168.100.0/24 - Non-Routable)
+                 |                                      |                                      |
+                 +-------------------+                  |                  +-------------------+
+                                     |                  |                  |
+                                     v                  v                  v
+                      +--------------------------------------------------------------+
+                      |         ENTERPRISE NEXT-GEN FIREWALL / SD-WAN CLUSTER        |
+                      |   - Zone-Based Firewall Policies (Deny All Cross-Traffic)    |
+                      |   - Dual-WAN SD-WAN Engine with Performance SLA Probing      |
+                      +--------------------------------------------------------------+
+                                            /                  \
+                                           v                    v
+                               [ WAN 1: Fiber Leased Line ]  [ WAN 2: High-Speed Broadband ]
+                               (Primary - VoIP / ERP SLA)    (Secondary - Bulk Web / Video)
+          </pre>
+        </div>
+
+        <h3>2. Implementing Private VLANs on Cisco Catalyst</h3>
+        <p>In school labs or municipal kiosks, configure an <strong>Isolated Secondary VLAN</strong>. Workstations on isolated ports can reach the promiscuous router gateway (port 48), but cannot ping or send frames to each other:</p>
+
+        <div class="terminal-card" style="margin: 20px 0;">
+          <div class="terminal-header">
+            <span class="terminal-title">cisco-ios // private-vlan-lab-isolation.ios</span>
+          </div>
+          <pre class="terminal-body"><code>! Define Secondary Isolated VLAN and Primary VLAN
+vlan 201
+ name LAB_STUDENT_ISOLATED
+ private-vlan isolated
+!
+vlan 200
+ name LAB_PRIMARY
+ private-vlan primary
+ private-vlan association 201
+!
+! Apply Isolated Mode to Student Lab Access Switchports
+interface range GigabitEthernet1/0/1 - 24
+ description STUDENT_COMPUTER_LAB_PORTS
+ switchport mode private-vlan host
+ switchport private-vlan host-association 200 201
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security violation restrict
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+! Promiscuous Uplink Port to Core Firewall / Gateway
+interface GigabitEthernet1/0/48
+ description PROMISCUOUS_UPLINK_TO_FIREWALL
+ switchport mode private-vlan promiscuous
+ switchport private-vlan mapping 200 201</code></pre>
+        </div>
+
+        <h3>3. Multi-Site SD-WAN Architecture for Distributed Branches</h3>
+        <p>For corporate headquarters with regional offices or municipal city halls with ward offices, traditional static IPsec VPNs suffer during ISP outages. SD-WAN solves this by creating dynamic overlays over dual WAN links and continuously measuring latency, jitter, and packet loss:</p>
+
+        <div class="terminal-card" style="margin: 20px 0;">
+          <div class="terminal-header">
+            <span class="terminal-title">fortios // multi-branch-sdwan-sla.conf</span>
+          </div>
+          <pre class="terminal-body"><code># Configure Performance SLA Probe for Voice &amp; Critical ERP Traffic
+config system sdwan
+    config health-check
+        edit "CRITICAL_SERVICES_SLA"
+            set server "10.0.0.1" "8.8.8.8"
+            set interval 500
+            set probe-timeout 300
+            set recoverytime 5
+            config sla
+                edit 1
+                    set latency-threshold 45
+                    set jitter-threshold 12
+                    set packetloss-threshold 1
+                next
+            end
+            set members 1 2
+        next
+    end
+    # Automated Dynamic Steering Rule
+    config service
+        edit 10
+            set name "STEER_VOIP_AND_EGOV"
+            set mode priority
+            config sla
+                edit "CRITICAL_SERVICES_SLA"
+                    set id 1
+                next
+            end
+            set priority-members 1 2
+            set dst "CORPORATE_HQ_SUBNETS"
+            set service "SIP" "HTTPS"
+        next
+    end
+end</code></pre>
+        </div>
+
+        <div class="article-callout" style="border-left-color: #10b981;">
+          <strong>Key Takeaway:</strong> Modern campus and municipal engineering requires moving away from flat, unmanaged LANs. Combining Private VLANs at the edge, VRF-Lite at the core distribution layer, and multi-branch SD-WAN at the perimeter provides zero-trust security and carrier-grade availability.
+        </div>
+      `
     }
   };
 

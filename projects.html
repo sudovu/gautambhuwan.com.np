@@ -203,6 +203,8 @@
           <button type="button" class="architect-preset-chip" data-preset="metro_switch">Metro L2/L3 Switching Ring (QinQ &amp; MSTP)</button>
           <button type="button" class="architect-preset-chip" data-preset="juniper_transit">Juniper Core BGP Transit &amp; Filter</button>
           <button type="button" class="architect-preset-chip" data-preset="fortigate_firewall">Fortinet FortiGate &amp; CGNAT HA</button>
+          <button type="button" class="architect-preset-chip" data-preset="enterprise_sdwan">Enterprise SD-WAN (Corporate / Municipal / Schools)</button>
+          <button type="button" class="architect-preset-chip" data-preset="campus_isolation">Campus &amp; Municipal LAN Isolation (VRF-Lite &amp; PVLAN)</button>
         </div>
 
         <!-- Main 2-Column Grid: Configurator vs Live Blueprint & Code -->
@@ -702,6 +704,59 @@
           </div>
           <div style="display: flex; gap: 10px;">
             <a href="labs.html#lab-011" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
+            <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
+          </div>
+        </article>
+
+        <!-- Project 14: Enterprise SD-WAN & Multi-Site Interconnect -->
+        <article class="card card-interactive project-card" data-category="networking">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3);">SD-WAN &amp; MULTI-BRANCH</span>
+            <span class="mono-label" style="color: var(--accent-secondary);">2026</span>
+          </div>
+          <h3 style="margin-bottom: 10px;">Enterprise Multi-Site SD-WAN (Corporate, Municipalities &amp; Schools)</h3>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
+            Architected and deployed an enterprise-wide SD-WAN hub-and-spoke overlay interconnecting corporate headquarters, school branches, and municipal government ward offices. Configured active-active dual-ISP uplinks with continuous SLA health probes (packet loss, jitter, latency), automated sub-second IPsec failover, and quality-of-service (QoS) traffic prioritization for VoIP, ERP, and e-Governance transactions.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
+            <span class="skill-tag">Fortinet Secure SD-WAN</span>
+            <span class="skill-tag">IPsec IKEv2 Overlay</span>
+            <span class="skill-tag">Dynamic SLA Probing</span>
+            <span class="skill-tag">Corporate Headquarters</span>
+            <span class="skill-tag">Municipal Ward Interconnect</span>
+            <span class="skill-tag">Schools &amp; Campuses</span>
+            <span class="skill-tag">BGP Overlay</span>
+            <span class="skill-tag">QoS Traffic Steering</span>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <a href="labs.html#lab-012" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
+            <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
+          </div>
+        </article>
+
+        <!-- Project 15: Zero-Trust Campus LAN Micro-Segmentation & Isolation -->
+        <article class="card card-interactive project-card" data-category="networking">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <span class="tag" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-primary); border-color: rgba(139, 92, 246, 0.3);">CAMPUS &amp; MUNICIPAL ISOLATION</span>
+            <span class="mono-label" style="color: var(--accent-secondary);">2026</span>
+          </div>
+          <h3 style="margin-bottom: 10px;">Campus LAN Micro-Segmentation &amp; Network Isolation</h3>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
+            Engineered zero-trust internal network segregation across multi-floor corporate business houses, schools/colleges, and municipal administrative buildings. Deployed VRF-Lite routing boundaries, Private VLANs (community and isolated ports) to eliminate lateral malware spread in student/employee labs, 802.1X NAC, isolated captive-portal guest Wi-Fi, and quarantined CCTV surveillance zones with stateful inter-VLAN firewall inspection.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
+            <span class="skill-tag">VRF-Lite</span>
+            <span class="skill-tag">Private VLANs (PVLAN)</span>
+            <span class="skill-tag">802.1X NAC</span>
+            <span class="skill-tag">Cisco Catalyst</span>
+            <span class="skill-tag">Juniper EX</span>
+            <span class="skill-tag">Schools &amp; Universities</span>
+            <span class="skill-tag">Corporate Security</span>
+            <span class="skill-tag">CCTV Enclave</span>
+            <span class="skill-tag">Zero-Trust Inter-VLAN</span>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <a href="labs.html#lab-013" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
             <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
           </div>
         </article>
