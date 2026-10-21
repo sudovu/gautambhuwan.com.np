@@ -563,6 +563,52 @@ img, svg {
   opacity: 1;
 }
 
+/* Category-Themed Card Borders & Accents (Matching Heading Colors) */
+.category-section-block[data-category-section="foundations"] .card {
+  border: 1px solid rgba(6, 182, 212, 0.32);
+}
+.category-section-block[data-category-section="foundations"] .card:hover {
+  border-color: rgba(6, 182, 212, 0.75);
+  box-shadow: 0 10px 28px -8px rgba(6, 182, 212, 0.18);
+}
+.category-section-block[data-category-section="foundations"] .card-interactive::before {
+  background: linear-gradient(90deg, transparent, var(--accent-secondary), transparent);
+}
+
+.category-section-block[data-category-section="fiber-optics"] .card {
+  border: 1px solid rgba(16, 185, 129, 0.32);
+}
+.category-section-block[data-category-section="fiber-optics"] .card:hover {
+  border-color: rgba(16, 185, 129, 0.75);
+  box-shadow: 0 10px 28px -8px rgba(16, 185, 129, 0.18);
+}
+.category-section-block[data-category-section="fiber-optics"] .card-interactive::before {
+  background: linear-gradient(90deg, transparent, #10b981, transparent);
+}
+
+.category-section-block[data-category-section="enterprise-systems"] .card {
+  border: 1px solid rgba(168, 85, 247, 0.32);
+}
+.category-section-block[data-category-section="enterprise-systems"] .card:hover {
+  border-color: rgba(168, 85, 247, 0.75);
+  box-shadow: 0 10px 28px -8px rgba(168, 85, 247, 0.18);
+}
+.category-section-block[data-category-section="enterprise-systems"] .card-interactive::before {
+  background: linear-gradient(90deg, transparent, #a855f7, transparent);
+}
+
+.category-section-block[data-category-section="carrier-core"] .card {
+  border: 1px solid rgba(244, 63, 94, 0.32);
+}
+.category-section-block[data-category-section="carrier-core"] .card:hover {
+  border-color: rgba(244, 63, 94, 0.75);
+  box-shadow: 0 10px 28px -8px rgba(244, 63, 94, 0.18);
+}
+.category-section-block[data-category-section="carrier-core"] .card-interactive::before {
+  background: linear-gradient(90deg, transparent, #f43f5e, transparent);
+}
+
+
 /* Grids */
 .grid-2 {
   display: grid;
