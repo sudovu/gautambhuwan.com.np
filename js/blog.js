@@ -735,6 +735,35 @@ end</code></pre>
     }
   }
 
+    // Category Filter Functionality
+  const filterBtns = document.querySelectorAll('.category-filter-btn');
+  const categorySections = document.querySelectorAll('.category-section-block');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => {
+        b.classList.remove('active');
+        b.style.background = 'transparent';
+        b.style.borderColor = 'var(--border)';
+        b.style.color = 'var(--text-secondary)';
+      });
+      btn.classList.add('active');
+      btn.style.background = 'var(--surface-card)';
+      btn.style.borderColor = 'var(--border-accent)';
+      btn.style.color = 'var(--text-primary)';
+
+      const selectedCat = btn.getAttribute('data-category');
+
+      categorySections.forEach(sec => {
+        if (selectedCat === 'all' || sec.getAttribute('data-category-section') === selectedCat) {
+          sec.style.display = 'block';
+        } else {
+          sec.style.display = 'none';
+        }
+      });
+    });
+  });
+
   // Robust Event Delegation for Article Previews (Cards & Buttons)
   document.addEventListener('click', (e) => {
     const trigger = e.target.closest('[data-article]');
