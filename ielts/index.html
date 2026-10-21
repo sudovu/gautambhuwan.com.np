@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>IELTS by GAMA - Multi-Platform Hybrid AI English Tutor</title>
+  <meta name="description" content="IELTS by GAMA - Multi-Platform (Tablet, iOS, Windows, Android) Hybrid Online + Offline AI English Exam Tutor with Cambridge 4-Skills & IELTS Advantage Framework.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="IELTS by GAMA">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/icon-180.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="images/icon-152.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="images/icon-120.png">
+  <link rel="apple-touch-icon" href="images/icon-180.png">
+  <meta name="theme-color" content="#0f141c" id="metaThemeColor">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-TileColor" content="#0f141c">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="images/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+  <div class="app-container">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="header-brand" onclick="navigateToTab('dashboard')" style="cursor: pointer;" title="Back to Dashboard">
+        <div class="brand-logo">
+          <img src="images/logo.png" alt="IELTS by GAMA Logo" class="brand-logo-img">
+        </div>
+        <div class="brand-title">
+          <h1>IELTS <span class="brand-accent">by GAMA</span></h1>
+          <span class="subtext" id="screenDimensionBadge">Adaptive Multi-Platform AI Tutor • <span class="version-tag" id="headerVersionBadge">v1.5.3</span></span>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <div id="connectivityBadge" class="status-badge offline" title="Network Engine Status">
+          <span class="dot">●</span> <span id="statusText">OFFLINE</span>
+        </div>
+        <button id="toggleOfflineBtn" class="btn btn-secondary btn-sm" title="Toggle forced offline mode for complete privacy">
+          Offline: OFF
+        </button>
+        <button id="iosInstallHeaderBtn" class="btn btn-secondary btn-sm" onclick="openIosInstallModal()" title="Install or Download IELTS by GAMA on iOS (iPhone & iPad)" style="display:inline-flex; align-items:center; gap:5px; border-color:rgba(59,130,246,0.5); color:var(--accent-primary);">
+          <span>📲</span> <span>iOS App</span>
+        </button>
+        <button id="themeToggleBtn" class="btn btn-icon btn-sm" title="Toggle Light/Dark Theme (Alt+T)">
+          🌓
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <div class="app-body">
+      <!-- Navigation Sidebar -->
+      <nav class="sidebar">
+        <!-- Mobile Category Filter Strip (All 4 Distinct Categories) -->
+        <div class="mobile-cat-filter" id="mobileCatFilter">
+          <button class="cat-filter-btn active" data-filter="core">🎯 Strategy</button>
+          <button class="cat-filter-btn" data-filter="exam">🎓 4-Skills</button>
+          <button class="cat-filter-btn" data-filter="advantage">🧭 Advantage</button>
+          <button class="cat-filter-btn" data-filter="system">⚙️ System</button>
+        </div>
+
+        <div class="sidebar-scrollable-content">
+          <!-- Category 1: Strategy & Core Diagnostics -->
+          <div class="nav-category-group" data-group="core">
+            <div class="nav-category-header">
+              <span class="cat-dot dot-core"></span>
+              <span class="cat-title">Strategy & Core</span>
+            </div>
+            <ul class="nav-links">
+              <li class="nav-item active" data-tab="dashboard" data-cat="core">
+                <span class="nav-icon">📊</span> <span class="nav-label">Dashboard</span>
+                <span class="nav-badge badge-core">Overview</span>
+              </li>
+              <li class="nav-item" data-tab="diagnostic" data-cat="core">
+                <span class="nav-icon">🎯</span> <span class="nav-label">Diagnostic Test</span>
+                <span class="nav-badge badge-core">12 Qs</span>
+              </li>
+              <li class="nav-item" data-tab="chat" data-cat="core">
+                <span class="nav-icon">💬</span> <span class="nav-label">AI Tutor Chat</span>
+                <span class="nav-badge badge-core">AI Assistant</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Category 2: Cambridge 4-Skills Exam Suite -->
+          <div class="nav-category-group" data-group="exam">
+            <div class="nav-category-header">
+              <span class="cat-dot dot-exam"></span>
+              <span class="cat-title">Cambridge 4-Skills Suite</span>
+            </div>
+            <ul class="nav-links">
+              <li class="nav-item" data-tab="speaking" data-cat="exam">
+                <span class="nav-icon">🎙️</span> <span class="nav-label">Speaking Examiner</span>
+                <span class="nav-badge badge-exam">Dr. Harrison</span>
+              </li>
+              <li class="nav-item" data-tab="writing" data-cat="exam">
+                <span class="nav-icon">✍️</span> <span class="nav-label">Writing Studio</span>
+                <span class="nav-badge badge-exam">Task 1 & 2</span>
+              </li>
+              <li class="nav-item" data-tab="reading" data-cat="exam">
+                <span class="nav-icon">📑</span> <span class="nav-label">Reading Practice</span>
+                <span class="nav-badge badge-exam">3 Passages</span>
+              </li>
+              <li class="nav-item" data-tab="listening" data-cat="exam">
+                <span class="nav-icon">🎧</span> <span class="nav-label">Listening Module</span>
+                <span class="nav-badge badge-exam">Sec 1-4</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Category 3: IELTS Advantage & Linguistic Drills -->
+          <div class="nav-category-group" data-group="advantage">
+            <div class="nav-category-header">
+              <span class="cat-dot dot-advantage"></span>
+              <span class="cat-title">Methodology & Drills</span>
+            </div>
+            <ul class="nav-links">
+              <li class="nav-item" data-tab="advantage" data-cat="advantage">
+                <span class="nav-icon">🧭</span> <span class="nav-label">Advantage Studio</span>
+                <span class="nav-badge badge-advantage">Pell Method</span>
+              </li>
+              <li class="nav-item" data-tab="grammar" data-cat="advantage">
+                <span class="nav-icon">📖</span> <span class="nav-label">Grammar & Clozes</span>
+                <span class="nav-badge badge-advantage">12 Fill-Ups</span>
+              </li>
+              <li class="nav-item" data-tab="vocab" data-cat="advantage">
+                <span class="nav-icon">🗂️</span> <span class="nav-label">Vocabulary & SRS</span>
+                <span class="nav-badge badge-advantage">10 Vaults</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Category 4: Tracking & System -->
+          <div class="nav-category-group" data-group="system">
+            <div class="nav-category-header">
+              <span class="cat-dot dot-system"></span>
+              <span class="cat-title">Tracking & System</span>
+            </div>
+            <ul class="nav-links">
+              <li class="nav-item" data-tab="mistakes" data-cat="system">
+                <span class="nav-icon">📕</span> <span class="nav-label">Mistake Book</span>
+                <span class="nav-badge badge-system">Errors</span>
+              </li>
+              <li class="nav-item" data-tab="settings" data-cat="system">
+                <span class="nav-icon">⚙️</span> <span class="nav-label">Settings & Data</span>
+                <span class="nav-badge badge-system">Privacy</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="device-pill">
+            <span class="small-label">Device Tier:</span>
+            <strong id="deviceProfileLabel">DESKTOP</strong>
+          </div>
+          <div class="model-pill">
+            <span class="small-label">Active Model:</span>
+            <span id="modelNameLabel">GAM IELTS Standard</span>
+          </div>
+          <div class="version-pill" style="margin-top: 8px; font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono); display: flex; justify-content: space-between; align-items: center; padding: 4px 8px; background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.25); border-radius: 6px;">
+            <span>Build:</span>
+            <strong style="color: var(--primary-accent);" id="appVersionBadge">v1.5.3</strong>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content Stage -->
+      <main class="content-stage">
+        <!-- 1. Dashboard Tab -->
+        <section id="tab-dashboard" class="tab-pane active">
+          <div class="pane-header">
+            <h2>Personal Learning Dashboard</h2>
+            <p class="subtitle" id="dailyGreetingText">Welcome back! Loading study recommendations...</p>
+          </div>
+
+          <!-- 1A. Daily Mission & Goal Achiever Card (v1.4.0) -->
+          <div class="daily-goal-card mb-4" id="dailyGoalAchieverCard">
+            <div class="goal-header-row">
+              <div class="goal-title-wrap">
+                <div class="goal-icon-badge">🎯</div>
+                <div>
+                  <h3 style="margin: 0; font-size: 1.15rem; color: var(--text-primary);">What do you want to achieve today?</h3>
+                  <span style="font-size: 0.8rem; color: var(--text-secondary);" id="todayDateLabel">Daily IELTS Target • 30 Mins Planned</span>
+                </div>
+              </div>
+              <button class="btn btn-cat-ghost btn-sm" onclick="openGoalSelectorModal()">⚙️ Change Today's Goal</button>
+            </div>
+
+            <!-- Quick Goal Selector Chips -->
+            <div class="goal-chips-row" id="dashboardGoalChips">
+              <button class="goal-chip active" id="chip_goal_speaking" onclick="setDailyGoal('speaking', this)">🎙️ Speaking Interview (Band 7.5+)</button>
+              <button class="goal-chip" id="chip_goal_reading" onclick="setDailyGoal('reading', this)">📑 Master Reading Passage (80%+)</button>
+              <button class="goal-chip" id="chip_goal_writing" onclick="setDailyGoal('writing', this)">✍️ Write & Audit Task 2 PEEL Essay</button>
+              <button class="goal-chip" id="chip_goal_grammar" onclick="setDailyGoal('grammar', this)">✏️ Solve 5 Grammar Clozes</button>
+              <button class="goal-chip" id="chip_goal_vocab" onclick="setDailyGoal('vocab', this)">🧠 Master 10 SRS Flashcards</button>
+              <button class="goal-chip" id="chip_goal_diagnostic" onclick="setDailyGoal('diagnostic', this)">🎯 Take 12-Q Diagnostic</button>
+            </div>
+
+            <!-- Active Goal State & Immediate Guidance -->
+            <div class="goal-active-box" id="goalActiveBox">
+              <div class="goal-target-details">
+                <div class="goal-target-title">
+                  <span id="activeGoalIcon">🎙️</span> <span id="activeGoalTitle">Complete 1 Official Speaking Interview</span>
+                  <span class="badge-role" id="goalStatusBadge" style="font-size: 0.72rem;">IN PROGRESS</span>
+                </div>
+                <div class="goal-target-desc" id="activeGoalDescription">
+                  Practice with Dr. Harrison in the 3-Part Examiner Room using the 3-Step Strategy (Direct Answer &rarr; Reason &rarr; Concrete Example).
+                </div>
+                <div class="goal-progress-bar-wrap">
+                  <div class="goal-progress-track">
+                    <div class="goal-progress-fill" id="goalProgressFill" style="width: 25%;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="goal-actions-group">
+                <button class="btn-achieve-goal btn-pulse" id="achieveGoalBtn" onclick="helpAchieveGoal()">
+                  <span>🚀</span> Help Me Achieve This Goal
+                </button>
+                <button class="btn btn-outline btn-sm" id="completeGoalBtn" onclick="markGoalAchieved()">
+                  ✓ Mark Achieved
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1B. Key Performance Metrics -->
+          <div class="grid-cards">
+            <div class="card stat-card primary">
+              <span class="card-label">Current Estimated Band</span>
+              <div class="big-metric" id="currentBandMetric">6.0</div>
+              <span class="metric-sub" id="cefrMetric">CEFR Level: B2</span>
+            </div>
+
+            <div class="card stat-card">
+              <span class="card-label">Target Band</span>
+              <div class="big-metric" id="targetBandMetric">7.5</div>
+              <span class="metric-sub">Track: Academic</span>
+            </div>
+
+            <div class="card stat-card">
+              <span class="card-label">SRS Flashcards Due</span>
+              <div class="big-metric" id="srsDueMetric">0</div>
+              <span class="metric-sub">SuperMemo SM-2 SRS</span>
+            </div>
+
+            <div class="card stat-card">
+              <span class="card-label">Active Mistakes</span>
+              <div class="big-metric" id="activeMistakesMetric">0</div>
+              <span class="metric-sub" id="accuracyRateMetric">Accuracy: 100%</span>
+            </div>
+          </div>
+
+          <!-- 1C. Category Progress & Mastery Tracking (NEW v1.4.0) -->
+          <div class="mt-4">
+            <div class="section-title-row">
+              <h3>Category Progress & Mastery Tracking</h3>
+              <span class="badge-role">Live Competency Ledger</span>
+            </div>
+            <p class="subtitle" style="margin-top: 4px;">Real-time competency, completion rates, and practice tracking across all 4 preparation categories.</p>
+
+            <div class="category-progress-grid" id="categoryProgressGrid">
+              <!-- Category 1: Strategy & Core -->
+              <div class="cat-progress-card" data-cat="core">
+                <div>
+                  <div class="cat-card-header">
+                    <div class="cat-badge-title">
+                      <span class="cat-dot dot-core"></span>
+                      <span>Strategy & Core</span>
+                    </div>
+                    <span class="cat-progress-percent" id="catProgressPct_core">65%</span>
+                  </div>
+                  <div class="cat-progress-track mt-2">
+                    <div class="cat-progress-bar bar-core" id="catProgressBar_core" style="width: 65%;"></div>
+                  </div>
+                  <div class="cat-metrics-list mt-3">
+                    <div class="cat-metric-item">
+                      <span>CEFR Diagnostic:</span>
+                      <strong id="catMetricDiag">Completed (Band 6.0)</strong>
+                    </div>
+                    <div class="cat-metric-item">
+                      <span>Baseline CEFR:</span>
+                      <strong id="catMetricCefr">B2 Independent</strong>
+                    </div>
+                    <div class="cat-metric-item">
+                      <span>AI Tutor Queries:</span>
+                      <strong id="catMetricTutor">12 Dialogues</strong>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn btn-sm btn-outline mt-2" onclick="navigateToTab('diagnostic')">🎯 Open Diagnostic / Tutor</button>
+              </div>
+
+              <!-- Category 2: Cambridge 4-Skills Suite -->
+              <div class="cat-progress-card" data-cat="exam">
+                <div>
+                  <div class="cat-card-header">
+                    <div class="cat-badge-title">
+                      <span class="cat-dot dot-exam"></span>
+                      <span>Cambridge 4-Skills</span>
+                    </div>
+                    <span class="cat-progress-percent" id="catProgressPct_exam">72%</span>
+                  </div>
+                  <div class="cat-progress-track mt-2">
+                    <div class="cat-progress-bar bar-exam" id="catProgressBar_exam" style="width: 72%;"></div>
+                  </div>
+                  <div class="cat-metrics-list mt-3">
+                    <div class="cat-metric-item">
+                      <span>Speaking Examiner:</span>
+                      <strong id="catMetricSpeaking">Set 1 Done (Band 6.5)</strong>
+                    </div>
+                    <div class="cat-metric-item">
+                      <span>Writing Studio:</span>
+                      <strong id="catMetricWriting">1 Essay Evaluated (Band 7.0)</strong>
+                    </div>
+                    <div class="cat-metric-item">
+                      <span>Academic Reading:</span>
+                      <strong id="catMetricReading">Passage 1 (8.5 Band)</strong>
+                    </div>
+                    <div class="cat-metric-item">
+                      <span>Listening Simulation:</span>
+                      <strong id="catMetricListening">Sec 1 Done (7.5 Band)</strong>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn btn-sm btn-hero-exam mt-2" onclick="navigateToTab('speaking')">🎙️ Practice Exam Suite</button>
+              </div>
+
+              <!-- Category 3: Methodology & Drills -->
+              <div class="cat-progress-card" data-cat="advantage">
+                <div>
+                  <div class="cat-card-header">
+                    <div class="cat-badge-title">
+                      <span class="cat-dot dot-advantage"></span>
+                      <span>Methodology & Drills</span>
+                    </div>
+                    <span class="cat-progress-percent" id="catProgressPct_advantage">80%</span>
+                  </div>
+                  <div class="cat-progress-track mt-2">
+                    <div class="cat-progress-bar bar-advantage" id="catProgressBar_advantage" style="width: 80%;"></div>
+                  </div>
+                  <div class="cat-metrics-list mt-3">
+                    <div class="cat-metric-item">
+                      <span>Advantage 100% Rule:</span>
+                      <strong id="catMetricAdvantage">4 Prompts Analyzed</strong>
+                    </div>
+                    <div class="cat-metric-item">
+                      <span>10-Point Essay Audit:</span>
+                      <strong id="catMetricChecklist">Verified 10/10</strong>
+                    </div>
+                    <div class="cat-metric-item">
+                      <span>Grammar Clozes:</span>
+                      <strong id="catMetricGrammar">12 Drills Solved (Streak: 4)</strong>
+                    </div>
+                    <div class="cat-metric-item">
+                      <span>SRS Vocab Deck:</span>
+                      <strong id="catMetricVocab">24 Cards Retained</strong>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn btn-sm btn-hero-advantage mt-2" onclick="navigateToTab('advantage')">🧭 Open Advantage Studio</button>
+              </div>
+
+              <!-- Category 4: Tracking & System -->
+              <div class="cat-progress-card" data-cat="system">
+                <div>
+                  <div class="cat-card-header">
+                    <div class="cat-badge-title">
+                      <span class="cat-dot dot-system"></span>
+                      <span>Tracking & System</span>
+                    </div>
+                    <span class="cat-progress-percent" id="catProgressPct_system">85%</span>
+                  </div>
+                  <div class="cat-progress-track mt-2">
+                    <div class="cat-progress-bar bar-system" id="catProgressBar_system" style="width: 85%;"></div>
+                  </div>
+                  <div class="cat-metrics-list mt-3">
+                    <div class="cat-metric-item">
+                      <span>Mistake Book:</span>
+                      <strong id="catMetricMistakes">0 Active / 1 Mastered</strong>
+                    </div>
+                    <div class="cat-metric-item">
+                      <span>Accuracy Ratio:</span>
+                      <strong id="catMetricAccuracy">100% Clean</strong>
+                    </div>
+                    <div class="cat-metric-item">
+                      <span>Daily Study Target:</span>
+                      <strong id="catMetricStudyTime">30 Min Target Active</strong>
+                    </div>
+                    <div class="cat-metric-item">
+                      <span>Offline Engine:</span>
+                      <strong id="catMetricStorage">Local RAG Synced</strong>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn btn-sm btn-cat-ghost mt-2" onclick="navigateToTab('mistakes')">📖 Review Mistake Ledger</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1D. Study Plan & Skills Radar -->
+          <div class="split-view mt-4">
+            <div class="card flex-1">
+              <h3>Today's Structured Study Plan</h3>
+              <div id="dailyPlanTasksList" class="tasks-list mt-2">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <div class="card flex-1">
+              <h3>Skills Performance Radar</h3>
+              <div id="skillsRadarBox" class="radar-bars mt-2">
+                <!-- Radar bars injected via JS -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. AI Tutor Chat Tab -->
+        <section id="tab-chat" class="tab-pane">
+          <div class="pane-header">
+            <h2>Unified AI English Tutor</h2>
+            <p class="subtitle">Ask grammar rules, test sentences, or explore IELTS strategies. 100% local by default.</p>
+          </div>
+
+          <div class="chat-container card">
+            <div id="chatMessages" class="chat-messages">
+              <div class="message tutor">
+                <div class="msg-bubble">
+                  Hello! I am your AI English & IELTS Tutor, powered by GAMA with IELTS Advantage methodology. How can I help you today?
+                </div>
+              </div>
+            </div>
+
+            <div class="chat-quick-chips">
+              <span class="chip-label">Quick Prompts:</span>
+              <button class="chip-btn" onclick="sendQuickPrompt('Explain the IELTS Advantage 100% Rule for Task 2 question analysis.')">🧭 100% Rule Analysis</button>
+              <button class="chip-btn" onclick="sendQuickPrompt('Give me a Band 8+ cue card opening structure for Part 2 Speaking.')">🎙️ Part 2 Cue Opening</button>
+              <button class="chip-btn" onclick="sendQuickPrompt('How do I use negative adverbial inversion to boost GRA to Band 8?')">📖 Inversion in Writing</button>
+              <button class="chip-btn" onclick="sendQuickPrompt('What are top academic collocations for environmental essay topics?')">🌿 Environmental Lexis</button>
+            </div>
+
+            <div class="chat-input-bar">
+              <input type="text" id="chatInput" placeholder="Ask a grammar rule (e.g. affect vs effect), type 'I am agree', or ask for an IELTS prompt..." />
+              <button id="voiceInputBtn" class="btn btn-icon" title="Speak message (Web Speech API)">🎙️</button>
+              <button id="sendMessageBtn" class="btn btn-primary">Send</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. Diagnostic Test Tab -->
+        <section id="tab-diagnostic" class="tab-pane">
+          <div class="pane-header">
+            <h2>Comprehensive CEFR & IELTS Diagnostic Assessment</h2>
+            <p class="subtitle">12-question diagnostic benchmarking Grammar, Vocabulary, Reading, Listening, and IELTS Advantage methodology.</p>
+          </div>
+
+          <div class="card">
+            <div id="diagnosticQuestionsContainer"></div>
+            <button id="submitDiagnosticBtn" class="btn btn-primary mt-3">Submit Diagnostic</button>
+            <div id="diagnosticReport" class="report-box mt-3" style="display: none;"></div>
+          </div>
+        </section>
+
+        <!-- 4. IELTS Advantage Questionnaire & Planning Tab (NEW) -->
+        <section id="tab-advantage" class="tab-pane">
+          <div class="pane-header">
+            <h2>IELTS Advantage Question Analysis & Planning Studio</h2>
+            <p class="subtitle">Inspired by Chris Pell's IELTS Advantage methodology: eliminate Band 5-6 traps through systematic question breakdown and the Coffee Shop Method.</p>
+          </div>
+
+          <!-- Studio Navigation Sub-bar -->
+          <div class="sub-nav-bar mb-3">
+            <button class="btn btn-sub-tool active" id="btnAdvTab_analyzer" onclick="switchAdvantageSubTab('analyzer')">
+              <span class="tool-step">1</span> <span class="tool-icon">🧭</span> Question Breakdown
+            </button>
+            <button class="btn btn-sub-tool" id="btnAdvTab_coffee" onclick="switchAdvantageSubTab('coffee')">
+              <span class="tool-step">2</span> <span class="tool-icon">☕</span> Coffee Shop Method
+            </button>
+            <button class="btn btn-sub-tool" id="btnAdvTab_peel" onclick="switchAdvantageSubTab('peel')">
+              <span class="tool-step">3</span> <span class="tool-icon">🧱</span> PEEL Blueprint
+            </button>
+            <button class="btn btn-sub-tool" id="btnAdvTab_checklist" onclick="switchAdvantageSubTab('checklist')">
+              <span class="tool-step">4</span> <span class="tool-icon">📋</span> 10-Point Audit
+            </button>
+          </div>
+
+          <!-- Sub-Tab 1: Question Breakdown Questionnaire -->
+          <div id="advSubPane_analyzer" class="card">
+            <div class="section-title-row">
+              <h3>Question Analysis Questionnaire (The 100% Rule)</h3>
+              <span class="badge-role">Pillar 1: Task Response</span>
+            </div>
+            <p class="small-text mt-1">Select an official essay prompt or type your own question to deconstruct it into its fundamental components.</p>
+
+            <div class="chip-selector-bar mt-2" id="advPromptChips">
+              <span class="chip-label">Quick Prompts:</span>
+              <button class="chip-btn active" onclick="selectAdvantageChip('stem', this)">🔬 STEM vs Arts</button>
+              <button class="chip-btn" onclick="selectAdvantageChip('ubi', this)">🤖 AI & UBI</button>
+              <button class="chip-btn" onclick="selectAdvantageChip('tourism', this)">✈️ Mass Tourism</button>
+              <button class="chip-btn" onclick="selectAdvantageChip('traffic', this)">🚗 Traffic Congestion</button>
+              <button class="chip-btn" onclick="selectAdvantageChip('fashion', this)">👗 Fast Fashion</button>
+            </div>
+
+            <div class="form-group mt-2">
+              <label for="advPromptSelect"><strong>Select Practice Prompt:</strong></label>
+              <select id="advPromptSelect" class="form-select mt-1" onchange="loadAdvantagePrompt(this.value)">
+                <option value="stem">Topic 1: STEM vs Creative Arts (Discuss Both Views)</option>
+                <option value="ubi">Topic 2: Universal Basic Income & AI Automation (Opinion / Agree or Disagree)</option>
+                <option value="tourism">Topic 3: Mass Tourism & Cultural Preservation (Advantages vs Disadvantages)</option>
+                <option value="traffic">Topic 4: Urban Traffic Congestion (Causes & Solutions)</option>
+                <option value="fashion">Topic 5: Fast Fashion & Consumer Society (Direct Two-Part Question)</option>
+              </select>
+            </div>
+
+            <div class="prompt-box mt-3" id="advPromptDisplayBox">
+              <h4 id="advPromptTitle">STEM vs Creative Arts in High School Curricula</h4>
+              <p id="advPromptText">Some educationalists argue that high school curricula should prioritize STEM subjects over creative arts to ensure economic competitiveness. Others believe artistic subjects are equally vital. Discuss both views and give your opinion. (250+ words).</p>
+            </div>
+
+            <div class="analysis-breakdown-grid mt-3">
+              <div class="breakdown-card">
+                <span class="badge-step">STEP 1</span>
+                <h4>General Topic</h4>
+                <p id="advGeneralTopic" class="highlight-text">Education & Curriculum Design</p>
+                <span class="sub-hint">The broad umbrella category for your vocabulary pool.</span>
+              </div>
+
+              <div class="breakdown-card">
+                <span class="badge-step">STEP 2</span>
+                <h4>Specific Micro-Topic</h4>
+                <p id="advMicroTopic" class="highlight-text">Whether schools should prioritize STEM over Arts or maintain balance</p>
+                <span class="sub-hint">The exact boundaries. Writing outside this causes a Band 5 Task Response penalty!</span>
+              </div>
+
+              <div class="breakdown-card">
+                <span class="badge-step">STEP 3</span>
+                <h4>Task Words & Instructions</h4>
+                <p id="advTaskWords" class="highlight-text">Discuss BOTH views AND give your OWN opinion</p>
+                <span class="sub-hint">Must balance both sides equally and maintain a clear personal stance throughout.</span>
+              </div>
+            </div>
+
+            <div class="callout-card mt-3">
+              <h4>⚠️ Examiner Trap Warning:</h4>
+              <p id="advTrapWarning">Do not spend the entire essay defending only one perspective! Because the prompt specifies "Discuss both views", spending 80% on STEM and 20% on arts automatically limits Task Achievement to Band 6.</p>
+            </div>
+          </div>
+
+          <!-- Sub-Tab 2: Coffee Shop Method Idea Generator -->
+          <div id="advSubPane_coffee" class="card" style="display: none;">
+            <div class="section-title-row">
+              <h3>The Coffee Shop Method (Natural Idea Generation)</h3>
+              <span class="badge-role">Anti-Panic Strategy</span>
+            </div>
+            <p class="small-text mt-1">
+              "Imagine you are in a coffee shop with a friend discussing this topic. What would you say in simple, logical terms? Examiners reward clear, realistic arguments—never memorize artificial 'genius' ideas!"
+            </p>
+
+            <div class="mt-3">
+              <label><strong>Brainstorm your Coffee Shop Ideas:</strong></label>
+              <textarea id="advCoffeeShopInput" rows="4" class="mt-1" placeholder="In plain English: What is your genuine opinion on this? What causes it? Give a simple real-world example..."></textarea>
+            </div>
+
+            <div class="coffee-guidance-box mt-3">
+              <h4>Band 7+ Idea Quality Filter:</h4>
+              <ul class="guidance-list">
+                <li>✅ <strong>Is it easy to explain?</strong> If an idea takes 3 complex sentences just to define, drop it.</li>
+                <li>✅ <strong>Can you give a concrete example?</strong> Avoid fake statistics ("A Harvard 2019 survey says 99%..."). Use real instances, policies, or documented trends.</li>
+                <li>✅ <strong>Does it directly address the micro-topic?</strong> Every point must link directly back to the question prompt.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Sub-Tab 3: PEEL Paragraph Blueprint -->
+          <div id="advSubPane_peel" class="card" style="display: none;">
+            <div class="section-title-row">
+              <h3>The PEEL Paragraph Blueprint (Point, Explain, Example, Link)</h3>
+              <span class="badge-role">Band 8+ Coherence</span>
+            </div>
+            <p class="small-text mt-1">Structure each body paragraph with surgical logic using the IELTS Advantage PEEL blueprint.</p>
+
+            <div class="peel-interactive-grid mt-3">
+              <div class="peel-card point">
+                <span class="peel-tag">P - Point</span>
+                <p><strong>Topic Sentence:</strong> State ONE central controlling idea clearly.</p>
+                <div id="advPeelPoint" class="peel-content">STEM disciplines directly power technological modernization and industrial competitiveness.</div>
+              </div>
+
+              <div class="peel-card explain">
+                <span class="peel-tag">E - Explain</span>
+                <p><strong>The 'Why' / 'How':</strong> Explain the underlying mechanism or societal consequence.</p>
+                <div id="advPeelExplain" class="peel-content">Modern knowledge economies require qualified software engineers, data analysts, and researchers to drive productivity.</div>
+              </div>
+
+              <div class="peel-card example">
+                <span class="peel-tag">E - Example</span>
+                <p><strong>Concrete Evidence:</strong> Illustrate with a realistic, recognizable real-world scenario.</p>
+                <div id="advPeelExample" class="peel-content">For instance, nations that subsidized technology education in secondary schools witnessed marked growth in high-tech exports.</div>
+              </div>
+
+              <div class="peel-card link">
+                <span class="peel-tag">L - Link / Result</span>
+                <p><strong>Summary & Impact:</strong> Conclude the thought and tie back to your overarching position.</p>
+                <div id="advPeelLink" class="peel-content">Consequently, allocating robust curriculum hours to STEM subjects is economically justified.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sub-Tab 4: 10-Point Self-Assessment Questionnaire -->
+          <div id="advSubPane_checklist" class="card" style="display: none;">
+            <div class="section-title-row">
+              <h3>The Official 10-Point Essay Self-Assessment Questionnaire</h3>
+              <span class="badge-role">Pre-Submission Quality Gate</span>
+            </div>
+            <p class="small-text mt-1">Never submit an essay without auditing these 10 points. Check each item as you review your draft.</p>
+
+            <div class="checklist-container mt-3" id="advChecklistContainer">
+              <label class="check-item"><input type="checkbox" onchange="updateChecklistProgress()"> 1. Did I answer ALL parts of the prompt (every question word)?</label>
+              <label class="check-item"><input type="checkbox" onchange="updateChecklistProgress()"> 2. Is my personal position clearly stated in both introduction and conclusion?</label>
+              <label class="check-item"><input type="checkbox" onchange="updateChecklistProgress()"> 3. Does each body paragraph focus on ONE central main point?</label>
+              <label class="check-item"><input type="checkbox" onchange="updateChecklistProgress()"> 4. Are ideas fully developed using Point, Explanation, and Concrete Example (PEEL)?</label>
+              <label class="check-item"><input type="checkbox" onchange="updateChecklistProgress()"> 5. Did I avoid sweeping over-generalizations by using academic hedging (e.g., 'tends to', 'could potentially')?</label>
+              <label class="check-item"><input type="checkbox" onchange="updateChecklistProgress()"> 6. Are cohesive linkers varied and natural (not mechanical like 'First of all, Secondly, Lastly')?</label>
+              <label class="check-item"><input type="checkbox" onchange="updateChecklistProgress()"> 7. Did I use topic-specific academic collocations instead of memorized idioms?</label>
+              <label class="check-item"><input type="checkbox" onchange="updateChecklistProgress()"> 8. Did I include a mix of complex sentences (conditionals, relative clauses, passive voice)?</label>
+              <label class="check-item"><input type="checkbox" onchange="updateChecklistProgress()"> 9. Did I proofread for simple slips (subject-verb agreement, plural '-s', articles)?</label>
+              <label class="check-item"><input type="checkbox" onchange="updateChecklistProgress()"> 10. Is the word count comfortably between 260 and 290 words (preventing underlength penalties)?</label>
+            </div>
+
+            <div class="progress-bar-container mt-3">
+              <div class="progress-bar-track">
+                <div class="progress-bar-fill" id="checklistProgressBar" style="width: 0%;"></div>
+              </div>
+              <span id="checklistScoreText" class="mt-1" style="font-size: 0.85rem; font-weight: 600;">0 of 10 checks verified (0%)</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. Adaptive Grammar & Grammar Fill-Up Tab -->
+        <section id="tab-grammar" class="tab-pane">
+          <div class="pane-header">
+            <h2>Grammar Coach & Interactive Fill-Up Clozes</h2>
+            <p class="subtitle">Targeted cloze drills and personalized lessons driven by your error frequency.</p>
+          </div>
+
+          <!-- Sub-bar for Grammar Modes -->
+          <div class="sub-nav-bar mb-3">
+            <button class="btn btn-sub-tool active" id="btnGrammar_fillup" onclick="switchGrammarMode('fillup')">
+              <span class="tool-icon">✏️</span> Interactive Clozes (12 Drills)
+            </button>
+            <button class="btn btn-sub-tool" id="btnGrammar_adaptive" onclick="switchGrammarMode('adaptive')">
+              <span class="tool-icon">🎯</span> Personalized Weakness Lessons
+            </button>
+          </div>
+
+          <!-- Mode 1: Grammar Fill-Up -->
+          <div id="grammarFillupView">
+            <div class="card mb-3">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <div style="flex: 1;">
+                  <span style="font-weight: 700; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 6px; display: block;">Drill Categories & Syntax:</span>
+                  <div class="chip-selector-bar" id="grammarCategoryChips">
+                    <button class="chip-btn active" onclick="selectGrammarFilter('Conditionals', this)">⚡ Conditionals</button>
+                    <button class="chip-btn" onclick="selectGrammarFilter('Inversion', this)">🔄 Inversion (Band 8+)</button>
+                    <button class="chip-btn" onclick="selectGrammarFilter('Passive Voice & Impersonal Structures', this)">🛡️ Passive & Impersonal</button>
+                    <button class="chip-btn" onclick="selectGrammarFilter('Relative & Participle Clauses', this)">🧩 Participle Clauses</button>
+                    <button class="chip-btn" onclick="selectGrammarFilter('Hedging & Modality', this)">🌿 Hedging</button>
+                    <button class="chip-btn" onclick="selectGrammarFilter('Subject-Verb Agreement', this)">⚖️ Subject-Verb</button>
+                    <button class="chip-btn" onclick="selectGrammarFilter('Articles & Countability', this)">🔤 Articles</button>
+                  </div>
+                  <select id="grammarCategorySelect" class="form-select mt-1" style="display: none;" onchange="filterFillupDrills(this.value)">
+                    <option value="Conditionals" selected>Conditionals (Band 7-9)</option>
+                    <option value="Passive Voice & Impersonal Structures">Passive Voice & Impersonal</option>
+                    <option value="Subject-Verb Agreement">Subject-Verb Agreement</option>
+                    <option value="Inversion">Inversion (Band 8+)</option>
+                    <option value="Relative & Participle Clauses">Relative & Participle Clauses</option>
+                    <option value="Prepositions & Concordance">Prepositions & Concordance</option>
+                    <option value="Hedging & Modality">Hedging & Modality</option>
+                    <option value="Articles & Countability">Articles & Countability</option>
+                  </select>
+                </div>
+                <div class="fillup-stats-badge">
+                  Score: <strong id="fillupScore">0</strong> / <span id="fillupTotal">12</span> | Streak: <strong id="fillupStreak">0</strong> 🔥
+                </div>
+              </div>
+            </div>
+
+            <div id="fillupDrillsList" class="fillup-grid">
+              <!-- Drills dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Mode 2: Adaptive Weakness Lessons -->
+          <div id="grammarAdaptiveView" style="display: none;">
+            <div class="card">
+              <div id="grammarSessionContent">
+                <p>Loading adaptive session...</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6. Vocabulary & 3-Step SRS Tab -->
+        <section id="tab-vocab" class="tab-pane">
+          <div class="pane-header">
+            <h2>Vocabulary Vault & SuperMemo SM-2 SRS</h2>
+            <p class="subtitle">IELTS Advantage 3-Step Vocabulary System: Read -> Record Collocations -> Review in Context.</p>
+          </div>
+
+          <!-- Sub-bar for Vocab Modes -->
+          <div class="sub-nav-bar mb-3">
+            <button class="btn btn-sub-tool active" id="btnVocab_vault" onclick="switchVocabMode('vault')">
+              <span class="tool-icon">📚</span> 10 Topic Vaults
+            </button>
+            <button class="btn btn-sub-tool" id="btnVocab_collocations" onclick="switchVocabMode('collocations')">
+              <span class="tool-icon">🔗</span> Collocation Matcher
+            </button>
+            <button class="btn btn-sub-tool" id="btnVocab_upgrades" onclick="switchVocabMode('upgrades')">
+              <span class="tool-icon">🚀</span> Lexical Upgrade Clinic
+            </button>
+            <button class="btn btn-sub-tool" id="btnVocab_srs" onclick="switchVocabMode('srs')">
+              <span class="tool-icon">🗂️</span> SM-2 Flashcards (<span id="srsTabCount">24</span>)
+            </button>
+          </div>
+
+          <!-- Mode 1: Topic Vocabulary Vault -->
+          <div id="vocabVaultView" class="card">
+            <div class="section-title-row">
+              <h3>10 High-Frequency IELTS Academic Topic Vaults</h3>
+              <span class="badge-role">Band 8+ Lexical Vault</span>
+            </div>
+            <div class="chip-selector-bar mt-2" id="vocabTopicChips">
+              <span class="chip-label">Topics:</span>
+              <button class="chip-btn active" onclick="selectVocabTopicChip('environment', this)">🌿 Environment</button>
+              <button class="chip-btn" onclick="selectVocabTopicChip('education', this)">🎓 Education</button>
+              <button class="chip-btn" onclick="selectVocabTopicChip('technology', this)">🤖 Technology</button>
+              <button class="chip-btn" onclick="selectVocabTopicChip('health', this)">🩺 Health</button>
+              <button class="chip-btn" onclick="selectVocabTopicChip('crime', this)">⚖️ Crime</button>
+              <button class="chip-btn" onclick="selectVocabTopicChip('globalization', this)">🌐 Globalisation</button>
+              <button class="chip-btn" onclick="selectVocabTopicChip('work', this)">💼 Economy</button>
+              <button class="chip-btn" onclick="selectVocabTopicChip('urbanization', this)">🏙️ Urbanisation</button>
+              <button class="chip-btn" onclick="selectVocabTopicChip('media', this)">📺 Media</button>
+              <button class="chip-btn" onclick="selectVocabTopicChip('society', this)">👥 Society</button>
+            </div>
+            <select id="vocabTopicSelect" class="form-select mt-1" style="display: none;" onchange="renderVocabTopic(this.value)">
+              <option value="environment">1. Environment & Climate Change</option>
+              <option value="education">2. Education & Academic Curricula</option>
+              <option value="technology">3. Technology & Automation</option>
+              <option value="health">4. Health, Diet & Modern Lifestyles</option>
+              <option value="crime">5. Crime, Justice & Rehabilitation</option>
+              <option value="globalization">6. Globalization & Cultural Identity</option>
+              <option value="work">7. Work, Employment & Automation</option>
+              <option value="urbanization">8. Urbanization & Housing</option>
+              <option value="media">9. Media & Advertising</option>
+              <option value="society">10. Society, Youth & Aging</option>
+            </select>
+
+            <div id="vocabTopicContent" class="mt-3">
+              <!-- Dynamically populated topic cards -->
+            </div>
+          </div>
+
+          <!-- Mode 2: Collocation Matcher -->
+          <div id="vocabCollocationsView" class="card" style="display: none;">
+            <div class="section-title-row">
+              <h3>Academic Collocation Matcher</h3>
+              <span class="badge-role">Band 7+ Lexical Resource</span>
+            </div>
+            <p class="small-text mt-1">Match each Academic Verb with its natural noun partner. Collocations make English sound authentic and un-memorized!</p>
+            <div id="collocationGameGrid" class="collocation-game-grid mt-3">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+          <!-- Mode 3: Lexical Upgrade Clinic -->
+          <div id="vocabUpgradesView" class="card" style="display: none;">
+            <div class="section-title-row">
+              <h3>Lexical Upgrade Clinic (Band 6 to Band 8+)</h3>
+              <span class="badge-role">Precision Vocabulary</span>
+            </div>
+            <p class="small-text mt-1">Learn to replace casual spoken words with precise academic equivalents recommended by former examiners.</p>
+            <div id="upgradesTableContainer" class="mt-3">
+              <!-- Upgrades Table -->
+            </div>
+          </div>
+
+          <!-- Mode 4: SM-2 Spaced Repetition Flashcards -->
+          <div id="vocabSrsView" class="card srs-card-container" style="display: none;">
+            <div id="srsFlashcard" class="flashcard">
+              <div class="flashcard-front">
+                <span class="badge-step" id="cardCategoryBadge">VOCABULARY</span>
+                <h3 id="cardPrompt" class="mt-2">Loading due cards...</h3>
+              </div>
+              <div class="flashcard-back" id="cardAnswerBox" style="display: none;">
+                <hr>
+                <div id="cardAnswer"></div>
+                <div class="rating-buttons mt-3">
+                  <span>Rate your recall:</span>
+                  <button class="btn btn-danger btn-sm" onclick="gradeCard(0)">0 - Blank</button>
+                  <button class="btn btn-warning btn-sm" onclick="gradeCard(3)">3 - Hesitant</button>
+                  <button class="btn btn-success btn-sm" onclick="gradeCard(5)">5 - Perfect</button>
+                </div>
+              </div>
+            </div>
+            <button id="revealCardBtn" class="btn btn-secondary mt-3">Reveal Answer</button>
+          </div>
+        </section>
+
+        <!-- 7. Reading Tab -->
+        <section id="tab-reading" class="tab-pane">
+          <div class="pane-header">
+            <h2>IELTS Reading Practice (Academic Passages)</h2>
+            <p class="subtitle">Complete original academic passages with True/False/Not Given, completion, and IELTS Advantage keyword-synonym mapping.</p>
+          </div>
+
+          <!-- Reading Passage Selector -->
+          <div class="card mb-3">
+            <div class="section-title-row">
+              <h3>Cambridge Academic Reading Passages</h3>
+              <button id="toggleSynonymTableBtn" class="btn btn-outline btn-sm" onclick="toggleSynonymTable()">🔍 Keyword & Synonym Table</button>
+            </div>
+            <div class="chip-selector-bar mt-2" id="readingPassageChips">
+              <span class="chip-label">Passages:</span>
+              <button class="chip-btn active" onclick="selectReadingPassageChip('acad_p1', this)">🌊 Passage 1: Hydrothermal Ecosystems</button>
+              <button class="chip-btn" onclick="selectReadingPassageChip('acad_p2', this)">🧠 Passage 2: Bilingual Cognition</button>
+              <button class="chip-btn" onclick="selectReadingPassageChip('acad_p3', this)">🏙️ Passage 3: Urban Heat Islands</button>
+            </div>
+            <select id="readingPassageSelect" class="form-select mt-1" style="display: none;" onchange="switchReadingPassage(this.value)">
+              <option value="acad_p1">Passage 1: Deep-Sea Hydrothermal Ecosystems (Biology & Geology)</option>
+              <option value="acad_p2">Passage 2: Cognitive Architecture of Bilingualism (Neuroscience)</option>
+              <option value="acad_p3">Passage 3: Urban Heat Islands & Microclimates (Architecture & Ecology)</option>
+            </select>
+            <div id="synonymTableBox" class="mt-3" style="display: none;">
+              <!-- Synonym Table Injected -->
+            </div>
+          </div>
+
+          <div class="split-view reading-split">
+            <div class="card passage-pane">
+              <h3 id="readingTitle">Loading Passage...</h3>
+              <div id="readingText" class="passage-text mt-2"></div>
+            </div>
+
+            <div class="card questions-pane">
+              <h3>Questions</h3>
+              <div id="readingQuestionsList" class="mt-2"></div>
+              <button id="submitReadingBtn" class="btn btn-hero-exam mt-3">Submit Reading Answers</button>
+              <div id="readingScoreReport" class="report-box mt-3" style="display:none;"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 8. Listening Tab -->
+        <section id="tab-listening" class="tab-pane">
+          <div class="pane-header">
+            <h2>IELTS Listening Module</h2>
+            <p class="subtitle">Cambridge-standard audio simulation, distractor detection, and spelling accuracy.</p>
+          </div>
+
+          <div class="card">
+            <div class="chip-selector-bar mb-3" id="listeningSectionChips">
+              <span class="chip-label">Sections:</span>
+              <button class="chip-btn active" id="secBtn_sec_1" onclick="selectListeningSectionChip('sec_1', this)">🏘️ Sec 1: Accommodation</button>
+              <button class="chip-btn" id="secBtn_sec_2" onclick="selectListeningSectionChip('sec_2', this)">🎭 Sec 2: Arts Centre</button>
+              <button class="chip-btn" id="secBtn_sec_3" onclick="selectListeningSectionChip('sec_3', this)">⚡ Sec 3: Solar Microgrids</button>
+              <button class="chip-btn" id="secBtn_sec_4" onclick="selectListeningSectionChip('sec_4', this)">🐋 Sec 4: Cetaceans</button>
+            </div>
+
+            <h3 id="listeningTitle">Loading Listening Scenario...</h3>
+            <div class="audio-control-bar mt-2">
+              <button id="playAudioScriptBtn" class="btn btn-hero-audio">🔊 Play Audio Simulation</button>
+              <button id="toggleTranscriptBtn" class="btn btn-cat-ghost btn-sm">📄 Show / Hide Transcript</button>
+            </div>
+            <div id="listeningTranscriptBox" class="transcript-box mt-2" style="display:none;"></div>
+
+            <div id="listeningQuestionsList" class="mt-3"></div>
+            <button id="submitListeningBtn" class="btn btn-primary mt-3">Submit Listening Answers</button>
+            <div id="listeningScoreReport" class="report-box mt-3" style="display:none;"></div>
+          </div>
+        </section>
+
+        <!-- 9. Writing Studio Tab -->
+        <section id="tab-writing" class="tab-pane">
+          <div class="pane-header">
+            <h2>IELTS Writing Studio & Formative Feedback</h2>
+            <p class="subtitle">5 Diverse Task 2 Question Types with Band 9 Model Essays, IELTS Advantage Checklist, and Criteria Band Scoring.</p>
+          </div>
+
+          <div class="card mb-3">
+            <div class="section-title-row">
+              <h3>Academic Task 2 Essay Types</h3>
+              <button class="btn btn-hero-advantage btn-sm" id="toggleModelEssayBtn" onclick="toggleModelEssay()">💡 Band 9 Model Essay</button>
+            </div>
+            <div class="chip-selector-bar mt-2" id="writingPromptChips">
+              <span class="chip-label">Question Types:</span>
+              <button class="chip-btn active" onclick="selectWritingPromptChip('acad_t2_stem', this)">⚖️ Discuss Both Views</button>
+              <button class="chip-btn" onclick="selectWritingPromptChip('acad_t2_ubi', this)">💡 Opinion / Agree-Disagree</button>
+              <button class="chip-btn" onclick="selectWritingPromptChip('acad_t2_tourism', this)">⚖️ Advantages vs Disadvantages</button>
+              <button class="chip-btn" onclick="selectWritingPromptChip('acad_t2_traffic', this)">🛠️ Causes & Solutions</button>
+              <button class="chip-btn" onclick="selectWritingPromptChip('acad_t2_fast_fashion', this)">❓ Direct Two-Part</button>
+            </div>
+            <select id="writingPromptSelect" class="form-select mt-1" style="display: none;" onchange="switchWritingPrompt(this.value)">
+              <option value="acad_t2_stem">STEM vs Creative Arts (Discuss Both Views)</option>
+              <option value="acad_t2_ubi">Universal Basic Income & AI (Opinion / Agree or Disagree)</option>
+              <option value="acad_t2_tourism">Mass Tourism & Preservation (Advantages vs Disadvantages)</option>
+              <option value="acad_t2_traffic">Urban Traffic Congestion (Causes & Solutions)</option>
+              <option value="acad_t2_fast_fashion">Fast Fashion & Sustainability (Direct Two-Part Questions)</option>
+            </select>
+
+            <!-- Band 9 Model Essay Box (Toggleable) -->
+            <div id="modelEssayBox" class="mt-3 p-3 callout-card" style="display: none;">
+              <h4 id="modelEssayTitle">Band 9 Model Essay</h4>
+              <div id="modelEssayText" class="mt-2" style="line-height: 1.6; font-size: 0.95rem;"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="prompt-box">
+              <h3 id="currentWritingTitle">Task 2: Secondary Education Curriculum (Academic)</h3>
+              <p id="currentWritingPrompt">Some educationalists argue that high school curricula should prioritize STEM subjects over creative arts. Discuss both views and give your opinion. (Minimum 250 words).</p>
+            </div>
+
+            <div class="essay-editor-wrapper mt-3">
+              <textarea id="essayInput" rows="12" placeholder="Type or paste your essay here..."></textarea>
+              <div class="word-counter-bar">
+                <span>Word Count: <strong id="wordCountLabel">0</strong></span>
+                <span class="req-text">(Sweet Spot: 260 - 290 words)</span>
+              </div>
+            </div>
+
+            <button id="evaluateWritingBtn" class="btn btn-hero-exam mt-3">🚀 Evaluate Essay with Rubrics</button>
+            <div id="writingEvalReport" class="report-box mt-3" style="display:none;"></div>
+          </div>
+        </section>
+
+        <!-- 10. Speaking Tab -->
+        <section id="tab-speaking" class="tab-pane">
+          <div class="pane-header">
+            <h2>AI IELTS Speaking Examiner Room</h2>
+            <p class="subtitle">Official 3-Part Interview Simulation with Dr. Harrison (Cambridge-standard 6 Exam Sets & Band 9 Models).</p>
+          </div>
+
+          <!-- Interview Progress Stepper -->
+          <div class="interview-stepper">
+            <div class="step-badge active" id="badgePart1">
+              <span class="badge-number">1</span>
+              <span>Part 1: Interview</span>
+            </div>
+            <div class="step-badge" id="badgePart2">
+              <span class="badge-number">2</span>
+              <span>Part 2: Cue Card</span>
+            </div>
+            <div class="step-badge" id="badgePart3">
+              <span class="badge-number">3</span>
+              <span>Part 3: Discussion</span>
+            </div>
+            <div class="step-badge" id="badgeResult">
+              <span class="badge-number">✓</span>
+              <span>Diagnostic Report</span>
+            </div>
+          </div>
+
+          <!-- Topic Selection & Controls -->
+          <div class="card mb-3">
+            <div class="section-title-row">
+              <h3>Cambridge 3-Part Speaking Tests</h3>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button id="startInterviewBtn" class="btn btn-hero-audio btn-sm btn-pulse">🎙️ Begin Interview</button>
+                <button id="viewBand9SpeakingBtn" class="btn btn-hero-advantage btn-sm" onclick="toggleBand9SpeakingModel()">💡 Band 9 Model</button>
+                <button id="resetInterviewBtn" class="btn btn-cat-ghost btn-sm">🔄 Reset</button>
+              </div>
+            </div>
+            <div class="chip-selector-bar mt-2" id="speakingExamChips">
+              <span class="chip-label">Exam Sets:</span>
+              <button class="chip-btn active" onclick="selectSpeakingSetChip('0', this)">🎯 Set 1: Career & Ambition</button>
+              <button class="chip-btn" onclick="selectSpeakingSetChip('1', this)">🌿 Set 2: Urban Heritage</button>
+              <button class="chip-btn" onclick="selectSpeakingSetChip('2', this)">🤖 Set 3: AI & Automation</button>
+              <button class="chip-btn" onclick="selectSpeakingSetChip('3', this)">✈️ Set 4: Overtourism</button>
+              <button class="chip-btn" onclick="selectSpeakingSetChip('4', this)">🎓 Set 5: Modern Education</button>
+              <button class="chip-btn" onclick="selectSpeakingSetChip('5', this)">🏥 Set 6: Fast Lifestyles</button>
+            </div>
+            <select id="speakingExamSetSelect" class="form-select mt-1" style="display: none;" onchange="onSpeakingSetChanged(this.value)">
+              <option value="0">Exam Set 1: Career, Goals & Ambition</option>
+              <option value="1">Exam Set 2: Sustainable Living & Urban Heritage</option>
+              <option value="2">Exam Set 3: Artificial Intelligence & Automation</option>
+              <option value="3">Exam Set 4: International Tourism & Overtourism</option>
+              <option value="4">Exam Set 5: Modern Education & Practical Skills</option>
+              <option value="5">Exam Set 6: Public Health & Fast-Paced Lifestyles</option>
+            </select>
+
+            <!-- Band 9 Speaking Model (Toggleable) -->
+            <div id="speakingBand9ModelBox" class="mt-3 p-3 callout-card" style="display: none;">
+              <h4>Band 9 Model Cue Card Answer:</h4>
+              <p id="speakingBand9CueModel" class="mt-1" style="font-style: italic;"></p>
+            </div>
+          </div>
+
+          <!-- IELTS Advantage 3-Step Strategy Helper Pill -->
+          <div class="advantage-pill-banner mb-3" id="speakingAdvantagePill">
+            <span class="icon">🧭</span>
+            <span><strong>IELTS Advantage 3-Step Strategy:</strong> 1. Direct Answer ➔ 2. Reason (Why) ➔ 3. Concrete Example or Anecdote</span>
+          </div>
+
+          <!-- Stage 1 & 3: Interactive Interview Room -->
+          <div class="card examiner-stage-card" id="examinerRoomCard">
+            <div class="examiner-avatar-row">
+              <div class="examiner-avatar">👨‍🏫</div>
+              <div class="examiner-info">
+                <div class="examiner-name">Dr. Harrison (Examiner) <span class="badge-role">Certified Examiner</span></div>
+                <div class="examiner-status" id="examinerStatusLabel">Ready to begin interview</div>
+              </div>
+            </div>
+
+            <div class="examiner-speech-bubble" id="examinerSpeechBubble">
+              "Good day. Welcome to the IELTS Speaking test. Please select a topic above and press 'Begin Official Interview' to start."
+            </div>
+
+            <!-- Part 2 Prep Countdown Card (Hidden until Part 2) -->
+            <div class="prep-timer-card" id="part2PrepCard" style="display: none;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h4 style="margin: 0; color: #f59e0b;">⏱️ 1-Minute Preparation Time</h4>
+                <div class="prep-countdown" id="prepCountdownText">01:00</div>
+              </div>
+              <div id="part2CueCardText" class="mt-2" style="font-size: 0.95rem; line-height: 1.5;"></div>
+              <textarea id="part2NotesInput" class="mt-2" rows="2" placeholder="Scratchpad: jot 4 bullet points or lexical collocations here during your 1-minute prep..." style="width: 100%; font-size: 0.85rem; border-radius: 6px;"></textarea>
+              <div class="mt-2">
+                <button id="skipPrepBtn" class="btn btn-sm btn-outline">Skip Prep & Start Speaking Now</button>
+              </div>
+            </div>
+
+            <!-- Dialogue History -->
+            <div class="interview-dialogue-history mt-3" id="interviewDialogueHistory">
+              <!-- Live conversational turns appear here -->
+            </div>
+
+            <!-- Candidate Response Controls -->
+            <div class="speech-recording-area mt-3">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="timer-display" id="speakingTimer">00:00</div>
+                <span id="speakingStatusText" style="font-size: 0.85rem; color: var(--text-secondary);">Tap microphone to reply to examiner</span>
+              </div>
+              <div class="speech-btn-group mt-2">
+                <button id="startSpeechRecordBtn" class="btn btn-hero-audio" disabled>🎙️ Answer Examiner (Speak)</button>
+                <button id="stopSpeechRecordBtn" class="btn btn-hero-exam" disabled>⏹️ Send Answer to Examiner</button>
+                <button id="replayQuestionBtn" class="btn btn-cat-ghost" style="font-size: 0.85rem;">🔊 Repeat Question</button>
+              </div>
+              <textarea id="speakingTranscriptInput" rows="3" class="mt-2" placeholder="Your live response appears here (or you can type your answer)..."></textarea>
+            </div>
+          </div>
+
+          <!-- Stage 4: Comprehensive Optimization & Diagnostic Report -->
+          <div class="card mt-3" id="speakingReportContainer" style="display: none;">
+            <div id="speakingEvalReport" class="report-box"></div>
+          </div>
+        </section>
+
+        <!-- 11. Mistake Book Tab -->
+        <section id="tab-mistakes" class="tab-pane">
+          <div class="pane-header">
+            <h2>Personalized Mistake Book</h2>
+            <p class="subtitle">Track recurring errors across grammar, vocabulary, and exam tasks with one-click resolution.</p>
+          </div>
+
+          <div class="card">
+            <div id="mistakeBookSummary">Loading mistake ledger...</div>
+            <div id="mistakeBookList" class="mt-3"></div>
+          </div>
+        </section>
+
+        <!-- 12. Settings & Data Tab -->
+        <section id="tab-settings" class="tab-pane">
+          <div class="pane-header">
+            <h2>Settings & Data Privacy</h2>
+            <p class="subtitle">Control offline execution, privacy boundaries, and data export.</p>
+          </div>
+
+          <div class="card">
+            <h3>Privacy & AI Preferences</h3>
+            <div class="setting-item mt-2">
+              <label>
+                <input type="checkbox" id="settingForcedOffline"> Force 100% Offline Mode (Never send requests online)
+              </label>
+            </div>
+            <div class="setting-item mt-2">
+              <label>
+                <input type="checkbox" id="settingCloudAI"> Enable Optional Cloud AI (Gemini) when online
+              </label>
+            </div>
+            <div class="setting-item mt-2">
+              <label>
+                <input type="checkbox" id="settingAutoResearch" checked> Automatic Online-to-Offline Research (when local confidence is low)
+              </label>
+            </div>
+
+            <hr class="my-3">
+            <h3>Data Backup & Portability</h3>
+            <p class="small-text">Export your learning records, mistake book, and progress in open JSON format.</p>
+            <div class="btn-group mt-2">
+              <button id="exportDataBtn" class="btn btn-secondary">Export Learning Data (JSON)</button>
+              <button id="importDataBtn" class="btn btn-outline">Import Learning Data</button>
+            </div>
+            <textarea id="dataTransferArea" rows="4" class="mt-2" placeholder="Exported JSON or JSON to import will appear here..."></textarea>
+          </div>
+
+          <!-- Developed by GAMA Section -->
+          <div class="card developer-showcase-card mt-3">
+            <div class="developer-layout">
+              <div class="developer-img-frame">
+                <img src="images/gama_developer.jpg" alt="Developed by GAMA" class="developer-photo" id="developerPhoto">
+                <div class="developer-status-pill">
+                  <span class="pulse-dot"></span> System Architect
+                </div>
+              </div>
+              <div class="developer-details">
+                <div class="badge-developer">CREATOR & DEVELOPER</div>
+                <h3 class="developer-name">Developed by GAMA</h3>
+                <p class="developer-bio">
+                  Architected with a hybrid-first offline intelligence foundation for IELTS mastery and English linguistic confidence. Designed to operate completely self-contained with sub-millisecond local retrieval, formative correction rubrics, and privacy-by-default execution.
+                </p>
+                <div class="developer-tags">
+                  <span class="tag-pill">Hybrid AI</span>
+                  <span class="tag-pill">Offline-First</span>
+                  <span class="tag-pill">IELTS Mastery</span>
+                  <span class="tag-pill">IELTS Advantage Method</span>
+                </div>
+                <div class="developer-specs-grid">
+                  <div class="spec-cell">
+                    <span class="spec-label">Version</span>
+                    <strong class="spec-value" id="settingsVersionValue">v1.5.3 Production</strong>
+                  </div>
+                  <div class="spec-cell">
+                    <span class="spec-label">Engine</span>
+                    <strong class="spec-value">GAMA Local RAG v1.5</strong>
+                  </div>
+                  <div class="spec-cell">
+                    <span class="spec-label">Active Screen</span>
+                    <strong class="spec-value" id="devScreenSpec">Detecting...</strong>
+                  </div>
+                  <div class="spec-cell">
+                    <span class="spec-label">Platform Support</span>
+                    <strong class="spec-value">Tablet, iOS, Windows &amp; Android</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Live Band Score Update Toast -->
+  <div id="bandUpdateToast" class="band-update-toast" aria-live="polite">
+    <div class="toast-icon">🎯</div>
+    <div class="toast-content">
+      <div class="toast-title" id="toastTitle">Band Score Updated!</div>
+      <div class="toast-subtitle" id="toastSubtitle">New Overall Band: 7.0 (C1) • +0.25 bonus</div>
+    </div>
+  </div>
+
+  <!-- Daily Mission Welcome Modal (What do you want to achieve today?) -->
+  <div id="goalWelcomeModal" class="goal-modal-overlay">
+    <div class="goal-modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 12px;">
+        <div style="display:flex; align-items:center; gap: 10px;">
+          <span style="font-size: 1.8rem;">🎯</span>
+          <div>
+            <h3 style="margin:0; font-size: 1.25rem;">What do you want to achieve today?</h3>
+            <p style="margin:2px 0 0 0; font-size:0.85rem; color:var(--text-secondary);">Set your daily target to focus your IELTS preparation and boost your band score.</p>
+          </div>
+        </div>
+        <button id="closeGoalModalBtn" class="btn btn-outline" style="padding: 4px 10px; font-size: 0.9rem; border-radius: 8px;">✕</button>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:10px; margin-top:16px;">
+        <button class="goal-chip modal-goal-opt" data-goal="reading" style="display:flex; justify-content:space-between; padding:12px 16px; border-radius:10px; text-align:left;">
+          <div>
+            <strong>📖 Cambridge Reading Drill</strong>
+            <div style="font-size:0.8rem; color:var(--text-secondary);">Complete Academic Reading Passage with Skimming & Scanning</div>
+          </div>
+          <span style="color:#60a5fa; font-weight:700;">+0.25 Band</span>
+        </button>
+
+        <button class="goal-chip modal-goal-opt" data-goal="listening" style="display:flex; justify-content:space-between; padding:12px 16px; border-radius:10px; text-align:left;">
+          <div>
+            <strong>🎧 Section 3/4 Audio Practice</strong>
+            <div style="font-size:0.8rem; color:var(--text-secondary);">Complete 10 Cambridge listening items with live voice simulator</div>
+          </div>
+          <span style="color:#34d399; font-weight:700;">+0.25 Band</span>
+        </button>
+
+        <button class="goal-chip modal-goal-opt" data-goal="writing" style="display:flex; justify-content:space-between; padding:12px 16px; border-radius:10px; text-align:left;">
+          <div>
+            <strong>✍️ Task 2 PEEL Essay Mastery</strong>
+            <div style="font-size:0.8rem; color:var(--text-secondary);">Write or evaluate an essay against IELTS Advantage 4-criteria rubric</div>
+          </div>
+          <span style="color:#f59e0b; font-weight:700;">+0.5 Band</span>
+        </button>
+
+        <button class="goal-chip modal-goal-opt" data-goal="speaking" style="display:flex; justify-content:space-between; padding:12px 16px; border-radius:10px; text-align:left;">
+          <div>
+            <strong>🗣️ Part 2/3 Speech Simulation</strong>
+            <div style="font-size:0.8rem; color:var(--text-secondary);">Voice cue-card speech turn with real-time fluency scoring</div>
+          </div>
+          <span style="color:#ec4899; font-weight:700;">+0.5 Band</span>
+        </button>
+
+        <button class="goal-chip modal-goal-opt" data-goal="grammar" style="display:flex; justify-content:space-between; padding:12px 16px; border-radius:10px; text-align:left;">
+          <div>
+            <strong>🧩 5 Grammar Clozes / Vocabulary SRS</strong>
+            <div style="font-size:0.8rem; color:var(--text-secondary);">Zero grammar penalties and active collocation mastery</div>
+          </div>
+          <span style="color:#a855f7; font-weight:700;">+0.2 Band</span>
+        </button>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
+        <span style="font-size:0.8rem; color:var(--text-secondary);">You can change your target at any time in Dashboard.</span>
+        <button id="btnSkipGoalModal" class="btn btn-secondary" style="padding:6px 16px;">Maybe Later</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- iOS Direct Download & Installation Modal -->
+  <div id="iosInstallModal" class="modal-overlay" style="display:none; z-index:99999;">
+    <div class="modal-content" style="max-width:620px; width:92%; max-height:90vh; overflow-y:auto; border-radius:18px; padding:24px; box-shadow:0 25px 60px rgba(0,0,0,0.6);">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:14px; margin-bottom:18px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg, #2563eb, #1d4ed8); display:flex; align-items:center; justify-content:center; font-size:1.4rem;">
+            🍎
+          </div>
+          <div>
+            <h3 style="margin:0; font-size:1.2rem; font-weight:700;">Install IELTS by GAMA on iOS</h3>
+            <span style="font-size:0.82rem; color:var(--text-secondary);">Direct download & install for iPhone & iPad (No Mac or App Store needed)</span>
+          </div>
+        </div>
+        <button onclick="closeIosInstallModal()" class="btn btn-icon btn-sm" style="font-size:1.1rem; border-radius:50%;" title="Close">✕</button>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <!-- Option 1: 1-Click Apple Profile -->
+        <div style="background:var(--bg-secondary); border:1.5px solid var(--accent-primary); border-radius:14px; padding:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+            <div style="display:flex; gap:10px; align-items:center;">
+              <span style="font-size:1.4rem;">⚡</span>
+              <div>
+                <strong style="font-size:0.98rem; color:var(--text-primary);">Method 1: 1-Click Apple Profile (Recommended)</strong>
+                <div style="font-size:0.82rem; color:var(--text-secondary);">Adds the native app icon to Home Screen with full-screen standalone windowing.</div>
+              </div>
+            </div>
+            <span style="font-size:0.75rem; font-weight:700; background:rgba(37,99,235,0.2); color:#60a5fa; padding:3px 8px; border-radius:6px; white-space:nowrap;">1-Click</span>
+          </div>
+
+          <div style="background:rgba(0,0,0,0.2); border-radius:8px; padding:10px 14px; font-size:0.82rem; color:var(--text-secondary); margin-bottom:12px; line-height:1.5;">
+            <strong>Quick 3-Step Setup:</strong><br>
+            1. Tap <strong>Download Profile</strong> below and select <strong>"Allow"</strong>.<br>
+            2. Open your iPhone/iPad <strong>Settings</strong> &rarr; tap <strong>"Profile Downloaded"</strong> at the top.<br>
+            3. Tap <strong>"Install"</strong> in the top-right corner and enter your passcode.
+          </div>
+
+          <a href="https://gautambhuwan.com.np/downloads/ielts-by-gama/ielts-by-gama.mobileconfig" download class="btn btn-primary" style="width:100%; text-decoration:none; justify-content:center; padding:10px; font-weight:600; display:inline-flex; align-items:center; gap:8px;">
+            <span>📥</span> Download iOS Profile (.mobileconfig)
+          </a>
+        </div>
+
+        <!-- Option 2: Safari Web App (PWA) -->
+        <div style="background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:14px; padding:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+            <div style="display:flex; gap:10px; align-items:center;">
+              <span style="font-size:1.4rem;">📲</span>
+              <div>
+                <strong style="font-size:0.98rem; color:var(--text-primary);">Method 2: Safari Add to Home Screen (PWA)</strong>
+                <div style="font-size:0.82rem; color:var(--text-secondary);">Direct offline web app cached by Service Worker with zero downloads.</div>
+              </div>
+            </div>
+            <span style="font-size:0.75rem; font-weight:700; background:rgba(16,185,129,0.2); color:#34d399; padding:3px 8px; border-radius:6px; white-space:nowrap;">Instant</span>
+          </div>
+
+          <div style="background:rgba(0,0,0,0.2); border-radius:8px; padding:10px 14px; font-size:0.82rem; color:var(--text-secondary); line-height:1.5;">
+            In Apple Safari, tap the <strong>Share</strong> button (<strong>⎋</strong> box with arrow up) at the bottom or top bar &rarr; scroll down &rarr; tap <strong>"Add to Home Screen" (➕)</strong> &rarr; tap <strong>"Add"</strong>.
+          </div>
+        </div>
+
+        <!-- Option 3: Sideload Native .IPA & Wireless OTA -->
+        <div style="background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:14px; padding:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+            <div style="display:flex; gap:10px; align-items:center;">
+              <span style="font-size:1.4rem;">📦</span>
+              <div>
+                <strong style="font-size:0.98rem; color:var(--text-primary);">Method 3: Native iOS Binary (.IPA) Sideloading</strong>
+                <div style="font-size:0.82rem; color:var(--text-secondary);">Universal 64-bit iOS package for AltStore, Sideloadly, Scarlet, TrollStore, or Xcode.</div>
+              </div>
+            </div>
+            <span style="font-size:0.75rem; font-weight:700; background:rgba(245,158,11,0.2); color:#fbbf24; padding:3px 8px; border-radius:6px; white-space:nowrap;">AltStore / Sideload</span>
+          </div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+            <a href="https://gautambhuwan.com.np/downloads/ielts-by-gama/ielts-by-gama.ipa" download class="btn btn-secondary" style="flex:1; min-width:200px; text-decoration:none; justify-content:center; padding:10px; font-weight:600; display:inline-flex; align-items:center; gap:8px;">
+              <span>💾</span> Download .IPA (3.7 MB)
+            </a>
+            <a href="itms-services://?action=download-manifest&url=https://gautambhuwan.com.np/downloads/ielts-by-gama/manifest.plist" class="btn btn-secondary" style="flex:1; min-width:200px; text-decoration:none; justify-content:center; padding:10px; font-weight:600; display:inline-flex; align-items:center; gap:8px;" title="Wireless Over-The-Air install (Requires enterprise/ad-hoc certificate matching device UDID)">
+              <span>📡</span> Wireless OTA Install
+            </a>
+          </div>
+
+          <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:8px;">
+            💡 Sideload with 1-click via <strong>AltStore</strong>, <strong>Sideloadly</strong>, or <strong>TrollStore</strong> on iOS 15.0 through 18+.
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; border-top:1px solid var(--border-color); pt:14px; padding-top:14px;">
+        <a href="https://github.com/sudovu/IELTS-by-GAMA/releases" target="_blank" rel="noopener noreferrer" style="font-size:0.82rem; color:var(--accent-primary); text-decoration:none;">
+          🐙 View GitHub Releases & Source &rarr;
+        </a>
+        <button onclick="closeIosInstallModal()" class="btn btn-secondary" style="padding:6px 16px;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
