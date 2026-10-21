@@ -735,32 +735,67 @@ end</code></pre>
     }
   }
 
-    // Category Filter Functionality
+    // Enhanced Category Filter Functionality with Distinct Theme Accents
   const filterBtns = document.querySelectorAll('.category-filter-btn');
+  const focusBtns = document.querySelectorAll('.focus-category-btn');
   const categorySections = document.querySelectorAll('.category-section-block');
+
+  const CAT_THEMES = {
+    'all': { color: 'var(--text-primary)', bg: 'var(--surface-card)', border: 'var(--border-accent)' },
+    'foundations': { color: 'var(--accent-secondary)', bg: 'rgba(6, 182, 212, 0.12)', border: 'var(--accent-secondary)' },
+    'fiber-optics': { color: '#10b981', bg: 'rgba(16, 185, 129, 0.12)', border: '#10b981' },
+    'enterprise-systems': { color: '#a855f7', bg: 'rgba(168, 85, 247, 0.12)', border: '#a855f7' },
+    'carrier-core': { color: '#f43f5e', bg: 'rgba(244, 63, 94, 0.12)', border: '#f43f5e' }
+  };
+
+  function applyCategoryFilter(selectedCat) {
+    // Update Filter Button Styles
+    filterBtns.forEach(btn => {
+      const cat = btn.getAttribute('data-category');
+      if (cat === selectedCat) {
+        btn.classList.add('active');
+        const theme = CAT_THEMES[cat] || CAT_THEMES['all'];
+        btn.style.color = theme.color;
+        btn.style.background = theme.bg;
+        btn.style.borderColor = theme.border;
+      } else {
+        btn.classList.remove('active');
+        btn.style.background = 'transparent';
+        btn.style.borderColor = 'var(--border)';
+        btn.style.color = 'var(--text-secondary)';
+      }
+    });
+
+    // Show/Hide Category Sections
+    categorySections.forEach(sec => {
+      const secCat = sec.getAttribute('data-category-section');
+      if (selectedCat === 'all' || secCat === selectedCat) {
+        sec.style.display = 'block';
+        sec.style.animation = 'fadeIn 0.35s ease forwards';
+      } else {
+        sec.style.display = 'none';
+      }
+    });
+  }
 
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      filterBtns.forEach(b => {
-        b.classList.remove('active');
-        b.style.background = 'transparent';
-        b.style.borderColor = 'var(--border)';
-        b.style.color = 'var(--text-secondary)';
-      });
-      btn.classList.add('active');
-      btn.style.background = 'var(--surface-card)';
-      btn.style.borderColor = 'var(--border-accent)';
-      btn.style.color = 'var(--text-primary)';
+      const cat = btn.getAttribute('data-category');
+      applyCategoryFilter(cat);
+    });
+  });
 
-      const selectedCat = btn.getAttribute('data-category');
-
-      categorySections.forEach(sec => {
-        if (selectedCat === 'all' || sec.getAttribute('data-category-section') === selectedCat) {
-          sec.style.display = 'block';
-        } else {
-          sec.style.display = 'none';
-        }
-      });
+  // 'Focus Domain' in-section quick filters
+  focusBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const cat = btn.getAttribute('data-category');
+      applyCategoryFilter(cat);
+      // Smooth scroll back to top of section
+      const targetSec = document.querySelector(`[data-category-section="${cat}"]`);
+      if (targetSec) {
+        targetSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
   });
 
