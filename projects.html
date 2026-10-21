@@ -199,6 +199,12 @@
           <button type="button" class="architect-preset-chip" data-preset="linux_wireguard">Linux WireGuard VPN Gateway</button>
           <button type="button" class="architect-preset-chip" data-preset="docker_mesh">Docker Microservices Mesh (Traefik)</button>
           <button type="button" class="architect-preset-chip" data-preset="python_audit">Python Netmiko Compliance Auditor</button>
+          <button type="button" class="architect-preset-chip" data-preset="carrier_olt">GPON/EPON OLT Service Provisioning</button>
+          <button type="button" class="architect-preset-chip" data-preset="metro_switch">Metro L2/L3 Switching Ring (QinQ &amp; MSTP)</button>
+          <button type="button" class="architect-preset-chip" data-preset="juniper_transit">Juniper Core BGP Transit &amp; Filter</button>
+          <button type="button" class="architect-preset-chip" data-preset="fortigate_firewall">Fortinet FortiGate &amp; CGNAT HA</button>
+          <button type="button" class="architect-preset-chip" data-preset="enterprise_sdwan">Enterprise SD-WAN (Corporate / Municipal / Schools)</button>
+          <button type="button" class="architect-preset-chip" data-preset="campus_isolation">Campus &amp; Municipal LAN Isolation (VRF-Lite &amp; PVLAN)</button>
         </div>
 
         <!-- Main 2-Column Grid: Configurator vs Live Blueprint & Code -->
@@ -374,6 +380,545 @@
             <input type="text" id="arch-sim-input" class="architect-sim-input" placeholder="Type command (Tab to autocomplete, '?' for help)..." autocomplete="off" spellcheck="false">
             <button type="button" class="architect-sim-btn" id="arch-sim-execute">Execute</button>
           </div>
+        </div>
+      </section>
+
+                  <!-- Enterprise Network Transformation (Before vs. After) Case Study -->
+      <section id="network-transformation" class="transformation-wrapper reveal" aria-label="Network Transformation Case Study">
+        <div class="transformation-card">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 8px;">
+            <div>
+              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px;">
+                <span class="section-badge" style="margin-bottom: 0;">CASE STUDY // REAL-WORLD AUDIT &amp; REDESIGN</span>
+                <span class="status-pill" style="font-size: 0.72rem; padding: 2px 8px; border-color: rgba(16, 185, 129, 0.4);"><span class="status-dot"></span> ZERO-TRUST HIERARCHY</span>
+              </div>
+              <h2 style="font-size: clamp(1.4rem, 2.6vw, 1.85rem); margin-bottom: 6px;">Enterprise Network Transformation: Flat vs. Segmented Architecture</h2>
+              <p class="body-sm" style="color: var(--text-secondary); max-width: 820px; line-height: 1.6;">
+                A comprehensive engineering redesign for a multi-building enterprise campus. Comparing the vulnerabilities of an unmanaged flat network topology against a high-security, 3-tier zero-trust architecture separating <strong>Wireless</strong>, <strong>LAN Network Points</strong>, <strong>CCTV Surveillance</strong>, and <strong>IP Telephony (VoIP)</strong>.
+              </p>
+            </div>
+            <div>
+              <span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); font-family: var(--font-mono); font-size: 0.78rem; padding: 6px 12px;">
+                WIRELESS &bull; DATA LAN &bull; CCTV &bull; IP TELEPHONY
+              </span>
+            </div>
+          </div>
+
+          <!-- Interactive View Switcher Tabs -->
+          <div class="transformation-toggle-nav" role="tablist" aria-label="Before and After Views">
+            <button type="button" class="transformation-tab-btn active" data-tab="before" role="tab" aria-selected="true" id="tab-btn-before">
+              <span>⚠️ BEFORE: Vulnerable Flat Architecture</span>
+            </button>
+            <button type="button" class="transformation-tab-btn" data-tab="after" role="tab" aria-selected="false" id="tab-btn-after">
+              <span>🛡️ AFTER: Optimized Segmented Architecture</span>
+            </button>
+          </div>
+
+          <!-- ================= PANEL 1: BEFORE (LEGACY UNMANAGED TOPOLOGY) ================= -->
+          <div class="transformation-panel is-active" id="panel-before" role="tabpanel" aria-labelledby="tab-btn-before">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+              <div>
+                <span class="tag" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border-color: rgba(245, 158, 11, 0.35);">LEGACY UNMANAGED</span>
+                <h3 style="font-size: 1.25rem; margin-top: 6px; margin-bottom: 2px;">Flat Layer 2 Unsegmented Topology</h3>
+              </div>
+              <span class="mono-label" style="color: #ef4444; font-size: 0.78rem;">HIGH RISK: ZERO ISOLATION &bull; SERIAL 100M CHOKE POINTS</span>
+            </div>
+
+            <!-- Connected Topology Diagram: BEFORE -->
+            <div class="diagram-canvas">
+              <svg viewBox="0 0 980 580" width="100%" height="auto" class="connected-topology-svg" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad-router-warn" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b45309" />
+      <stop offset="100%" stop-color="#78350f" />
+    </linearGradient>
+    <linearGradient id="grad-sw-danger" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <marker id="arrow-warn" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#f59e0b" />
+    </marker>
+    <marker id="arrow-danger" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#ef4444" />
+    </marker>
+  </defs>
+
+  <!-- Background Grid -->
+  <rect width="100%" height="100%" fill="#080c16" rx="10" />
+
+  <!-- WAN Feeds (Top Left) -->
+  <g transform="translate(40, 30)">
+    <rect width="130" height="36" rx="6" fill="#1e293b" stroke="#64748b" stroke-width="1.5" />
+    <text x="65" y="22" fill="#94a3b8" font-size="12" font-family="var(--font-mono)" text-anchor="middle" font-weight="600">🌐 WAN1</text>
+  </g>
+  <g transform="translate(40, 80)">
+    <rect width="130" height="36" rx="6" fill="#1e293b" stroke="#64748b" stroke-width="1.5" />
+    <text x="65" y="22" fill="#94a3b8" font-size="12" font-family="var(--font-mono)" text-anchor="middle" font-weight="600">📡 WAN2</text>
+  </g>
+
+  <!-- Feeds to Gateway Lines -->
+  <path d="M 170 48 L 240 70" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrow-warn)" />
+  <path d="M 170 98 L 240 76" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrow-warn)" />
+
+  <!-- Gateway Router -->
+  <g transform="translate(240, 44)">
+    <rect width="190" height="62" rx="8" fill="url(#grad-router-warn)" stroke="#f59e0b" stroke-width="2" />
+    <text x="95" y="26" fill="#fef3c7" font-size="14" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">🔀 Gateway Router</text>
+    <text x="95" y="44" fill="#fcd34d" font-size="11" font-family="var(--font-mono)" text-anchor="middle">Single Subnet / Flat DHCP</text>
+  </g>
+
+  <!-- Line: Gateway to Central Switch -->
+  <path d="M 430 75 L 530 75" stroke="#ef4444" stroke-width="3" />
+  <text x="480" y="66" fill="#ef4444" font-size="11" font-family="var(--font-mono)" text-anchor="middle" font-weight="600">1 Gbps Flat</text>
+
+  <!-- Central Switch (Main Facility) -->
+  <g transform="translate(530, 44)">
+    <rect width="250" height="62" rx="8" fill="url(#grad-sw-danger)" stroke="#ef4444" stroke-width="2.5" />
+    <text x="125" y="26" fill="#fca5a5" font-size="14" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">🏢 Network Switch (Layer 2)</text>
+    <text x="125" y="46" fill="#f87171" font-size="11" font-family="var(--font-mono)" text-anchor="middle">⚠️ Shared Broadcast Domain</text>
+  </g>
+
+  <!-- Bus line down from Central Switch -->
+  <path d="M 655 106 L 655 170" stroke="#ef4444" stroke-width="2.5" />
+  <circle cx="655" cy="170" r="4" fill="#ef4444" />
+
+  <!-- Horizontal Distribution Line -->
+  <path d="M 160 170 L 655 170" stroke="#ef4444" stroke-width="2" />
+
+  <!-- Drop 1: Wireless Access Point Branch -->
+  <path d="M 160 170 L 160 210" stroke="#ef4444" stroke-width="2" marker-end="url(#arrow-danger)" />
+  <g transform="translate(70, 210)">
+    <rect width="180" height="52" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5" />
+    <text x="90" y="24" fill="#e2e8f0" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">📶 Network Switch</text>
+    <text x="90" y="40" fill="#94a3b8" font-size="10.5" font-family="var(--font-mono)" text-anchor="middle">Layer 2 Switch</text>
+  </g>
+  <!-- Lines to APs -->
+  <path d="M 160 262 L 160 300" stroke="#f59e0b" stroke-width="1.5" />
+  <g transform="translate(70, 300)">
+    <rect width="180" height="64" rx="6" fill="#0f172a" stroke="#f59e0b" stroke-width="1" stroke-dasharray="3,3" />
+    <text x="90" y="24" fill="#38bdf8" font-size="12" font-family="var(--font-sans)" font-weight="600" text-anchor="middle">Access Point Routers</text>
+    <text x="90" y="44" fill="#f87171" font-size="10" font-family="var(--font-mono)" text-anchor="middle">❌ Public Wi-Fi Unisolated</text>
+  </g>
+
+  <!-- Drop 2: Main LAN Network Points -->
+  <path d="M 400 170 L 400 210" stroke="#ef4444" stroke-width="2" marker-end="url(#arrow-danger)" />
+  <g transform="translate(310, 210)">
+    <rect width="180" height="154" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" />
+    <text x="90" y="24" fill="#38bdf8" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">💻 Network Points</text>
+    <text x="90" y="40" fill="#94a3b8" font-size="10.5" font-family="var(--font-mono)" text-anchor="middle">(Workstations LAN)</text>
+    <line x1="20" y1="52" x2="160" y2="52" stroke="#334155" stroke-width="1" />
+    <!-- Visual Jack Points -->
+    <g transform="translate(30, 64)">
+      <rect x="0" y="0" width="22" height="20" rx="3" fill="#0f172a" stroke="#38bdf8" />
+      <rect x="34" y="0" width="22" height="20" rx="3" fill="#0f172a" stroke="#38bdf8" />
+      <rect x="68" y="0" width="22" height="20" rx="3" fill="#0f172a" stroke="#38bdf8" />
+      <rect x="102" y="0" width="22" height="20" rx="3" fill="#0f172a" stroke="#38bdf8" />
+      <rect x="0" y="28" width="22" height="20" rx="3" fill="#0f172a" stroke="#38bdf8" />
+      <rect x="34" y="28" width="22" height="20" rx="3" fill="#0f172a" stroke="#38bdf8" />
+      <rect x="68" y="28" width="22" height="20" rx="3" fill="#0f172a" stroke="#38bdf8" />
+      <rect x="102" y="28" width="22" height="20" rx="3" fill="#0f172a" stroke="#38bdf8" />
+    </g>
+    <text x="90" y="138" fill="#cbd5e1" font-size="10.5" font-family="var(--font-mono)" text-anchor="middle">Desk RJ45 Ports</text>
+  </g>
+
+  <!-- Drop 3: CCTV Daisy-Chained PoE Switches (Bottleneck) -->
+  <path d="M 655 170 L 655 210" stroke="#ef4444" stroke-width="2" marker-end="url(#arrow-danger)" />
+  <g transform="translate(565, 210)">
+    <rect width="180" height="52" rx="6" fill="#1e293b" stroke="#ef4444" stroke-width="1.5" />
+    <text x="90" y="24" fill="#e2e8f0" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">📹 PoE Switch</text>
+    <text x="90" y="40" fill="#94a3b8" font-size="10.5" font-family="var(--font-mono)" text-anchor="middle">PoE Switch (1)</text>
+  </g>
+  <!-- 100M Choke Link -->
+  <path d="M 745 236 L 800 236" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="3,3" />
+  <g transform="translate(800, 210)">
+    <rect width="140" height="52" rx="6" fill="#1e293b" stroke="#ef4444" stroke-width="1.5" />
+    <text x="70" y="24" fill="#e2e8f0" font-size="12" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">📹 PoE Switch (2)</text>
+    <text x="70" y="40" fill="#f87171" font-size="10" font-family="var(--font-mono)" text-anchor="middle">⚠️ 100M Daisy Chain</text>
+  </g>
+  <!-- CCTV Cameras -->
+  <path d="M 870 262 L 870 300" stroke="#ef4444" stroke-width="1.5" />
+  <g transform="translate(790, 300)">
+    <rect width="160" height="64" rx="6" fill="#0f172a" stroke="#ef4444" stroke-width="1" />
+    <text x="80" y="24" fill="#f87171" font-size="12" font-family="var(--font-sans)" font-weight="600" text-anchor="middle">CCTV Cameras</text>
+    <text x="80" y="44" fill="#ef4444" font-size="10" font-family="var(--font-mono)" text-anchor="middle">❌ Direct Internet Exposure</text>
+  </g>
+
+  <!-- Drop 4 & 5: Remote Facilities (Bottom) -->
+  <path d="M 280 170 L 280 430" stroke="#ef4444" stroke-width="1.5" />
+  <path d="M 280 430 L 320 430" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrow-danger)" />
+  <g transform="translate(320, 404)">
+    <rect width="260" height="62" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5" />
+    <text x="130" y="24" fill="#f1f5f9" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">🏬 Remote Facility Switch (1)</text>
+    <text x="130" y="44" fill="#94a3b8" font-size="11" font-family="var(--font-mono)" text-anchor="middle">Bridged &rarr; Local Network Points</text>
+  </g>
+
+  <path d="M 655 430 L 690 430" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrow-danger)" />
+  <path d="M 655 170 L 655 430" stroke="#ef4444" stroke-width="1.5" />
+  <g transform="translate(690, 404)">
+    <rect width="260" height="62" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5" />
+    <text x="130" y="24" fill="#f1f5f9" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">🌱 Remote Facility Switch (2)</text>
+    <text x="130" y="44" fill="#94a3b8" font-size="11" font-family="var(--font-mono)" text-anchor="middle">Bridged &rarr; Network Points + AP</text>
+  </g>
+
+  <!-- Risk Callout Banner inside SVG -->
+  <g transform="translate(80, 500)">
+    <rect width="820" height="52" rx="8" fill="rgba(239, 68, 68, 0.12)" stroke="#ef4444" stroke-width="1.5" />
+    <text x="410" y="24" fill="#fca5a5" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">UNMANAGED FLAT NETWORK RISKS</text>
+    <text x="410" y="42" fill="#cbd5e1" font-size="11.5" font-family="var(--font-mono)" text-anchor="middle">Single collision domain &bull; 100M daisy-chain video bottleneck &bull; Zero security separation between Wi-Fi, LAN &amp; CCTV</text>
+  </g>
+</svg>
+            </div>
+
+            <!-- Detailed Deficiencies Analysis -->
+            <div class="audit-grid">
+              <div class="audit-card audit-card-danger">
+                <h4 style="color: #ef4444;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -3px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                  1. Shared Broadcast &amp; Collision Domain
+                </h4>
+                <p>All endpoints across all buildings shared a single flat subnet. Every ARP request, network broadcast, and device discovery flooded all switchports, creating network-wide packet storms.</p>
+              </div>
+
+              <div class="audit-card audit-card-danger">
+                <h4 style="color: #ef4444;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -3px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                  2. Lateral Threat Spread &amp; Sniffing
+                </h4>
+                <p>Because there was zero VLAN segmentation, any visitor connected to an access point or any infected workstation could directly scan and sniff internal administrative traffic and surveillance streams using simple packet sniffers.</p>
+              </div>
+
+              <div class="audit-card audit-card-danger">
+                <h4 style="color: #ef4444;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -3px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  3. 100M Daisy-Chained PoE Bottleneck
+                </h4>
+                <p>PoE switches powering CCTV cameras were linked together via a serial 100 Mbps uplink. During simultaneous multi-camera high-definition recording, this link became a major choke point, causing severe dropped video frames.</p>
+              </div>
+
+              <div class="audit-card audit-card-danger">
+                <h4 style="color: #ef4444;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -3px;"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+                  4. CCTV Surveillance Exposed to the Internet
+                </h4>
+                <p>CCTV cameras and the NVR shared default internet access with employee computers. Without an isolated firewall zone, camera firmware was exposed to potential remote exploitation or unauthorized viewing.</p>
+              </div>
+
+              <div class="audit-card audit-card-danger">
+                <h4 style="color: #ef4444;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -3px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                  5. Zero Voice Prioritization (QoS)
+                </h4>
+                <p>Staff trying to run softphones or IP telephone calls suffered from severe voice distortion and call drops because voice packets competed with heavy file downloads without any Quality of Service tagging.</p>
+              </div>
+
+              <div class="audit-card audit-card-danger">
+                <h4 style="color: #ef4444;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -3px;"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+                  6. Cascading Switch Failure Points
+                </h4>
+                <p>Cascading unmanaged desktop switches across multiple buildings created daisy-chained loops and single points of failure. If an intermediary switch lost power, entire buildings lost connection.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================= PANEL 2: AFTER (OPTIMIZED CONNECTED TOPOLOGY) ================= -->
+          <div class="transformation-panel" id="panel-after" role="tabpanel" aria-labelledby="tab-btn-after">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+              <div>
+                <span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.35);">ENGINEERED RESTRUCTURE // ZERO-TRUST</span>
+                <h3 style="font-size: 1.25rem; margin-top: 6px; margin-bottom: 2px;">Hierarchical 3-Tier Segmented Architecture</h3>
+              </div>
+              <span class="mono-label" style="color: #10b981; font-size: 0.78rem;">OPTIMIZED: FULL 802.1Q ISOLATION &bull; VOICE QOS &bull; CCTV ENCLAVE</span>
+            </div>
+
+            <!-- Connected Topology Diagram: AFTER -->
+            <div class="diagram-canvas">
+              <svg viewBox="0 0 980 620" width="100%" height="auto" class="connected-topology-svg" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad-isp" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0891b2" />
+      <stop offset="100%" stop-color="#0e7490" />
+    </linearGradient>
+    <linearGradient id="grad-gw" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6d28d9" />
+      <stop offset="100%" stop-color="#4c1d95" />
+    </linearGradient>
+    <linearGradient id="grad-core" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#047857" />
+      <stop offset="100%" stop-color="#064e3b" />
+    </linearGradient>
+    <marker id="arrow-cyan" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#06b6d4" />
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#10b981" />
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#a855f7" />
+    </marker>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="100%" height="100%" fill="#070a14" rx="10" />
+
+  <!-- 1. Top Tier: Multiple WAN Links (WAN1 & WAN2) -->
+  <!-- WAN 1: Primary Link -->
+  <g transform="translate(255, 18)">
+    <rect width="215" height="46" rx="8" fill="url(#grad-isp)" stroke="#06b6d4" stroke-width="2" />
+    <text x="107" y="24" fill="#f8fafc" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">🌐 WAN1 (Primary ISP)</text>
+    <text x="107" y="38" fill="#e0f2fe" font-size="9.5" font-family="var(--font-mono)" text-anchor="middle">[Active &bull; SFP Optical]</text>
+  </g>
+
+  <!-- WAN 2: Secondary / Backup Link -->
+  <g transform="translate(510, 18)">
+    <rect width="215" height="46" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2" />
+    <text x="107" y="24" fill="#f8fafc" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">📡 WAN2 (Secondary ISP)</text>
+    <text x="107" y="38" fill="#93c5fd" font-size="9.5" font-family="var(--font-mono)" text-anchor="middle">[Auto-Failover / Backup]</text>
+  </g>
+
+  <!-- Lines: WAN1 and WAN2 into Gateway Router -->
+  <path d="M 362 64 L 430 95" stroke="#06b6d4" stroke-width="2.5" marker-end="url(#arrow-cyan)" />
+  <path d="M 618 64 L 550 95" stroke="#3b82f6" stroke-width="2.5" stroke-dasharray="4,3" marker-end="url(#arrow-cyan)" />
+
+  <!-- 2. Gateway Router Tier -->
+  <g transform="translate(340, 95)">
+    <rect width="300" height="58" rx="8" fill="url(#grad-gw)" stroke="#a855f7" stroke-width="2" />
+    <text x="150" y="26" fill="#f8fafc" font-size="14" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">🛡️ GATEWAY ROUTER (DUAL-WAN)</text>
+    <text x="150" y="44" fill="#e9d5ff" font-size="11" font-family="var(--font-mono)" text-anchor="middle">(Dual-WAN Failover &bull; NAT &bull; DHCP &bull; QoS)</text>
+  </g>
+
+  <!-- Line: Gateway to Core Switch (Tagged Trunk) -->
+  <path d="M 490 153 L 490 190" stroke="#10b981" stroke-width="3" marker-end="url(#arrow-green)" />
+  <rect x="420" y="162" width="140" height="18" rx="3" fill="#0f172a" stroke="#10b981" stroke-width="1" />
+  <text x="490" y="175" fill="#6ee7b7" font-size="9.5" font-family="var(--font-mono)" text-anchor="middle">802.1Q Core Trunk</text>
+
+  <!-- 3. Central Core Switch Tier -->
+  <g transform="translate(290, 190)">
+    <rect width="400" height="60" rx="8" fill="url(#grad-core)" stroke="#10b981" stroke-width="2.5" />
+    <text x="200" y="27" fill="#f0fdf4" font-size="15" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">⚡ MANAGED CORE SWITCH</text>
+    <text x="200" y="46" fill="#a7f3d0" font-size="11.5" font-family="var(--font-mono)" text-anchor="middle">(Core Backbone &amp; Central Distribution Layer)</text>
+  </g>
+
+  <!-- Bus Distribution Line from Core Switch -->
+  <path d="M 490 250 L 490 290" stroke="#10b981" stroke-width="2" />
+  <circle cx="490" cy="290" r="4" fill="#10b981" />
+  <path d="M 120 290 L 860 290" stroke="#10b981" stroke-width="2" />
+
+  <!-- ================= SEPARATED DISTRIBUTION TIERS ================= -->
+
+  <!-- Tier A: Data LAN (Managed Edge Switch) -->
+  <path d="M 120 290 L 120 330" stroke="#06b6d4" stroke-width="2" marker-end="url(#arrow-cyan)" />
+  <g transform="translate(30, 330)">
+    <rect width="180" height="60" rx="8" fill="#111c2e" stroke="#06b6d4" stroke-width="2" />
+    <text x="90" y="25" fill="#e0f2fe" font-size="12.5" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">💻 Managed Edge Switch</text>
+    <text x="90" y="44" fill="#38bdf8" font-size="11" font-family="var(--font-mono)" text-anchor="middle">VLAN 20: Data LAN</text>
+  </g>
+  <!-- Edge Switch to Network Points -->
+  <path d="M 120 390 L 120 440" stroke="#06b6d4" stroke-width="2" marker-end="url(#arrow-cyan)" />
+  <g transform="translate(30, 440)">
+    <rect width="180" height="90" rx="8" fill="#0f172a" stroke="#06b6d4" stroke-width="1.5" />
+    <text x="90" y="24" fill="#38bdf8" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">🔌 Network Points</text>
+    <text x="90" y="42" fill="#94a3b8" font-size="11" font-family="var(--font-mono)" text-anchor="middle">Workstation PCs &bull; LAN</text>
+    <text x="90" y="60" fill="#cbd5e1" font-size="10" font-family="var(--font-mono)" text-anchor="middle">Shared Local Printers</text>
+    <text x="90" y="78" fill="#10b981" font-size="10" font-family="var(--font-mono)" text-anchor="middle">✓ Isolated from CCTV/Voice</text>
+  </g>
+
+  <!-- Tier B: IP Telephony (PoE Voice Switch) -->
+  <path d="M 360 290 L 360 330" stroke="#a855f7" stroke-width="2" marker-end="url(#arrow-purple)" />
+  <g transform="translate(270, 330)">
+    <rect width="180" height="60" rx="8" fill="#1b122c" stroke="#a855f7" stroke-width="2" />
+    <text x="90" y="25" fill="#f3e8ff" font-size="12.5" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">📞 PoE Switch</text>
+    <text x="90" y="44" fill="#c084fc" font-size="11" font-family="var(--font-mono)" text-anchor="middle">VLAN 50: Voice (QoS)</text>
+  </g>
+  <!-- Voice Switch to IP Phones & PBX -->
+  <path d="M 360 390 L 360 440" stroke="#a855f7" stroke-width="2" marker-end="url(#arrow-purple)" />
+  <g transform="translate(270, 440)">
+    <rect width="180" height="90" rx="8" fill="#0f172a" stroke="#a855f7" stroke-width="1.5" />
+    <text x="90" y="24" fill="#c084fc" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">☎️ Desktop IP Phones</text>
+    <text x="90" y="42" fill="#e9d5ff" font-size="11" font-family="var(--font-mono)" text-anchor="middle">&amp; IP PBX Server</text>
+    <text x="90" y="60" fill="#94a3b8" font-size="10" font-family="var(--font-mono)" text-anchor="middle">DSCP Expedited Forwarding</text>
+    <text x="90" y="78" fill="#10b981" font-size="10" font-family="var(--font-mono)" text-anchor="middle">✓ Zero Call Drops / Latency</text>
+  </g>
+
+  <!-- Tier C: CCTV Surveillance (PoE CCTV Switch) -->
+  <path d="M 610 290 L 610 330" stroke="#10b981" stroke-width="2" marker-end="url(#arrow-green)" />
+  <g transform="translate(520, 330)">
+    <rect width="180" height="60" rx="8" fill="#0b201a" stroke="#10b981" stroke-width="2" />
+    <text x="90" y="25" fill="#ecfdf5" font-size="12.5" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">📹 PoE Switch</text>
+    <text x="90" y="44" fill="#34d399" font-size="11" font-family="var(--font-mono)" text-anchor="middle">VLAN 60: CCTV Enclave</text>
+  </g>
+  <!-- CCTV Switch to Cameras & NVR -->
+  <path d="M 610 390 L 610 440" stroke="#10b981" stroke-width="2" marker-end="url(#arrow-green)" />
+  <g transform="translate(520, 440)">
+    <rect width="180" height="90" rx="8" fill="#0f172a" stroke="#10b981" stroke-width="1.5" />
+    <text x="90" y="24" fill="#34d399" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">📹 IP CCTV Cameras</text>
+    <text x="90" y="42" fill="#a7f3d0" font-size="11" font-family="var(--font-mono)" text-anchor="middle">&amp; Central NVR Storage</text>
+    <text x="90" y="60" fill="#94a3b8" font-size="10" font-family="var(--font-mono)" text-anchor="middle">30-Day Video Retention</text>
+    <text x="90" y="78" fill="#ef4444" font-size="10" font-family="var(--font-mono)" text-anchor="middle">🔒 0% Internet Exposure</text>
+  </g>
+
+  <!-- Tier D: Wireless Network (PoE AP Switch) -->
+  <path d="M 860 290 L 860 330" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow-cyan)" />
+  <g transform="translate(770, 330)">
+    <rect width="180" height="60" rx="8" fill="#0c1e3d" stroke="#3b82f6" stroke-width="2" />
+    <text x="90" y="25" fill="#eff6ff" font-size="12.5" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">📶 PoE Switch</text>
+    <text x="90" y="44" fill="#60a5fa" font-size="11" font-family="var(--font-mono)" text-anchor="middle">Wireless AP Distribution</text>
+  </g>
+  <!-- AP Switch to Access Points -->
+  <path d="M 860 390 L 860 440" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow-cyan)" />
+  <g transform="translate(770, 440)">
+    <rect width="180" height="90" rx="8" fill="#0f172a" stroke="#3b82f6" stroke-width="1.5" />
+    <text x="90" y="24" fill="#60a5fa" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">📶 Wi-Fi Access Points</text>
+    <text x="90" y="42" fill="#93c5fd" font-size="11" font-family="var(--font-mono)" text-anchor="middle">VLAN 30 (Staff 802.1X)</text>
+    <text x="90" y="60" fill="#fcd34d" font-size="10" font-family="var(--font-mono)" text-anchor="middle">VLAN 40 (Guest Isolated)</text>
+    <text x="90" y="78" fill="#10b981" font-size="10" font-family="var(--font-mono)" text-anchor="middle">✓ Layer 2 Client Isolation</text>
+  </g>
+
+  <!-- Bottom Quality Indicator -->
+  <g transform="translate(60, 554)">
+    <rect width="860" height="46" rx="8" fill="rgba(16, 185, 129, 0.1)" stroke="#10b981" stroke-width="1.5" />
+    <text x="430" y="22" fill="#34d399" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">🛡️ ZERO-TRUST ADVANTAGE: INDEPENDENT BROADCAST &amp; COLLISION DOMAINS</text>
+    <text x="430" y="38" fill="#cbd5e1" font-size="11" font-family="var(--font-mono)" text-anchor="middle">Dedicated star topology &bull; Full QoS hardware prioritization for IP Phones &bull; CCTV completely shielded from outside world</text>
+  </g>
+</svg>
+            </div>
+
+            <!-- Logical VLAN Segmentation & Access Control Matrix -->
+            <div style="margin-top: 28px; margin-bottom: 24px;">
+              <h4 style="font-size: 1.1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                <span class="mono-label" style="color: var(--accent-secondary);">TABLE 1.0</span>
+                <span>Logical Network Segmentation Matrix (802.1Q VLANs &amp; Access Control)</span>
+              </h4>
+              <div style="overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-sm);">
+                <table class="data-table" style="width: 100%; margin-bottom: 0;">
+                  <thead>
+                    <tr>
+                      <th>VLAN ID &amp; Name</th>
+                      <th>Subnet (CIDR)</th>
+                      <th>Usable Hosts</th>
+                      <th>Gateway</th>
+                      <th>Security Posture</th>
+                      <th>Access Control List (ACL) Rules</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><span class="tag" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-primary);">VLAN 10: MGMT</span></td>
+                      <td class="mono">10.60.10.0/24</td>
+                      <td class="mono">254</td>
+                      <td class="mono">10.60.10.1</td>
+                      <td><span class="status-pill" style="border-color: #ef4444; color: #f87171;">High Security</span></td>
+                      <td>Permit IT Subnet only. Deny all inter-VLAN. Deny Internet inbound.</td>
+                    </tr>
+                    <tr>
+                      <td><span class="tag" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-secondary);">VLAN 20: STAFF</span></td>
+                      <td class="mono">10.60.20.0/23</td>
+                      <td class="mono">510</td>
+                      <td class="mono">10.60.20.1</td>
+                      <td><span class="status-pill" style="border-color: #06b6d4; color: #38bdf8;">Medium Security</span></td>
+                      <td>Permit Internet. Permit local shared printers. Deny access to VLAN 60 (CCTV).</td>
+                    </tr>
+                    <tr>
+                      <td><span class="tag" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">VLAN 30: STAFF-WIFI</span></td>
+                      <td class="mono">10.60.30.0/23</td>
+                      <td class="mono">510</td>
+                      <td class="mono">10.60.30.1</td>
+                      <td><span class="status-pill" style="border-color: #3b82f6; color: #93c5fd;">Medium Security</span></td>
+                      <td>Bridged to Staff Data. Permit Internet. Enforce 802.1X Enterprise authentication.</td>
+                    </tr>
+                    <tr>
+                      <td><span class="tag" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">VLAN 40: GUEST</span></td>
+                      <td class="mono">10.60.40.0/22</td>
+                      <td class="mono">1022</td>
+                      <td class="mono">10.60.40.1</td>
+                      <td><span class="status-pill" style="border-color: #f59e0b; color: #fbbf24;">Isolated (Zero Trust)</span></td>
+                      <td>Permit Internet ONLY. Enforce Layer 2 Client Isolation. Deny all internal enterprise subnets.</td>
+                    </tr>
+                    <tr>
+                      <td><span class="tag" style="background: rgba(139, 92, 246, 0.15); color: #c4b5fd;">VLAN 50: VOICE</span></td>
+                      <td class="mono">10.60.50.0/24</td>
+                      <td class="mono">254</td>
+                      <td class="mono">10.60.50.1</td>
+                      <td><span class="status-pill" style="border-color: #8b5cf6; color: #c4b5fd;">High Priority (QoS)</span></td>
+                      <td>Permit PBX server registration. Enforce strict DSCP Expedited Forwarding (EF). Deny general data.</td>
+                    </tr>
+                    <tr>
+                      <td><span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">VLAN 60: CCTV</span></td>
+                      <td class="mono">10.60.60.0/24</td>
+                      <td class="mono">254</td>
+                      <td class="mono">10.60.60.1</td>
+                      <td><span class="status-pill" style="border-color: #10b981; color: #34d399;">Maximum Security</span></td>
+                      <td>Permit NVR communication only. Deny Internet access completely to eliminate hacking risks.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Key Measurable Advantages Grid -->
+            <div style="margin-top: 28px;">
+              <h4 style="font-size: 1.1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                <span class="mono-label" style="color: #10b981;">ADVANTAGES</span>
+                <span>Measurable Technical Advantages Achieved After Separation</span>
+              </h4>
+              <div class="audit-grid">
+                
+                <div class="audit-card audit-card-success">
+                  <h4 style="color: #10b981;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -3px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    1. Zero-Trust Security &amp; Malware Containment
+                  </h4>
+                  <p>Broadcast domains are strictly confined to individual subnets. If an infected device enters Guest Wi-Fi, lateral malware spread across the enterprise is stopped dead at switch hardware ASICs.</p>
+                </div>
+
+                <div class="audit-card audit-card-success">
+                  <h4 style="color: #10b981;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -3px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    2. CCTV Total Isolation (0% Internet Exposure)
+                  </h4>
+                  <p>By enforcing an explicit <code>deny internet</code> firewall policy on VLAN 60, IP cameras and the NVR are completely isolated from the outside world. Cameras cannot leak video or be recruited into botnets.</p>
+                </div>
+
+                <div class="audit-card audit-card-success">
+                  <h4 style="color: #10b981;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -3px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    3. Deterministic Voice QoS (Zero Dropped Calls)
+                  </h4>
+                  <p>Voice traffic on VLAN 50 receives DSCP Expedited Forwarding (EF) with strict priority queueing. Phone conversations between all desk extensions and reception remain crystal-clear even during peak link utilization.</p>
+                </div>
+
+                <div class="audit-card audit-card-success">
+                  <h4 style="color: #10b981;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -3px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    4. Elimination of Daisy-Chain Choke Points
+                  </h4>
+                  <p>Replaced serial 100M daisy-chained PoE switches with dedicated Gigabit star downlinks from the Managed Core Switch. Eliminates bottlenecks and provides full line-rate throughput for all cameras.</p>
+                </div>
+
+                <div class="audit-card audit-card-success">
+                  <h4 style="color: #10b981;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -3px;"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+                    5. High-Speed L2-Isolated Guest Wi-Fi
+                  </h4>
+                  <p>Guest users on VLAN 40 receive isolated internet connectivity with Layer 2 Client Isolation enabled. Visitors cannot browse local network shares or communicate with other connected devices.</p>
+                </div>
+
+                <div class="audit-card audit-card-success">
+                  <h4 style="color: #10b981;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -3px;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                    6. Structured Network Points Standard
+                  </h4>
+                  <p>Dedicated Cat6 terminations for PC data and IP telephony provide organized cable distribution with easy maintenance and clean port auditing.</p>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
         </div>
       </section>
 
@@ -602,6 +1147,159 @@
           </div>
         </article>
 
+        <!-- Project 10: Carrier GPON/EPON OLT Deployment -->
+        <article class="card card-interactive project-card" data-category="networking">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <span class="tag" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-secondary); border-color: rgba(6, 182, 212, 0.3);">CARRIER &amp; FTTH</span>
+            <span class="mono-label" style="color: var(--accent-secondary);">2026</span>
+          </div>
+          <h3 style="margin-bottom: 10px;">Carrier GPON/EPON OLT Deployment &amp; FTTH Provisioning</h3>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
+            Configured and deployed production Huawei SmartAX MA5608T &amp; ZTE C320 OLT chassis. Defined Type 1–5 Dynamic Bandwidth Allocation (DBA) profiles, mapped GEM ports to T-CONTs, implemented Service VLAN tagging (SVLAN 802.1ad QinQ), and automated ONT auto-discovery and optical link budget verification (-8 to -27 dBm).
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
+            <span class="skill-tag">Huawei MA5608T</span>
+            <span class="skill-tag">ZTE C320</span>
+            <span class="skill-tag">GPON / EPON</span>
+            <span class="skill-tag">DBA Profiles</span>
+            <span class="skill-tag">T-CONT / GEM</span>
+            <span class="skill-tag">QinQ (802.1ad)</span>
+            <span class="skill-tag">ONT Provisioning</span>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <a href="labs.html#lab-008" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
+            <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
+          </div>
+        </article>
+
+        <!-- Project 11: Metro & Enterprise L2/L3 Switching Fabric -->
+        <article class="card card-interactive project-card" data-category="networking">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <span class="tag" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-primary); border-color: rgba(139, 92, 246, 0.3);">METRO SWITCHING</span>
+            <span class="mono-label" style="color: var(--accent-secondary);">2026</span>
+          </div>
+          <h3 style="margin-bottom: 10px;">Metro Ethernet L2/L3 Switching Fabric (Cisco &amp; Juniper EX)</h3>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
+            Engineered high-density aggregation and distribution switching topology using Cisco Catalyst 3850/9300 and Juniper EX3400/4300. Deployed Multiple Spanning Tree (MSTP IEEE 802.1s), multi-chassis LACP (802.3ad) port-channels, DHCP Snooping with Option 82 circuit insertion, Dynamic ARP Inspection (DAI), and storm control thresholds.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
+            <span class="skill-tag">Cisco Catalyst</span>
+            <span class="skill-tag">Juniper EX</span>
+            <span class="skill-tag">MSTP (802.1s)</span>
+            <span class="skill-tag">LACP Port-Channel</span>
+            <span class="skill-tag">DHCP Snooping</span>
+            <span class="skill-tag">Option 82</span>
+            <span class="skill-tag">DAI &amp; Storm Control</span>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <a href="labs.html#lab-009" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
+            <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
+          </div>
+        </article>
+
+        <!-- Project 12: Juniper Junos Multi-Homed BGP Edge -->
+        <article class="card card-interactive project-card" data-category="networking">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3);">JUNIPER CORE</span>
+            <span class="mono-label" style="color: var(--accent-secondary);">2026</span>
+          </div>
+          <h3 style="margin-bottom: 10px;">Juniper Junos Multi-Homed BGP Edge &amp; RE Protection Filters</h3>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
+            Architected Internet border peering on Juniper MX204 / SRX345 running Junos OS. Configured dual-upstream eBGP with BGP community tagging for traffic engineering (Local-Pref &amp; AS-Path prepending), graceful restart, route dampening, and hardened stateless loopback firewall filters (lo0.0) protecting the Routing Engine against control-plane DDoS.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
+            <span class="skill-tag">Juniper Junos</span>
+            <span class="skill-tag">MX204 / SRX345</span>
+            <span class="skill-tag">eBGP Transit</span>
+            <span class="skill-tag">BGP Communities</span>
+            <span class="skill-tag">Routing Policies</span>
+            <span class="skill-tag">RE Filter (lo0.0)</span>
+            <span class="skill-tag">Commit Confirmed</span>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <a href="labs.html#lab-010" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
+            <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
+          </div>
+        </article>
+
+        <!-- Project 13: Next-Gen Firewall & CGNAT Gateway -->
+        <article class="card card-interactive project-card" data-category="networking">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <span class="tag" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">FIREWALL &amp; CGNAT</span>
+            <span class="mono-label" style="color: var(--accent-secondary);">2026</span>
+          </div>
+          <h3 style="margin-bottom: 10px;">Next-Gen Firewall (Fortinet FortiGate &amp; pfSense HA) with CGNAT</h3>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
+            Constructed carrier perimeter security and large-scale translation gateway using Fortinet FortiGate-100F and pfSense Plus HA. Deployed Zone-Based firewalls, Deterministic Carrier-Grade NAT (RFC 6598 100.64.0.0/10) with 2,000-port blocks per subscriber, active-passive CARP state sync, and hardware-accelerated IPsec IKEv2 site-to-site VPN tunnels.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
+            <span class="skill-tag">Fortinet FortiGate</span>
+            <span class="skill-tag">pfSense HA</span>
+            <span class="skill-tag">CGNAT (RFC 6598)</span>
+            <span class="skill-tag">CARP Failover</span>
+            <span class="skill-tag">IPsec IKEv2</span>
+            <span class="skill-tag">Zone Security</span>
+            <span class="skill-tag">QoS Traffic Shaping</span>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <a href="labs.html#lab-011" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
+            <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
+          </div>
+        </article>
+
+        <!-- Project 14: Enterprise SD-WAN & Multi-Site Interconnect -->
+        <article class="card card-interactive project-card" data-category="networking">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3);">SD-WAN &amp; MULTI-BRANCH</span>
+            <span class="mono-label" style="color: var(--accent-secondary);">2026</span>
+          </div>
+          <h3 style="margin-bottom: 10px;">Enterprise Multi-Site SD-WAN (Corporate, Municipalities &amp; Schools)</h3>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
+            Architected and deployed an enterprise-wide SD-WAN hub-and-spoke overlay interconnecting corporate headquarters, school branches, and municipal government ward offices. Configured active-active dual-ISP uplinks with continuous SLA health probes (packet loss, jitter, latency), automated sub-second IPsec failover, and quality-of-service (QoS) traffic prioritization for VoIP, ERP, and e-Governance transactions.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
+            <span class="skill-tag">Fortinet Secure SD-WAN</span>
+            <span class="skill-tag">IPsec IKEv2 Overlay</span>
+            <span class="skill-tag">Dynamic SLA Probing</span>
+            <span class="skill-tag">Corporate Headquarters</span>
+            <span class="skill-tag">Municipal Ward Interconnect</span>
+            <span class="skill-tag">Schools &amp; Campuses</span>
+            <span class="skill-tag">BGP Overlay</span>
+            <span class="skill-tag">QoS Traffic Steering</span>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <a href="labs.html#lab-012" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
+            <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
+          </div>
+        </article>
+
+        <!-- Project 15: Zero-Trust Campus LAN Micro-Segmentation & Isolation -->
+        <article class="card card-interactive project-card" data-category="networking">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <span class="tag" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-primary); border-color: rgba(139, 92, 246, 0.3);">CAMPUS &amp; MUNICIPAL ISOLATION</span>
+            <span class="mono-label" style="color: var(--accent-secondary);">2026</span>
+          </div>
+          <h3 style="margin-bottom: 10px;">Campus LAN Micro-Segmentation &amp; Network Isolation</h3>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
+            Engineered zero-trust internal network segregation across multi-floor corporate business houses, schools/colleges, and municipal administrative buildings. Deployed VRF-Lite routing boundaries, Private VLANs (community and isolated ports) to eliminate lateral malware spread in student/employee labs, 802.1X NAC, isolated captive-portal guest Wi-Fi, and quarantined CCTV surveillance zones with stateful inter-VLAN firewall inspection.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
+            <span class="skill-tag">VRF-Lite</span>
+            <span class="skill-tag">Private VLANs (PVLAN)</span>
+            <span class="skill-tag">802.1X NAC</span>
+            <span class="skill-tag">Cisco Catalyst</span>
+            <span class="skill-tag">Juniper EX</span>
+            <span class="skill-tag">Schools &amp; Universities</span>
+            <span class="skill-tag">Corporate Security</span>
+            <span class="skill-tag">CCTV Enclave</span>
+            <span class="skill-tag">Zero-Trust Inter-VLAN</span>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <a href="labs.html#lab-013" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
+            <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
+          </div>
+        </article>
+
         <!-- Project 9 -->
         <article class="card card-interactive project-card" data-category="networking">
           <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
@@ -641,7 +1339,7 @@
           </div>
           <h3 style="margin-bottom: 8px; font-size: 1.3rem;">Looking for GAM.AI, GAMA, or Native Mobile Applications?</h3>
           <p class="body-sm" style="color: var(--text-secondary); margin: 0; line-height: 1.6;">
-            All active software engineering applications, including <strong>GAM.AI Edge Intelligence (v1.5.1)</strong>, <strong>GAMA Cybernetic Audio (v2.3.1)</strong>, and <strong>IELTS by GAMA (v1.5.3)</strong> with their complete release archive histories and download binaries have been consolidated into our dedicated <strong>Developments Hub</strong>.
+            All active software engineering applications, including <strong>GAM.AI Edge Intelligence (v1.5.3)</strong>, <strong>GAMA Cybernetic Audio (v2.3.1)</strong>, and <strong>IELTS by GAMA (v1.5.3)</strong> with their complete release archive histories and download binaries have been consolidated into our dedicated <strong>Developments Hub</strong>.
           </p>
         </div>
         <div>

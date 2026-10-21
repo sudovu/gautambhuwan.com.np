@@ -208,6 +208,66 @@ document.addEventListener('DOMContentLoaded', () => {
       telemetryLogging: true,
       hostname: 'netops-orchestrator',
       subnet: '10.0.0.0/8'
+    },
+    carrier_olt: {
+      platform: 'juniper',
+      scenario: 'juniper-vlan',
+      securityHardened: true,
+      haRedundancy: true,
+      dualStackIPv6: true,
+      telemetryLogging: true,
+      hostname: 'OLT-MA5608-CORE01',
+      subnet: '10.200.0.0/20'
+    },
+    metro_switch: {
+      platform: 'cisco',
+      scenario: 'cisco-campus',
+      securityHardened: true,
+      haRedundancy: true,
+      dualStackIPv6: true,
+      telemetryLogging: true,
+      hostname: 'METRO-SW-AGG01',
+      subnet: '10.100.0.0/22'
+    },
+    juniper_transit: {
+      platform: 'juniper',
+      scenario: 'juniper-bgp',
+      securityHardened: true,
+      haRedundancy: true,
+      dualStackIPv6: true,
+      telemetryLogging: true,
+      hostname: 'JUNIPER-MX204-BORDER',
+      subnet: '198.51.100.0/24'
+    },
+    fortigate_firewall: {
+      platform: 'juniper',
+      scenario: 'juniper-srx',
+      securityHardened: true,
+      haRedundancy: true,
+      dualStackIPv6: true,
+      telemetryLogging: true,
+      hostname: 'FORTI-EDGE-HA01',
+      subnet: '100.64.0.0/16'
+    },
+    enterprise_sdwan: {
+      platform: 'cisco',
+      scenario: 'cisco-ipsec',
+      securityHardened: true,
+      haRedundancy: true,
+      dualStackIPv6: true,
+      telemetryLogging: true,
+      hostname: 'SDWAN-HUB-CORP01',
+      subnet: '10.160.0.0/16'
+    },
+    campus_isolation: {
+      platform: 'cisco',
+      scenario: 'cisco-zbfw',
+      securityHardened: true,
+      haRedundancy: true,
+      dualStackIPv6: true,
+      telemetryLogging: true,
+      hostname: 'CAMPUS-MUNI-CORE01',
+      subnet: '172.24.0.0/16'
     }
   };
 

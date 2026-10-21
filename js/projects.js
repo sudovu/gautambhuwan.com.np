@@ -117,4 +117,33 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+  // Network Transformation (Before vs. After) Tab Controller
+  const transTabs = document.querySelectorAll('.transformation-tab-btn');
+  const transPanels = document.querySelectorAll('.transformation-panel');
+
+  if (transTabs.length && transPanels.length) {
+    transTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const targetTab = tab.getAttribute('data-tab');
+
+        // Update Tab active states
+        transTabs.forEach(t => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+
+        // Update Panel visibility
+        transPanels.forEach(panel => {
+          panel.classList.remove('is-active');
+        });
+
+        const activePanel = document.getElementById('panel-' + targetTab);
+        if (activePanel) {
+          activePanel.classList.add('is-active');
+        }
+      });
+    });
+  }
 });
