@@ -470,7 +470,7 @@
   </g>
 
   <!-- Line: Gateway to Central Switch -->
-  <path d="M 430 75 L 530 75" stroke="#ef4444" stroke-width="3" />
+  <path d="M 430 75 L 530 75" stroke="#ef4444" stroke-width="3" marker-end="url(#arrow-danger)" />
   <text x="480" y="66" fill="#ef4444" font-size="11" font-family="var(--font-mono)" text-anchor="middle" font-weight="600">1 Gbps Flat</text>
 
   <!-- Central Switch (Main Facility) -->
@@ -485,7 +485,11 @@
   <circle cx="655" cy="170" r="4" fill="#ef4444" />
 
   <!-- Horizontal Distribution Line -->
-  <path d="M 160 170 L 655 170" stroke="#ef4444" stroke-width="2" />
+  <path d="M 160 170 L 960 170" stroke="#ef4444" stroke-width="2" />
+  <circle cx="160" cy="170" r="3.5" fill="#ef4444" />
+  <circle cx="280" cy="170" r="3.5" fill="#ef4444" />
+  <circle cx="400" cy="170" r="3.5" fill="#ef4444" />
+  <circle cx="960" cy="170" r="3.5" fill="#ef4444" />
 
   <!-- Drop 1: Wireless Access Point Branch -->
   <path d="M 160 170 L 160 210" stroke="#ef4444" stroke-width="2" marker-end="url(#arrow-danger)" />
@@ -495,7 +499,7 @@
     <text x="90" y="40" fill="#94a3b8" font-size="10.5" font-family="var(--font-mono)" text-anchor="middle">Layer 2 Switch</text>
   </g>
   <!-- Lines to APs -->
-  <path d="M 160 262 L 160 300" stroke="#f59e0b" stroke-width="1.5" />
+  <path d="M 160 262 L 160 300" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#arrow-warn)" />
   <g transform="translate(70, 300)">
     <rect width="180" height="64" rx="6" fill="#0f172a" stroke="#f59e0b" stroke-width="1" stroke-dasharray="3,3" />
     <text x="90" y="24" fill="#38bdf8" font-size="12" font-family="var(--font-sans)" font-weight="600" text-anchor="middle">Access Point Routers</text>
@@ -531,14 +535,14 @@
     <text x="90" y="40" fill="#94a3b8" font-size="10.5" font-family="var(--font-mono)" text-anchor="middle">PoE Switch (1)</text>
   </g>
   <!-- 100M Choke Link -->
-  <path d="M 745 236 L 800 236" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="3,3" />
+  <path d="M 745 236 L 800 236" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="3,3" marker-end="url(#arrow-danger)" />
   <g transform="translate(800, 210)">
     <rect width="140" height="52" rx="6" fill="#1e293b" stroke="#ef4444" stroke-width="1.5" />
     <text x="70" y="24" fill="#e2e8f0" font-size="12" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">📹 PoE Switch (2)</text>
     <text x="70" y="40" fill="#f87171" font-size="10" font-family="var(--font-mono)" text-anchor="middle">⚠️ 100M Daisy Chain</text>
   </g>
   <!-- CCTV Cameras -->
-  <path d="M 870 262 L 870 300" stroke="#ef4444" stroke-width="1.5" />
+  <path d="M 870 262 L 870 300" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrow-danger)" />
   <g transform="translate(790, 300)">
     <rect width="160" height="64" rx="6" fill="#0f172a" stroke="#ef4444" stroke-width="1" />
     <text x="80" y="24" fill="#f87171" font-size="12" font-family="var(--font-sans)" font-weight="600" text-anchor="middle">CCTV Cameras</text>
@@ -554,11 +558,11 @@
     <text x="130" y="44" fill="#94a3b8" font-size="11" font-family="var(--font-mono)" text-anchor="middle">Bridged &rarr; Local Network Points</text>
   </g>
 
-  <path d="M 655 430 L 690 430" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrow-danger)" />
-  <path d="M 655 170 L 655 430" stroke="#ef4444" stroke-width="1.5" />
+  <path d="M 960 170 L 960 430" stroke="#ef4444" stroke-width="1.5" />
+  <path d="M 960 430 L 950 430" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrow-danger)" />
   <g transform="translate(690, 404)">
     <rect width="260" height="62" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5" />
-    <text x="130" y="24" fill="#f1f5f9" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">🌱 Remote Facility Switch (2)</text>
+    <text x="130" y="24" fill="#f1f5f9" font-size="13" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">🏬 Remote Facility Switch (2)</text>
     <text x="130" y="44" fill="#94a3b8" font-size="11" font-family="var(--font-mono)" text-anchor="middle">Bridged &rarr; Network Points + AP</text>
   </g>
 
