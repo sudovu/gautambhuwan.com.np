@@ -177,218 +177,86 @@
     <div class="container">
       <div class="section-header reveal">
         <div class="section-badge">SYSTEM INSIGHTS</div>
-        <h1 class="section-title">Technical Articles & Notes</h1>
-        <p class="section-description">
-          Deep dives, architectural breakdowns, and practical notes from production systems and network engineering.
+
+      <!-- HIERARCHY LEVEL 1 -->
+      <div class="tier-divider reveal" style="margin: 36px 0 24px 0; padding: 18px 24px; background: rgba(6, 182, 212, 0.05); border-left: 4px solid var(--accent-secondary); border-radius: 4px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+          <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.8rem; letter-spacing: 0.06em; font-weight: 700;">🌱 LEVEL 1 // BEGINNER &amp; TRAINEE FOUNDATIONS</span>
+          <span class="status-pill" style="font-size: 0.72rem; padding: 2px 8px;">4 ARTICLES</span>
+        </div>
+        <h2 style="font-size: 1.35rem; margin: 0 0 6px 0; color: var(--text-primary);">Networking &amp; Systems Essentials</h2>
+        <p class="body-sm" style="color: var(--text-secondary); margin: 0; line-height: 1.6;">
+          Core building blocks: IPv4 binary anatomy, public vs private subnets, essential diagnostic CLI commands, operating system sockets, and ISP field troubleshooting protocols.
         </p>
       </div>
 
-      <div class="grid-2">
-        <!-- Article 1: OSPF Area Design -->
-        <article id="ospf-area-design" class="card card-interactive reveal reveal-delay-1" data-article="ospf-area-design" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
+      <div class="grid-2" style="margin-bottom: 50px;">
+
+        <!-- Article: IPv4 Fundamentals -->
+        <article id="ipv4-fundamentals-classes-types" class="card card-interactive reveal reveal-delay-1" data-article="ipv4-fundamentals-classes-types" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
           <div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
-              <span class="tag" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-secondary); border-color: rgba(6, 182, 212, 0.3);">NETWORKING</span>
-              <span class="mono-label" style="color: var(--text-muted); font-size: 0.76rem;">6 MIN READ // AUG 2026</span>
+              <span class="tag" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-secondary); border-color: rgba(6, 182, 212, 0.3);">LEVEL 1 // FOUNDATIONS</span>
+              <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.76rem;">7 MIN READ // OCT 2026</span>
             </div>
-            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">Demystifying OSPF Area Design &amp; Route Summarization</h2>
+            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">IPv4 Fundamentals: Public vs. Private IPs, Address Classes, and Packet Types</h2>
             <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
-              Why multi-area OSPF topologies are critical for containing link-state advertisements (LSAs), preventing SPF recalculation storms, and establishing hierarchical route summarization at ABRs.
+              The definitive primer on IPv4: 32-bit binary anatomy, Public vs Private addresses (RFC 1918), Class A through E boundaries, transmission modes (Unicast, Multicast, Broadcast, Anycast), and special addresses (127.0.0.1, 169.254.x.x).
             </p>
           </div>
           <div class="read-article-action">
-            <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.78rem;">[ ARCHITECTURAL NOTE ]</span>
-            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="ospf-area-design">
+            <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.78rem;">[ NETWORKING 101 ]</span>
+            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="ipv4-fundamentals-classes-types">
               <span>Read Full Article &rarr;</span>
             </button>
           </div>
         </article>
 
-        <!-- Article 2: Linux Server Hardening -->
-        <article id="linux-server-hardening" class="card card-interactive reveal reveal-delay-2" data-article="linux-server-hardening" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
+        <!-- Article: Trainee CLI Toolkit -->
+        <article id="network-troubleshooting-basic-commands" class="card card-interactive reveal reveal-delay-2" data-article="network-troubleshooting-basic-commands" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
           <div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
-              <span class="tag" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-primary); border-color: rgba(139, 92, 246, 0.3);">SYSTEMS</span>
-              <span class="mono-label" style="color: var(--text-muted); font-size: 0.76rem;">8 MIN READ // JUL 2026</span>
+              <span class="tag" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-secondary); border-color: rgba(6, 182, 212, 0.3);">LEVEL 1 // DIAGNOSTICS</span>
+              <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.76rem;">8 MIN READ // OCT 2026</span>
             </div>
-            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">Hardening Ubuntu Server for Public-Facing Infrastructure</h2>
+            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">The Trainee CLI Toolkit: 8 Essential Commands to Verify Network Availability &amp; Sockets</h2>
             <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
-              Key practices for locking down Linux production instances: Ed25519 SSH keys, UFW default-deny firewall matrix, fail2ban rate-limiting, and sysctl kernel network stack tuning.
+              Mastering the primary command-line diagnostics every junior engineer needs: testing reachability with ping, hop isolation with tracert, DNS resolution with dig, open sockets with ss, and port probes with netcat.
             </p>
           </div>
           <div class="read-article-action">
-            <span class="mono-label" style="color: var(--accent-primary); font-size: 0.78rem;">[ SECURITY BLUEPRINT ]</span>
-            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="linux-server-hardening">
+            <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.78rem;">[ CLI CHEAT SHEET ]</span>
+            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="network-troubleshooting-basic-commands">
               <span>Read Full Article &rarr;</span>
             </button>
           </div>
         </article>
 
-        <!-- Article 3: Anycast DNS Latency -->
-        <article id="anycast-dns-latency" class="card card-interactive reveal reveal-delay-3" data-article="anycast-dns-latency" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
+        <!-- Article: Network & Systems Foundations -->
+        <article id="systems-networking-foundations-junior" class="card card-interactive reveal reveal-delay-3" data-article="systems-networking-foundations-junior" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
           <div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
-              <span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3);">INFRASTRUCTURE</span>
-              <span class="mono-label" style="color: var(--text-muted); font-size: 0.76rem;">5 MIN READ // JUN 2026</span>
+              <span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3);">LEVEL 1 // SYSTEMS</span>
+              <span class="mono-label" style="color: #10b981; font-size: 0.76rem;">9 MIN READ // OCT 2026</span>
             </div>
-            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">Understanding Anycast DNS &amp; Global Latency Reduction</h2>
+            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">Network &amp; Systems Foundations: The Junior Engineer's Field Guide to Daemons, Sockets, and IP Routing</h2>
             <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
-              How BGP Anycast routing enables identical nameservers across global datacenters to share a single IP prefix, routing clients to the nearest geographical node with automatic DDoS scrubbing.
+              Bridging the systems-network divide: socket bindings (0.0.0.0 vs 127.0.0.1), the DHCP DORA lifecycle, rogue gateway detection, the Linux DNS resolution chain, and diagnosing connection refused vs connection timed out.
             </p>
           </div>
           <div class="read-article-action">
-            <span class="mono-label" style="color: #10b981; font-size: 0.78rem;">[ NETWORKING PROTOCOL ]</span>
-            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="anycast-dns-latency">
+            <span class="mono-label" style="color: #10b981; font-size: 0.78rem;">[ SYSTEMS PLAYBOOK ]</span>
+            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="systems-networking-foundations-junior">
               <span>Read Full Article &rarr;</span>
             </button>
           </div>
         </article>
 
-        <!-- Article 4: Docker Bridge Networking -->
-        <article id="docker-bridge-networking" class="card card-interactive reveal reveal-delay-4" data-article="docker-bridge-networking" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
+        <!-- Article: The ISP Trainee Troubleshooting Playbook -->
+        <article id="isp-troubleshooting-playbook-trainee" class="card card-interactive reveal reveal-delay-4" data-article="isp-troubleshooting-playbook-trainee" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
           <div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
-              <span class="tag" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border-color: rgba(59, 130, 246, 0.3);">CLOUD &amp; DEVOPS</span>
-              <span class="mono-label" style="color: var(--text-muted); font-size: 0.76rem;">7 MIN READ // MAY 2026</span>
-            </div>
-            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">Bridge Networks in Docker: Under the Linux Kernel Hood</h2>
-            <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
-              Inspecting virtual ethernet (veth) pairs, software bridge interfaces (br0/docker0), network namespaces, and iptables NAT masquerading rules that power microservice isolation.
-            </p>
-          </div>
-          <div class="read-article-action">
-            <span class="mono-label" style="color: #60a5fa; font-size: 0.78rem;">[ KERNEL &amp; CONTAINERS ]</span>
-            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="docker-bridge-networking">
-              <span>Read Full Article &rarr;</span>
-            </button>
-          </div>
-        </article>
-
-        <!-- Article 5: GPON FTTH Architecture (NEW) -->
-        <article id="gpon-ftth-olt" class="card card-interactive reveal reveal-delay-1" data-article="gpon-ftth-olt" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
-              <span class="tag" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-secondary); border-color: rgba(6, 182, 212, 0.3);">CARRIER &amp; FTTH</span>
-              <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.76rem;">9 MIN READ // OCT 2026</span>
-            </div>
-            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">GPON FTTH Architecture: Deploying &amp; Provisioning Carrier OLTs</h2>
-            <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
-              Carrier-grade optical line terminal (OLT) engineering: Type 1–5 DBA bandwidth profiles, T-CONT allocation, GEM port mapping, QinQ (802.1ad) VLAN tagging, and optical power budget margins (-8 to -27 dBm).
-            </p>
-          </div>
-          <div class="read-article-action">
-            <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.78rem;">[ ISP FTTH ENGINEERING ]</span>
-            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="gpon-ftth-olt">
-              <span>Read Full Article &rarr;</span>
-            </button>
-          </div>
-        </article>
-
-        <!-- Article 6: Juniper Junos vs Cisco IOS-XE BGP & Filters (NEW) -->
-        <article id="juniper-core-bgp" class="card card-interactive reveal reveal-delay-2" data-article="juniper-core-bgp" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
-              <span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3);">JUNIPER CORE</span>
-              <span class="mono-label" style="color: #10b981; font-size: 0.76rem;">8 MIN READ // OCT 2026</span>
-            </div>
-            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">Juniper Junos vs Cisco IOS-XE: Core BGP Peering &amp; RE Filters</h2>
-            <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
-              Comparing multi-homed BGP edge architectures: Junos candidate configurations with atomic commits vs Cisco imperative syntax, BGP community policy manipulation, and stateless loopback filters protecting the Routing Engine.
-            </p>
-          </div>
-          <div class="read-article-action">
-            <span class="mono-label" style="color: #10b981; font-size: 0.78rem;">[ ROUTING ARCHITECTURE ]</span>
-            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="juniper-core-bgp">
-              <span>Read Full Article &rarr;</span>
-            </button>
-          </div>
-        </article>
-
-        <!-- Article 7: Enterprise SD-WAN & Network Isolation (NEW) -->
-        <article id="enterprise-sdwan-isolation" class="card card-interactive reveal reveal-delay-3" data-article="enterprise-sdwan-isolation" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
-              <span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3);">ENTERPRISE &amp; SD-WAN</span>
-              <span class="mono-label" style="color: #10b981; font-size: 0.76rem;">10 MIN READ // OCT 2026</span>
-            </div>
-            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">Enterprise Network Isolation &amp; SD-WAN: Zero-Trust for Schools, Corporations &amp; Municipalities</h2>
-            <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
-              Eliminating flat-network security risks with Layer 3 VRF-Lite segregation, preventing lateral malware spread in computer labs and kiosks using Private VLANs (PVLANs), and orchestrating multi-branch SD-WAN failover across dual ISPs.
-            </p>
-          </div>
-          <div class="read-article-action">
-            <span class="mono-label" style="color: #10b981; font-size: 0.78rem;">[ ENTERPRISE CAMPUS BLUEPRINT ]</span>
-            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="enterprise-sdwan-isolation">
-              <span>Read Full Article &rarr;</span>
-            </button>
-          </div>
-        </article>
-
-        <!-- Article 8: Carrier-Grade NAT (CGNAT RFC 6598) -->
-        <article id="cgnat-port-block-allocation" class="card card-interactive reveal reveal-delay-1" data-article="cgnat-port-block-allocation" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
-              <span class="tag" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-secondary); border-color: rgba(6, 182, 212, 0.3);">CARRIER &amp; CGNAT</span>
-              <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.76rem;">9 MIN READ // OCT 2026</span>
-            </div>
-            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">Carrier-Grade NAT (CGNAT RFC 6598): Deterministic Port Block Allocation &amp; ISP Traceability</h2>
-            <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
-              Scaling broadband subscriber access amidst IPv4 depletion: RFC 6598 (100.64.0.0/10), mathematical 1:32 deterministic port block allocation (PBA), and eliminating multi-terabyte syslog storage while satisfying law enforcement mandates.
-            </p>
-          </div>
-          <div class="read-article-action">
-            <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.78rem;">[ ISP ARCHITECTURE ]</span>
-            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="cgnat-port-block-allocation">
-              <span>Read Full Article &rarr;</span>
-            </button>
-          </div>
-        </article>
-
-        <!-- Article 9: High-Availability Firewall Clustering (CARP & pfsync) -->
-        <article id="firewall-ha-carp-sync" class="card card-interactive reveal reveal-delay-2" data-article="firewall-ha-carp-sync" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
-              <span class="tag" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-primary); border-color: rgba(139, 92, 246, 0.3);">SECURITY &amp; HA</span>
-              <span class="mono-label" style="color: var(--accent-primary); font-size: 0.76rem;">8 MIN READ // OCT 2026</span>
-            </div>
-            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">High-Availability Firewall Clustering: Zero-Downtime Gateway Redundancy with CARP &amp; pfsync</h2>
-            <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
-              Engineering mission-critical active/passive firewall clusters using CARP (RFC 5798) virtual IPs and dedicated kernel pfsync state replication. Seamless sub-second failover with zero dropped TCP sessions or VPN disconnects.
-            </p>
-          </div>
-          <div class="read-article-action">
-            <span class="mono-label" style="color: var(--accent-primary); font-size: 0.78rem;">[ HA BLUEPRINT ]</span>
-            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="firewall-ha-carp-sync">
-              <span>Read Full Article &rarr;</span>
-            </button>
-          </div>
-        </article>
-
-        <!-- Article 10: Advanced Linux Policy Routing (PBR & VRF) -->
-        <article id="linux-pbr-multi-homing" class="card card-interactive reveal reveal-delay-3" data-article="linux-pbr-multi-homing" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
-              <span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3);">LINUX &amp; SYSTEMS</span>
-              <span class="mono-label" style="color: #10b981; font-size: 0.76rem;">7 MIN READ // OCT 2026</span>
-            </div>
-            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">Advanced Linux Networking: Multi-Homed Policy Routing (PBR) &amp; VRF in Production</h2>
-            <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
-              Overcoming asymmetric routing failures on Linux servers with multi-homed ISP uplinks using iproute2 custom routing tables, source-based ip rules, and Linux kernel Virtual Routing and Forwarding (VRF) domains.
-            </p>
-          </div>
-          <div class="read-article-action">
-            <span class="mono-label" style="color: #10b981; font-size: 0.78rem;">[ KERNEL ROUTING ]</span>
-            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="linux-pbr-multi-homing">
-              <span>Read Full Article &rarr;</span>
-            </button>
-          </div>
-        </article>
-
-        <!-- Article 11: The ISP Trainee Troubleshooting Playbook -->
-        <article id="isp-troubleshooting-playbook-trainee" class="card card-interactive reveal reveal-delay-1" data-article="isp-troubleshooting-playbook-trainee" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
-              <span class="tag" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-secondary); border-color: rgba(6, 182, 212, 0.3);">ISP NOC &amp; TROUBLESHOOTING</span>
+              <span class="tag" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-secondary); border-color: rgba(6, 182, 212, 0.3);">LEVEL 1 // ISP NOC</span>
               <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.76rem;">10 MIN READ // OCT 2026</span>
             </div>
             <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">The ISP Trainee Troubleshooting Playbook: Step-by-Step Triage from Optical Fiber to Application</h2>
@@ -404,22 +272,233 @@
           </div>
         </article>
 
+      </div>
 
-        <!-- Article 12: Network & Systems Foundations -->
-        <article id="systems-networking-foundations-junior" class="card card-interactive reveal reveal-delay-2" data-article="systems-networking-foundations-junior" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
+      <!-- HIERARCHY LEVEL 2 -->
+      <div class="tier-divider reveal" style="margin: 50px 0 24px 0; padding: 18px 24px; background: rgba(139, 92, 246, 0.05); border-left: 4px solid var(--accent-primary); border-radius: 4px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+          <span class="mono-label" style="color: var(--accent-primary); font-size: 0.8rem; letter-spacing: 0.06em; font-weight: 700;">⚡ LEVEL 2 // INTERMEDIATE INFRASTRUCTURE OPERATIONS</span>
+          <span class="status-pill" style="font-size: 0.72rem; padding: 2px 8px;">4 ARTICLES</span>
+        </div>
+        <h2 style="font-size: 1.35rem; margin: 0 0 6px 0; color: var(--text-primary);">Enterprise Systems &amp; Routing Operations</h2>
+        <p class="body-sm" style="color: var(--text-secondary); margin: 0; line-height: 1.6;">
+          Production server security hardening, Linux container virtual networking, multi-area OSPF design, and zero-downtime high-availability firewall clustering.
+        </p>
+      </div>
+
+      <div class="grid-2" style="margin-bottom: 50px;">
+
+        <!-- Article: Linux Server Hardening -->
+        <article id="linux-server-hardening" class="card card-interactive reveal reveal-delay-1" data-article="linux-server-hardening" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
           <div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
-              <span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3);">SYSTEMS &amp; FOUNDATIONS</span>
-              <span class="mono-label" style="color: #10b981; font-size: 0.76rem;">9 MIN READ // OCT 2026</span>
+              <span class="tag" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-primary); border-color: rgba(139, 92, 246, 0.3);">LEVEL 2 // SYSTEMS</span>
+              <span class="mono-label" style="color: var(--text-muted); font-size: 0.76rem;">8 MIN READ // JUL 2026</span>
             </div>
-            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">Network &amp; Systems Foundations: The Junior Engineer's Field Guide to Daemons, Sockets, and IP Routing</h2>
+            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">Hardening Ubuntu Server for Public-Facing Infrastructure: The Zero-Trust Baseline</h2>
             <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
-              Bridging the systems-network divide: socket bindings (0.0.0.0 vs 127.0.0.1), the DHCP DORA lifecycle, rogue gateway detection, the Linux DNS resolution chain, and diagnosing connection refused vs connection timed out.
+              Key practices for locking down Linux production instances: Ed25519 SSH keys, UFW default-deny firewall matrix, fail2ban rate-limiting, and sysctl kernel network stack tuning.
             </p>
           </div>
           <div class="read-article-action">
-            <span class="mono-label" style="color: #10b981; font-size: 0.78rem;">[ SYSTEMS PLAYBOOK ]</span>
-            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="systems-networking-foundations-junior">
+            <span class="mono-label" style="color: var(--accent-primary); font-size: 0.78rem;">[ SECURITY BLUEPRINT ]</span>
+            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="linux-server-hardening">
+              <span>Read Full Article &rarr;</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- Article: Docker Bridge Networking -->
+        <article id="docker-bridge-networking" class="card card-interactive reveal reveal-delay-2" data-article="docker-bridge-networking" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
+              <span class="tag" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-primary); border-color: rgba(139, 92, 246, 0.3);">LEVEL 2 // CONTAINERS</span>
+              <span class="mono-label" style="color: var(--text-muted); font-size: 0.76rem;">7 MIN READ // MAY 2026</span>
+            </div>
+            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">Bridge Networks in Docker: What Really Happens Under the Hood</h2>
+            <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
+              Tracing packet flow through veth pairs, Linux software bridges (docker0), network namespaces, and kernel iptables MASQUERADE rules during container-to-host forwarding.
+            </p>
+          </div>
+          <div class="read-article-action">
+            <span class="mono-label" style="color: var(--accent-primary); font-size: 0.78rem;">[ LINUX INTERNALS ]</span>
+            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="docker-bridge-networking">
+              <span>Read Full Article &rarr;</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- Article: OSPF Area Design -->
+        <article id="ospf-area-design" class="card card-interactive reveal reveal-delay-3" data-article="ospf-area-design" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
+              <span class="tag" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-secondary); border-color: rgba(6, 182, 212, 0.3);">LEVEL 2 // ROUTING</span>
+              <span class="mono-label" style="color: var(--text-muted); font-size: 0.76rem;">6 MIN READ // AUG 2026</span>
+            </div>
+            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">Demystifying OSPF Area Design &amp; Route Summarization in Multi-Area Networks</h2>
+            <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
+              Why multi-area OSPF topologies are critical for containing link-state advertisements (LSAs), preventing SPF recalculation storms, and establishing hierarchical route summarization at ABRs.
+            </p>
+          </div>
+          <div class="read-article-action">
+            <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.78rem;">[ ARCHITECTURAL NOTE ]</span>
+            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="ospf-area-design">
+              <span>Read Full Article &rarr;</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- Article: High-Availability Firewall Clustering -->
+        <article id="firewall-ha-carp-sync" class="card card-interactive reveal reveal-delay-4" data-article="firewall-ha-carp-sync" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
+              <span class="tag" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-primary); border-color: rgba(139, 92, 246, 0.3);">LEVEL 2 // SECURITY &amp; HA</span>
+              <span class="mono-label" style="color: var(--accent-primary); font-size: 0.76rem;">8 MIN READ // OCT 2026</span>
+            </div>
+            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">High-Availability Firewall Clustering: Zero-Downtime Gateway Redundancy with CARP &amp; pfsync</h2>
+            <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
+              Engineering mission-critical active/passive firewall clusters using CARP (RFC 5798) virtual IPs and dedicated kernel pfsync state replication. Seamless sub-second failover with zero dropped TCP sessions.
+            </p>
+          </div>
+          <div class="read-article-action">
+            <span class="mono-label" style="color: var(--accent-primary); font-size: 0.78rem;">[ HA BLUEPRINT ]</span>
+            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="firewall-ha-carp-sync">
+              <span>Read Full Article &rarr;</span>
+            </button>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- HIERARCHY LEVEL 3 -->
+      <div class="tier-divider reveal" style="margin: 50px 0 24px 0; padding: 18px 24px; background: rgba(16, 185, 129, 0.05); border-left: 4px solid #10b981; border-radius: 4px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+          <span class="mono-label" style="color: #10b981; font-size: 0.8rem; letter-spacing: 0.06em; font-weight: 700;">🚀 LEVEL 3 // ADVANCED &amp; PROFESSIONAL ARCHITECTURE</span>
+          <span class="status-pill" style="font-size: 0.72rem; padding: 2px 8px;">6 ARTICLES</span>
+        </div>
+        <h2 style="font-size: 1.35rem; margin: 0 0 6px 0; color: var(--text-primary);">Carrier Core, ISP &amp; Advanced Systems</h2>
+        <p class="body-sm" style="color: var(--text-secondary); margin: 0; line-height: 1.6;">
+          Carrier-grade NAT (CGNAT RFC 6598), GPON FTTH OLT provisioning, global Anycast DNS routing, multi-homed Linux VRF policy routing, core BGP edge peering, and zero-trust SD-WAN.
+        </p>
+      </div>
+
+      <div class="grid-2">
+
+        <!-- Article: GPON FTTH Architecture -->
+        <article id="gpon-ftth-olt" class="card card-interactive reveal reveal-delay-1" data-article="gpon-ftth-olt" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
+              <span class="tag" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-secondary); border-color: rgba(6, 182, 212, 0.3);">LEVEL 3 // CARRIER GPON</span>
+              <span class="mono-label" style="color: var(--text-muted); font-size: 0.76rem;">9 MIN READ // APR 2026</span>
+            </div>
+            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">GPON FTTH Architecture: Deploying and Provisioning Carrier OLTs (Huawei &amp; ZTE)</h2>
+            <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
+              Optical distribution network (ODN) engineering, link loss budgets (Class B+ vs C+), DBA bandwidth profiles, and automated ONT provisioning templates on carrier chassis.
+            </p>
+          </div>
+          <div class="read-article-action">
+            <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.78rem;">[ ISP DEPLOYMENT ]</span>
+            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="gpon-ftth-olt">
+              <span>Read Full Article &rarr;</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- Article: Carrier-Grade NAT (CGNAT RFC 6598) -->
+        <article id="cgnat-port-block-allocation" class="card card-interactive reveal reveal-delay-2" data-article="cgnat-port-block-allocation" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
+              <span class="tag" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-secondary); border-color: rgba(6, 182, 212, 0.3);">LEVEL 3 // CARRIER CGNAT</span>
+              <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.76rem;">9 MIN READ // OCT 2026</span>
+            </div>
+            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">Carrier-Grade NAT (CGNAT RFC 6598): Deterministic Port Block Allocation &amp; ISP Traceability</h2>
+            <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
+              Scaling broadband subscriber access amidst IPv4 depletion: RFC 6598 (100.64.0.0/10), mathematical 1:32 deterministic port block allocation (PBA), and eliminating multi-terabyte syslog storage while satisfying law enforcement mandates.
+            </p>
+          </div>
+          <div class="read-article-action">
+            <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.78rem;">[ ISP ARCHITECTURE ]</span>
+            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="cgnat-port-block-allocation">
+              <span>Read Full Article &rarr;</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- Article: Anycast DNS Latency -->
+        <article id="anycast-dns-latency" class="card card-interactive reveal reveal-delay-3" data-article="anycast-dns-latency" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
+              <span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3);">LEVEL 3 // INFRASTRUCTURE</span>
+              <span class="mono-label" style="color: var(--text-muted); font-size: 0.76rem;">5 MIN READ // JUN 2026</span>
+            </div>
+            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">Understanding Anycast DNS &amp; Global Latency Reduction</h2>
+            <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
+              How BGP Anycast routing enables identical nameservers across global datacenters to share a single IP prefix, routing clients to the nearest geographical node with automatic DDoS scrubbing.
+            </p>
+          </div>
+          <div class="read-article-action">
+            <span class="mono-label" style="color: #10b981; font-size: 0.78rem;">[ NETWORKING PROTOCOL ]</span>
+            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="anycast-dns-latency">
+              <span>Read Full Article &rarr;</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- Article: Advanced Linux Policy Routing (PBR & VRF) -->
+        <article id="linux-pbr-multi-homing" class="card card-interactive reveal reveal-delay-4" data-article="linux-pbr-multi-homing" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
+              <span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3);">LEVEL 3 // KERNEL ROUTING</span>
+              <span class="mono-label" style="color: #10b981; font-size: 0.76rem;">7 MIN READ // OCT 2026</span>
+            </div>
+            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">Advanced Linux Networking: Multi-Homed Policy Routing (PBR) &amp; VRF in Production</h2>
+            <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
+              Overcoming asymmetric routing failures on Linux servers with multi-homed ISP uplinks using iproute2 custom routing tables, source-based ip rules, and Linux kernel Virtual Routing and Forwarding (VRF) domains.
+            </p>
+          </div>
+          <div class="read-article-action">
+            <span class="mono-label" style="color: #10b981; font-size: 0.78rem;">[ KERNEL ROUTING ]</span>
+            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="linux-pbr-multi-homing">
+              <span>Read Full Article &rarr;</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- Article: Juniper Core BGP -->
+        <article id="juniper-core-bgp" class="card card-interactive reveal reveal-delay-1" data-article="juniper-core-bgp" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
+              <span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3);">LEVEL 3 // CORE BGP</span>
+              <span class="mono-label" style="color: var(--text-muted); font-size: 0.76rem;">8 MIN READ // MAR 2026</span>
+            </div>
+            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">Juniper Junos vs Cisco IOS-XE: Core BGP Peering &amp; Routing Engine Protection</h2>
+            <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
+              Architectural differences in policy-options, explicit BGP export defaults, and configuring stateless loopback filters (lo0.0) to safeguard the control plane from distributed DDoS floods.
+            </p>
+          </div>
+          <div class="read-article-action">
+            <span class="mono-label" style="color: #10b981; font-size: 0.78rem;">[ CORE ROUTING ]</span>
+            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="juniper-core-bgp">
+              <span>Read Full Article &rarr;</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- Article: Enterprise SD-WAN Isolation -->
+        <article id="enterprise-sdwan-isolation" class="card card-interactive reveal reveal-delay-2" data-article="enterprise-sdwan-isolation" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
+              <span class="tag" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-primary); border-color: rgba(139, 92, 246, 0.3);">LEVEL 3 // ENTERPRISE SD-WAN</span>
+              <span class="mono-label" style="color: var(--text-muted); font-size: 0.76rem;">11 MIN READ // OCT 2026</span>
+            </div>
+            <h2 style="font-size: 1.35rem; margin-bottom: 12px; line-height: 1.4;">Enterprise Network Isolation &amp; SD-WAN: Designing Zero-Trust Infrastructure</h2>
+            <p class="body-sm" style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
+              Architectural blueprint for isolating sensitive administrative assets from high-density student/public traffic across multi-site campuses using VRF segmentation, IPSec hub-and-spoke tunnels, and bandwidth rate-limiting.
+            </p>
+          </div>
+          <div class="read-article-action">
+            <span class="mono-label" style="color: var(--accent-primary); font-size: 0.78rem;">[ ARCHITECTURAL BLUEPRINT ]</span>
+            <button type="button" class="btn btn-outline btn-sm read-article-btn" data-article="enterprise-sdwan-isolation">
               <span>Read Full Article &rarr;</span>
             </button>
           </div>
