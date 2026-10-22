@@ -19,6 +19,42 @@
 
 const LEXICON_DATA = [
   {
+    "id": "mfa-2fa",
+    "term": "2FA & MFA",
+    "full": "Two-Factor & Multi-Factor Authentication",
+    "category": "security",
+    "categoryLabel": "Security & Access",
+    "categoryColor": "#f43f5e",
+    "layman": "With only a password, a thief who sneaks a peek over your shoulder can steal your identity. Two-Factor Authentication requires two different types of proof: (1) Something you KNOW (your typed password), PLUS (2) Something you HAVE (a temporary 6-digit code on your phone), or (3) Something you ARE (your fingerprint or face scan). Even if a hacker buys your leaked password on the dark web, they cannot log in without holding your physical phone.",
+    "technical": "An access control method requiring two or more independent credential categories from: Knowledge (password/PIN), Possession (hardware security key, TOTP authenticator app, smart card), or Inherence (biometrics: fingerprint, retina, facial geometry).",
+    "whyItMatters": "SMS-based 2FA is vulnerable to SIM-swapping attacks where hackers trick cellular phone carriers into transferring a victim's phone number to a hacker's SIM card; hardware security keys (FIDO2/WebAuthn) or TOTP apps should be used instead.",
+    "tags": [
+      "TOTP",
+      "FIDO2",
+      "WebAuthn",
+      "Authentication",
+      "SIM Swap"
+    ]
+  },
+  {
+    "id": "acl",
+    "term": "ACL",
+    "full": "Access Control List (Standard & Extended)",
+    "category": "security",
+    "categoryLabel": "Security & Access",
+    "categoryColor": "#f43f5e",
+    "layman": "Think of an ACL like the VIP guest list held by a nightclub bouncer standing at the velvet rope. Line 1: 'If name is Alice, permit entry'. Line 2: 'If wearing flip-flops, deny entry'. Line 3: 'If no other rule matches, deny everyone else'.",
+    "technical": "An ordered list of sequential permit and deny statements applied to router/switch interfaces to filter packets based on Layer 3 and Layer 4 headers (Source IP, Destination IP, Protocol, Port numbers). Standard ACLs filter only by source IP; Extended ACLs filter by source, destination, protocol, and port. Evaluated top-down with an implicit deny-all at the bottom.",
+    "whyItMatters": "Forgetting that every ACL ends with an invisible 'deny any' rule can accidentally sever all management access to a remote router if your permit statements are too narrow.",
+    "tags": [
+      "Packet Filtering",
+      "Firewall",
+      "Implicit Deny",
+      "Standard vs Extended",
+      "TCAM"
+    ]
+  },
+  {
     "id": "anycast",
     "term": "Anycast",
     "full": "Anycast Routing Architecture",
@@ -93,6 +129,24 @@ const LEXICON_DATA = [
     ]
   },
   {
+    "id": "bios-uefi-secure-boot",
+    "term": "BIOS / UEFI & Secure Boot",
+    "full": "Unified Extensible Firmware Interface & Boot Integrity",
+    "category": "systems",
+    "categoryLabel": "Systems & Linux OS",
+    "categoryColor": "#10b981",
+    "layman": "When you press the power button on a computer, the CPU wakes up with complete amnesia: it doesn't know where the hard drive is, what keyboard is plugged in, or what Windows or Linux is. The BIOS/UEFI is the tiny bootstrap chip on the motherboard that wakes up first, checks the hardware pulse, tests the memory (POST), and hands the steering wheel to the operating system bootloader. Secure Boot ensures that the bootloader hasn't been infected with malware.",
+    "technical": "Firmware interfaces initializing hardware during the boot process. Legacy BIOS uses 16-bit real mode and MBR partition tables (limited to 2TB disks). Modern UEFI runs in 32-bit or 64-bit mode, supports GPT partitions (>2TB), offers faster boot times, and enforces Secure Boot (validating digital signatures of bootloaders against keys in NVRAM).",
+    "whyItMatters": "Installing Linux on a computer with Secure Boot enabled without proper signed shim bootloaders will trigger a firmware refusal: 'Access Denied / Secure Boot Violation'.",
+    "tags": [
+      "UEFI",
+      "POST",
+      "Secure Boot",
+      "GPT",
+      "Bootloader"
+    ]
+  },
+  {
     "id": "cdn",
     "term": "CDN",
     "full": "Content Delivery Network (Cloudflare, Fastly, Akamai)",
@@ -108,6 +162,24 @@ const LEXICON_DATA = [
       "RTT Reduction",
       "Origin Shield",
       "Cloudflare"
+    ]
+  },
+  {
+    "id": "collision-vs-broadcast-domain",
+    "term": "Collision vs Broadcast Domain",
+    "full": "Physical CSMA/CD Contention vs Logical Broadcast Reach",
+    "category": "networking",
+    "categoryLabel": "Networking & Protocols",
+    "categoryColor": "#06b6d4",
+    "layman": "A Collision Domain is a narrow hallway where two people walking in opposite directions will bump into each other if they step forward at the same time. A Broadcast Domain is a large lecture auditorium: when someone shouts through a megaphone, every single person in the room is forced to hear it. Switches eliminate collision domains; Routers break up broadcast domains.",
+    "technical": "A Collision Domain is a physical segment where packets can collide on shared media (CSMA/CD). A Broadcast Domain is a logical network area where any broadcast frame (MAC FF:FF:FF:FF:FF:FF) sent by one host will be received by all other hosts on that segment (delimited by Layer 3 routers or VLANs).",
+    "whyItMatters": "Placing 2,000 computers in a single flat /21 broadcast domain without VLANs causes constant ARP and mDNS broadcast noise that slows down network switches and degrades Wi-Fi.",
+    "tags": [
+      "Collision",
+      "Broadcast",
+      "CSMA/CD",
+      "VLAN Boundaries",
+      "Layer 2"
     ]
   },
   {
@@ -144,6 +216,24 @@ const LEXICON_DATA = [
       "Scheduling",
       "Backups",
       "crond"
+    ]
+  },
+  {
+    "id": "csr",
+    "term": "CSR",
+    "full": "Certificate Signing Request (PKCS#10)",
+    "category": "security",
+    "categoryLabel": "Security & Access",
+    "categoryColor": "#f43f5e",
+    "layman": "A CSR is like filling out an official application form at the government passport office. You generate your secret key at home, print out your name, city, company, and website domain onto the application form, and hand it to the government officer (the Certificate Authority) to stamp with their official holographic seal.",
+    "technical": "A standardized base64-encoded block of text (PKCS#10) submitted to a Certificate Authority (CA) to purchase or issue an SSL/TLS certificate. It contains the applicant's Public Key, Common Name (FQDN), Organization details, and is digitally signed by the applicant's private key to prove key ownership.",
+    "whyItMatters": "Never send or share your private key when submitting a CSR. A CSR contains ONLY your public key and domain identity; your private key must remain permanently locked on your local server.",
+    "tags": [
+      "PKCS#10",
+      "TLS Certificate",
+      "CA",
+      "Public Key",
+      "OpenSSL"
     ]
   },
   {
@@ -218,6 +308,23 @@ const LEXICON_DATA = [
     ]
   },
   {
+    "id": "default-route",
+    "term": "Default Route (0.0.0.0/0)",
+    "full": "Gateway of Last Resort & Prefix Zero",
+    "category": "networking",
+    "categoryLabel": "Networking & Protocols",
+    "categoryColor": "#06b6d4",
+    "layman": "Think of a train station platform with signs for 'Train to Boston' and 'Train to Chicago'. But for every other town on earth, there is a giant sign: 'For all other destinations not listed above, get on the Express Train to New York and ask there.' That is the Default Route: if a router doesn't have an exact matching road, it flings the packet to the Gateway of Last Resort.",
+    "technical": "The quad-zero route ('0.0.0.0/0' in IPv4, '::/0' in IPv6) matching all possible destinations with a prefix length of 0 bits. Because routers always follow the Longest Prefix Match rule, the default route is only selected when no more specific route exists in the Routing Information Base (RIB).",
+    "whyItMatters": "If a border router loses its default route, all external internet traffic is dropped instantly with an ICMP 'Destination Network Unreachable' error.",
+    "tags": [
+      "0.0.0.0/0",
+      "::/0",
+      "Gateway of Last Resort",
+      "Prefix Match"
+    ]
+  },
+  {
     "id": "dhcp",
     "term": "DHCP",
     "full": "Dynamic Host Configuration Protocol",
@@ -232,6 +339,59 @@ const LEXICON_DATA = [
       "IP Lease",
       "UDP 67/68",
       "Auto-Config"
+    ]
+  },
+  {
+    "id": "digital-signature",
+    "term": "Digital Signature",
+    "full": "Cryptographic Authenticity & Non-Repudiation",
+    "category": "security",
+    "categoryLabel": "Security & Access",
+    "categoryColor": "#f43f5e",
+    "layman": "In the physical world, anyone can forge a handwritten pen signature on a check. A Digital Signature is like stamping a legal contract with a magical wax seal made with your private fingerprint: if someone tampers with even a single decimal point on the invoice during delivery, the wax seal shatters into dust, proving the document was altered.",
+    "technical": "A mathematical mechanism providing authenticity, non-repudiation, and message integrity. The sender hashes the document and encrypts the hash with their private key. The recipient decrypts the signature using the sender's public key and compares it to their own calculated hash; an identical match mathematically proves origin and integrity.",
+    "whyItMatters": "If an organization allows an internal code-signing private key to leak onto GitHub, hackers can sign malware that Windows and macOS will automatically trust and execute without security warnings.",
+    "tags": [
+      "Non-Repudiation",
+      "Integrity",
+      "Code Signing",
+      "Public Key",
+      "Signatures"
+    ]
+  },
+  {
+    "id": "disaster-recovery-rto-rpo",
+    "term": "Disaster Recovery (RTO & RPO)",
+    "full": "Recovery Time Objective & Recovery Point Objective",
+    "category": "cloud",
+    "categoryLabel": "Cloud & Architecture",
+    "categoryColor": "#38bdf8",
+    "layman": "RPO (Recovery Point Objective) is: 'How much data can you afford to lose in a fire?'. If you backup once a day at midnight, and the server explodes at 11:59 PM, you lose 23 hours and 59 minutes of work (RPO = 24 hours). RTO (Recovery Time Objective) is: 'How many hours can your business sit completely closed before customers leave?'. If it takes 4 hours to buy a new server and restore backups, your RTO is 4 hours.",
+    "technical": "Core metrics in business continuity planning: RPO (Recovery Point Objective) defines the maximum acceptable data loss measured in time backward from the disaster event. RTO (Recovery Time Objective) defines the maximum acceptable downtime to restore business operations after disaster strikes.",
+    "whyItMatters": "Executives often demand 'Zero RTO and Zero RPO' without realizing that true zero-loss active-active multi-datacenter synchronous replication requires massive fiber infrastructure and millions of dollars in budget.",
+    "tags": [
+      "Business Continuity",
+      "RTO",
+      "RPO",
+      "Backups",
+      "Failover"
+    ]
+  },
+  {
+    "id": "dmz",
+    "term": "DMZ",
+    "full": "Demilitarized Zone (Perimeter Network)",
+    "category": "security",
+    "categoryLabel": "Security & Access",
+    "categoryColor": "#f43f5e",
+    "layman": "Think of a medieval castle. Inside the royal throne room sits the king's treasure vault (your private company database). Outside the moat is the wild open forest (the public Internet). The DMZ is the fortified courtyard between the outer drawbridge and the inner palace gate: you place guest food stalls and reception desks (public web servers) in the courtyard. Even if bandits take over a food stall, the heavy inner gate prevents them from entering the king's vault.",
+    "technical": "A physical or logical subnet separating an internal private local area network (LAN) from untrusted external networks (the Internet). External users can access services in the DMZ (web, mail, DNS), but DMZ hosts are blocked by firewalls from initiating connections into the internal LAN.",
+    "whyItMatters": "Placing a database server directly inside the DMZ instead of behind an internal firewall violates security isolation; if the web server is compromised via SQL injection, the attacker has local network access to the database.",
+    "tags": [
+      "Perimeter",
+      "Firewall Isolation",
+      "Web Servers",
+      "Network Architecture"
     ]
   },
   {
@@ -268,6 +428,60 @@ const LEXICON_DATA = [
       "Telemetry",
       "SNMP",
       "Transceiver Health"
+    ]
+  },
+  {
+    "id": "ebgp-vs-ibgp",
+    "term": "eBGP vs iBGP",
+    "full": "External BGP vs Internal BGP",
+    "category": "networking",
+    "categoryLabel": "Networking & Protocols",
+    "categoryColor": "#06b6d4",
+    "layman": "eBGP is like trade ambassadors negotiating commercial treaties between two independent sovereign nations (such as between your ISP and Google). iBGP is like the internal diplomatic courier circulating those exact same trade agreements between ministers sitting in different offices inside the same royal palace.",
+    "technical": "eBGP peers connect routers in different Autonomous Systems (ASNs), defaulting to TTL 1 and prepending the local ASN to AS_PATH. iBGP peers connect routers within the same ASN (requiring a full mesh or Route Reflectors because iBGP split-horizon prevents re-advertising routes learned from an iBGP peer to another iBGP peer). eBGP updates NEXT_HOP to itself; iBGP leaves NEXT_HOP unchanged unless 'next-hop-self' is configured.",
+    "whyItMatters": "Forgetting 'neighbor next-hop-self' on iBGP border routers is the number one reason internal routers mark external BGP paths as unreachable and drop customer traffic.",
+    "tags": [
+      "BGP",
+      "AS_PATH",
+      "Route Reflector",
+      "next-hop-self",
+      "Peering"
+    ]
+  },
+  {
+    "id": "edge-computing",
+    "term": "Edge Computing",
+    "full": "Decentralized Low-Latency Edge Processing",
+    "category": "cloud",
+    "categoryLabel": "Cloud & Architecture",
+    "categoryColor": "#38bdf8",
+    "layman": "Imagine an autonomous self-driving car driving at 100 km/h that spots a pedestrian stepping into the crosswalk. If the car has to send video camera footage to a cloud datacenter 3,000 km away and wait for a response: 'Hey car, you should press the brake!', the 200ms round-trip delay is too slow and causes an accident. Edge computing places the brain directly on the device or in a mini-server on the street corner so decisions happen in 2 milliseconds.",
+    "technical": "A distributed computing paradigm bringing computation and data storage closer to the location where it is needed (the 'edge' of the network) to reduce latency, save backbone bandwidth, and ensure offline autonomy for IoT, autonomous vehicles, and industrial robotics.",
+    "whyItMatters": "Managing software deployments and security patches across 10,000 decentralized edge devices is far more complex than updating a single centralized cloud datacenter.",
+    "tags": [
+      "Low Latency",
+      "IoT",
+      "Autonomous",
+      "Decentralized",
+      "Edge Nodes"
+    ]
+  },
+  {
+    "id": "encryption-decryption",
+    "term": "Encryption & Decryption",
+    "full": "Cryptographic Plaintext Transformation & Recovery",
+    "category": "security",
+    "categoryLabel": "Security & Access",
+    "categoryColor": "#f43f5e",
+    "layman": "Encryption is scrambling a readable love letter into an unreadable mess of hieroglyphics using a secret mathematical cipher. Decryption is taking that scrambled mess, applying the secret matching key, and restoring the text back into readable human words.",
+    "technical": "Encryption is the mathematical transformation of plaintext into ciphertext using an algorithm and key, guaranteeing confidentiality. Decryption reverses the process, transforming ciphertext back into plaintext with the authorized key.",
+    "whyItMatters": "Encrypting data without verifying data integrity (HMAC or AEAD ciphers like AES-GCM) leaves systems vulnerable to bit-flipping attacks where an attacker alters ciphertext in transit.",
+    "tags": [
+      "Confidentiality",
+      "Ciphertext",
+      "Plaintext",
+      "Ciphers",
+      "AEAD"
     ]
   },
   {
@@ -343,6 +557,24 @@ const LEXICON_DATA = [
     ]
   },
   {
+    "id": "ftp-sftp",
+    "term": "FTP vs SFTP vs FTPS",
+    "full": "File Transfer Protocol vs SSH File Transfer Protocol",
+    "category": "networking",
+    "categoryLabel": "Networking & Protocols",
+    "categoryColor": "#06b6d4",
+    "layman": "Legacy FTP is like shouting your bank password across a crowded cafeteria\u2014anyone holding a microphone can record it. SFTP is slipping your files through a secure pneumatic air tube running directly inside an armored underground vault (SSH).",
+    "technical": "Legacy FTP (RFC 959) uses separate control (TCP 21) and data (TCP 20 or dynamic high ports) channels in cleartext, frequently breaking stateful NAT firewalls. SFTP is a completely different protocol running over a single encrypted SSH connection (TCP port 22) with public-key authentication. FTPS is legacy FTP wrapped with TLS.",
+    "whyItMatters": "FTP active mode fails across modern NAT firewalls because the remote server attempts to initiate an inbound data connection to the client's private IP, which the firewall drops.",
+    "tags": [
+      "TCP 21",
+      "TCP 22",
+      "File Transfer",
+      "SSH",
+      "Active/Passive Mode"
+    ]
+  },
+  {
     "id": "fusion-splicer",
     "term": "Fusion Splicer",
     "full": "Core-Alignment Fiber Fusion Machine",
@@ -378,6 +610,42 @@ const LEXICON_DATA = [
     ]
   },
   {
+    "id": "half-vs-full-duplex",
+    "term": "Half-Duplex vs Full-Duplex",
+    "full": "Bidirectional Data Transmission Modes",
+    "category": "networking",
+    "categoryLabel": "Networking & Protocols",
+    "categoryColor": "#06b6d4",
+    "layman": "Half-Duplex is like a single-lane bridge or a walkie-talkie: only one person can speak at a time, and you must say 'Over' before the other side can reply. Full-Duplex is like a modern telephone call or a two-lane highway: both people can talk and listen simultaneously without interrupting each other.",
+    "technical": "Half-duplex allows data to travel in only one direction at a time over shared physical media, requiring CSMA/CD to detect collisions. Full-duplex allows simultaneous bidirectional transmission over dedicated pairs or fiber strands, completely eliminating collisions.",
+    "whyItMatters": "A duplex mismatch (one side forced to 100/Full and the other set to Auto-Negotiate falling back to Half) causes massive late collisions, packet loss, and severe bandwidth throttling down to dial-up speeds.",
+    "tags": [
+      "Duplex Mismatch",
+      "Auto-Negotiation",
+      "CSMA/CD",
+      "Throughput",
+      "Collisions"
+    ]
+  },
+  {
+    "id": "hashing-vs-encryption-vs-encoding",
+    "term": "Hashing vs Encryption vs Encoding",
+    "full": "Cryptographic Transformation Taxonomy",
+    "category": "security",
+    "categoryLabel": "Security & Access",
+    "categoryColor": "#f43f5e",
+    "layman": "Encoding (like Base64 or Morse code) is just changing the font or language so machines can read it; there is NO secret key, and anyone can decode it. Encryption is locking a message in a safe with a key; you can unlock it anytime with the key. Hashing is tossing a document into a woodchipper: it produces a unique pile of sawdust (a 64-character fingerprint). You can never rebuild the original tree from sawdust, but if anyone changes a single comma, the sawdust pattern looks completely different.",
+    "technical": "Encoding (Base64, Hex) transforms data format for transport without security (fully reversible). Encryption (AES, RSA) scrambles data with a key for confidentiality (reversible with key). Cryptographic Hashing (SHA-256, SHA-3) is a deterministic one-way mathematical function mapping arbitrary-length data to a fixed-size digest.",
+    "whyItMatters": "Never store user passwords using encoding (Base64) or basic encryption; passwords must be hashed using salted, slow key-derivation functions (Argon2id, bcrypt, PBKDF2).",
+    "tags": [
+      "SHA-256",
+      "Base64",
+      "bcrypt",
+      "One-Way",
+      "Salt"
+    ]
+  },
+  {
     "id": "high-availability-failover",
     "term": "High Availability (HA) & Failover",
     "full": "Redundant Architecture & Automated Recovery",
@@ -393,6 +661,42 @@ const LEXICON_DATA = [
       "No Single Point of Failure",
       "Heartbeat",
       "Clustering"
+    ]
+  },
+  {
+    "id": "hsrp-vrrp",
+    "term": "HSRP & VRRP",
+    "full": "First Hop Redundancy Protocols (FHRP)",
+    "category": "networking",
+    "categoryLabel": "Networking & Protocols",
+    "categoryColor": "#06b6d4",
+    "layman": "Imagine an office with two security guards at the front door. Guard A wears the yellow 'Lead Guard' badge and checks visitor passes. Guard B stands quietly in reserve. Every 3 seconds, Guard A taps Guard B's shoulder. If Guard A faints, Guard B immediately pins on the yellow badge and continues checking passes without anyone in line noticing.",
+    "technical": "Gateway redundancy protocols (Cisco proprietary HSRP, open standard VRRP RFC 5798). Multiple routers share a Virtual IP (VIP) and Virtual MAC. An election assigns the Active/Master role based on priority, while the Standby router monitors periodic hello multicasts. If hellos cease, the standby promotes itself and sends a Gratuitous ARP.",
+    "whyItMatters": "Without configuring 'preempt' mode, if the primary router reboots and recovers, it will stay in standby mode while the slower backup router continues handling all traffic indefinitely.",
+    "tags": [
+      "VIP",
+      "Failover",
+      "First Hop",
+      "Gateway Redundancy",
+      "Gratuitous ARP"
+    ]
+  },
+  {
+    "id": "http-https",
+    "term": "HTTP & HTTPS",
+    "full": "Hypertext Transfer Protocol & Secure (TLS/SSL)",
+    "category": "networking",
+    "categoryLabel": "Networking & Protocols",
+    "categoryColor": "#06b6d4",
+    "layman": "HTTP is like sending a postcard through the postal mail: anyone handling the card (the postman, the delivery driver, or a curious neighbor) can read everything written on the back. HTTPS is placing that exact same letter inside a tamper-proof titanium briefcase with a cryptographic combination lock before handing it to the courier.",
+    "technical": "Application Layer protocols for hypermedia transfer. HTTP (TCP port 80) transmits plain ASCII commands and plaintext bodies. HTTPS (TCP port 443) wraps the HTTP stream in a TLS cryptographic session, authenticating the remote server via X.509 digital certificates and encrypting all headers, URLs, cookies, and data payloads.",
+    "whyItMatters": "Running websites over unencrypted HTTP exposes user session cookies and passwords to Wi-Fi packet sniffing, triggers browser security warnings, and negatively impacts Google search rankings.",
+    "tags": [
+      "TCP 80",
+      "TCP 443",
+      "TLS",
+      "Web Protocols",
+      "Cleartext Risk"
     ]
   },
   {
@@ -520,6 +824,42 @@ const LEXICON_DATA = [
       "Reverse Proxy",
       "Health Checks",
       "Round Robin"
+    ]
+  },
+  {
+    "id": "loopback-interface",
+    "term": "Loopback Interface",
+    "full": "Logical Always-Up Virtual Router Port",
+    "category": "networking",
+    "categoryLabel": "Networking & Protocols",
+    "categoryColor": "#06b6d4",
+    "layman": "Physical network ports can go down if an installer trips over a blue cable or a laser burns out. A Loopback interface is a purely virtual, software port inside the router's brain. Because there is no physical cable, a Loopback interface NEVER goes down as long as the router has electrical power.",
+    "technical": "A logical, virtual Layer 3 interface that remains permanently in an 'UP/UP' operational state unless administratively shut down. Commonly assigned a /32 (or IPv6 /128) IP address and used as the Router ID (RID) for OSPF and BGP, as well as the stable termination IP for BGP peering sessions.",
+    "whyItMatters": "Peering BGP across physical interface IPs causes the BGP session to drop every time that specific cable wiggles. Peering over Loopbacks with redundant physical paths keeps the session alive during cable failures.",
+    "tags": [
+      "/32",
+      "Router ID",
+      "OSPF RID",
+      "Always Up",
+      "BGP Peering"
+    ]
+  },
+  {
+    "id": "lvm",
+    "term": "LVM",
+    "full": "Logical Volume Manager (PV, VG, LV)",
+    "category": "systems",
+    "categoryLabel": "Systems & Linux OS",
+    "categoryColor": "#10b981",
+    "layman": "In traditional computing, a physical hard drive is like a solid glass bottle: if you buy an 80GB drive and fill it up, you cannot stretch the glass. LVM turns your physical hard drives into a giant liquid reservoir: you can pour in a 500GB SSD, a 1TB HDD, and a 2TB NVMe into one big pool, and carve out resizable virtual cups (partitions) that can expand while the server is running without rebooting.",
+    "technical": "A storage abstraction layer in Linux decoupling physical disks from the operating system filesystems. Composed of Physical Volumes (PVs), grouped into Volume Groups (VGs), from which Logical Volumes (LVs) are allocated and dynamically resized ('lvextend', 'resize2fs') online.",
+    "whyItMatters": "Shrinking an LVM volume requires shrinking the filesystem before reducing the logical volume; reducing the volume first will permanently truncate and corrupt the filesystem.",
+    "tags": [
+      "Linux Storage",
+      "Partitions",
+      "lvextend",
+      "Volume Group",
+      "Online Resize"
     ]
   },
   {
@@ -662,6 +1002,24 @@ const LEXICON_DATA = [
       "RFC 6598",
       "Port Forwarding",
       "IPv4 Conservation"
+    ]
+  },
+  {
+    "id": "ntp-ptp",
+    "term": "NTP & PTP",
+    "full": "Network Time Protocol & Precision Time Protocol (IEEE 1588)",
+    "category": "networking",
+    "categoryLabel": "Networking & Protocols",
+    "categoryColor": "#06b6d4",
+    "layman": "If your database server thinks it is 12:05:00, but your authentication server thinks it is 12:00:00 and your firewall says 11:58:00, investigating a security breach is like solving a mystery where all security cameras have different clock times. NTP synchronizes every computer's clock to the exact same millisecond. PTP synchronizes stock exchanges and 5G cellular towers down to the nanosecond.",
+    "technical": "NTP (UDP port 123) synchronizes clocks across variable-latency packet networks using a hierarchy of Stratum levels (Stratum 0 = GPS/Atomic clock). Uses round-trip statistical jitter filters to maintain millisecond accuracy. PTP (IEEE 1588) uses hardware timestamping at the PHY layer to achieve sub-microsecond and nanosecond precision.",
+    "whyItMatters": "TLS certificate validation, Active Directory Kerberos tickets, and Two-Factor Authentication (TOTP) fail completely if a server's clock drifts more than 5 minutes from real time.",
+    "tags": [
+      "Clock Sync",
+      "UDP 123",
+      "Stratum",
+      "IEEE 1588",
+      "Kerberos Sync"
     ]
   },
   {
@@ -880,6 +1238,42 @@ const LEXICON_DATA = [
     ]
   },
   {
+    "id": "raid",
+    "term": "RAID",
+    "full": "Redundant Array of Independent Disks (0, 1, 5, 10)",
+    "category": "systems",
+    "categoryLabel": "Systems & Linux OS",
+    "categoryColor": "#10b981",
+    "layman": "Hard drives inevitably fail. RAID 0 is tying two rockets together for double speed; but if either rocket explodes, you crash. RAID 1 is keeping an identical twin mirror copy of your hard drive: if Drive A burns out, Drive B immediately keeps running with zero data loss. RAID 5 and RAID 10 combine speed and safety across multiple disks.",
+    "technical": "Storage virtualization combining multiple physical disk drives into a single logical unit. RAID 0 (Striping, max speed, no redundancy). RAID 1 (Mirroring, 50% capacity, tolerates 1 drive failure). RAID 5 (Block striping with distributed parity, tolerates 1 drive failure, minimum 3 disks). RAID 10 (Striped mirrors 1+0, high IOPS, tolerates multiple disk failures).",
+    "whyItMatters": "RAID is NOT a backup! If a ransomware virus encrypts your files or an administrator accidentally runs 'rm -rf /', RAID mirrors the corrupted or deleted files to all disks instantaneously.",
+    "tags": [
+      "Storage",
+      "Mirroring",
+      "Striping",
+      "Parity",
+      "High Availability"
+    ]
+  },
+  {
+    "id": "ram-rom-nvram",
+    "term": "RAM vs ROM vs NVRAM",
+    "full": "Volatile Working Memory vs Read-Only Firmware vs Non-Volatile RAM",
+    "category": "systems",
+    "categoryLabel": "Systems & Linux OS",
+    "categoryColor": "#10b981",
+    "layman": "RAM is your working short-term memory: it holds the apps you are actively typing in right now, but when you unplug the power cord, every thought vanishes instantly (Volatile). ROM is a stone tablet etched at the factory: it holds immutable permanent instructions that never change (Non-Volatile). NVRAM is a digital notebook powered by a tiny battery: it holds your router's startup configuration so it remembers its IP addresses even after being unplugged for weeks.",
+    "technical": "RAM provides high-speed volatile storage (~50-100 GB/s) requiring continuous electrical refresh. ROM is non-volatile hardwired memory. NVRAM retains configuration settings (like Cisco 'startup-config' or UEFI boot variables) across power cycles without continuous main power.",
+    "whyItMatters": "On Cisco routers, running 'configure terminal' alters memory only in RAM ('running-config'). If power is lost before typing 'write memory' or 'copy run start', all configuration changes vanish permanently upon reboot.",
+    "tags": [
+      "Volatile",
+      "Non-Volatile",
+      "running-config",
+      "startup-config",
+      "Memory"
+    ]
+  },
+  {
     "id": "rest-api-webhook",
     "term": "REST API vs Webhook",
     "full": "Request-Response (Polling) vs Event-Driven (Push)",
@@ -914,6 +1308,24 @@ const LEXICON_DATA = [
       "Compression",
       "WAF",
       "Gateway"
+    ]
+  },
+  {
+    "id": "saas-paas-iaas",
+    "term": "SaaS vs PaaS vs IaaS",
+    "full": "Cloud Computing Service Delivery Models",
+    "category": "cloud",
+    "categoryLabel": "Cloud & Architecture",
+    "categoryColor": "#38bdf8",
+    "layman": "Think of pizza: (1) IaaS (Infrastructure as a Service) is buying raw flour, cheese, and a rented commercial oven: you must bake the pizza and clean the kitchen yourself (like renting raw Linux VMs in AWS EC2). (2) PaaS (Platform as a Service) is ordering pizza delivery: they bake it and deliver the hot box, you just bring plates and eat it (like deploying code to Heroku or Firebase without managing Linux). (3) SaaS (Software as a Service) is walking into a restaurant: you just sit down, eat, and pay the bill (like Gmail, Netflix, or Salesforce).",
+    "technical": "Cloud computing abstractions: IaaS provides virtualized hardware (compute, networking, storage). PaaS provides application runtimes, managed databases, and deployment pipelines without OS management. SaaS delivers full turn-key software applications accessible via web browsers or APIs.",
+    "whyItMatters": "Assuming that PaaS or SaaS eliminates the need for data backups is a costly mistake; while cloud vendors manage platform uptime, customer-side data deletion, ransomware, or accidental corruption is still the customer's shared responsibility.",
+    "tags": [
+      "Cloud Models",
+      "AWS",
+      "Shared Responsibility",
+      "Serverless",
+      "Runtimes"
     ]
   },
   {
@@ -970,6 +1382,61 @@ const LEXICON_DATA = [
     ]
   },
   {
+    "id": "smtp-imap-pop3",
+    "term": "SMTP, IMAP & POP3",
+    "full": "Email Transmission & Mailbox Synchronization Protocols",
+    "category": "networking",
+    "categoryLabel": "Networking & Protocols",
+    "categoryColor": "#06b6d4",
+    "layman": "SMTP is the public blue mailbox on the street corner you drop letters INTO to send them across the world (Outgoing Mail). POP3 is walking to your PO Box, emptying all envelopes into your backpack, leaving the PO box empty (no multi-device sync). IMAP is reading your letters on a glass display case inside the post office: if you mark an email as 'Read' on your phone, it is also marked 'Read' on your laptop.",
+    "technical": "SMTP (TCP 25 / 587 submission) pushes email from clients to servers and relays messages between MTAs. POP3 (TCP 110 / 995 SSL) downloads messages to local client storage. IMAP (TCP 143 / 993 SSL) provides two-way folder and flag synchronization across multiple concurrent clients.",
+    "whyItMatters": "Most ISPs block outbound TCP port 25 on residential accounts to stop home malware botnets from spamming, requiring engineers to configure authenticated port 587 submission.",
+    "tags": [
+      "Email",
+      "TCP 25",
+      "TCP 587",
+      "TCP 993",
+      "Mail Sync"
+    ]
+  },
+  {
+    "id": "snmp",
+    "term": "SNMP",
+    "full": "Simple Network Management Protocol (v1, v2c, v3)",
+    "category": "networking",
+    "categoryLabel": "Networking & Protocols",
+    "categoryColor": "#06b6d4",
+    "layman": "Think of SNMP like an automatic fitness tracker strapped to every router, switch, and server. It constantly counts heartbeats (CPU temperature, fan speed, bandwidth bytes on port 1). Every 5 minutes, a central monitoring server asks: 'How many bytes passed through this port?'. If a cable is cut, the router immediately fires an emergency SMS alert (an SNMP Trap) to the administrator.",
+    "technical": "An application protocol (UDP port 161 for polling queries, UDP port 162 for asynchronous Trap/Inform alerts). Organizes telemetry metrics into a hierarchical tree of Object Identifiers (OIDs) defined by MIB files. SNMPv3 adds user-based security (USM), SHA/MD5 authentication, and AES encryption over legacy cleartext v1/v2c community strings.",
+    "whyItMatters": "Leaving default 'public' or 'private' community strings on SNMPv2c devices allows malicious scanners to dump the entire router configuration, routing table, and ARP cache.",
+    "tags": [
+      "Monitoring",
+      "UDP 161/162",
+      "OIDs",
+      "MIBs",
+      "Telemetry",
+      "SNMPv3"
+    ]
+  },
+  {
+    "id": "ssd-hdd-nvme",
+    "term": "SSD vs HDD vs NVMe",
+    "full": "Solid State Drive vs Hard Disk Drive vs Non-Volatile Memory Express",
+    "category": "systems",
+    "categoryLabel": "Systems & Linux OS",
+    "categoryColor": "#10b981",
+    "layman": "An HDD is a spinning mechanical record player with a magnetic needle reading magnetic plates at 7,200 RPM; reading files requires physically swinging the needle (slow, fragile to drops). A SATA SSD replaces spinning plates with microchips (5x faster, silent). NVMe is plugging those high-speed flash chips directly into the motherboard's high-speed highway (PCIe lanes) instead of through an old telephone wire, delivering speeds 35x faster than an HDD.",
+    "technical": "HDDs use magnetic platters and mechanical actuator arms limited by seek latency to ~100-200 IOPS and ~150 MB/s. SATA SSDs use NAND flash over legacy AHCI, capped at SATA-III limits (~550 MB/s). NVMe communicates directly over PCIe lanes with 64,000 parallel queues, delivering 7,000+ MB/s and 1,000,000+ IOPS.",
+    "whyItMatters": "Running high-transaction databases (PostgreSQL, MySQL) on mechanical HDDs or slow SATA drives causes massive I/O wait spikes (%iowait in top), throttling queries even if the CPU is 90% idle.",
+    "tags": [
+      "NVMe",
+      "PCIe",
+      "IOPS",
+      "NAND Flash",
+      "I/O Wait"
+    ]
+  },
+  {
     "id": "ssh-keys",
     "term": "SSH & Asymmetric Keys",
     "full": "Secure Shell & Public/Private Key Cryptography",
@@ -985,6 +1452,42 @@ const LEXICON_DATA = [
       "Public Key",
       "authorized_keys",
       "Remote Access"
+    ]
+  },
+  {
+    "id": "nat-types",
+    "term": "Static NAT vs Dynamic NAT vs PAT",
+    "full": "Network Address Translation Modes",
+    "category": "networking",
+    "categoryLabel": "Networking & Protocols",
+    "categoryColor": "#06b6d4",
+    "layman": "Static NAT is giving an employee their own permanent private phone number that rings directly to their desk from outside (1-to-1). Dynamic NAT is a company pool of 5 shared company cars: employees borrow one while out, but when all 5 are taken, the 6th person waits. PAT (Port Address Translation) is the entire 500-person office sharing ONE single main telephone number, using unique 4-digit extension numbers to separate who is talking.",
+    "technical": "Static NAT maps one private IP permanently to one public IP (ideal for inbound servers). Dynamic NAT maps private IPs to an available public IP pool from a list on a first-come, first-served basis. PAT (NAT Overload) multiplexes thousands of private IPs onto a single public IP by modifying Layer 4 source port numbers.",
+    "whyItMatters": "Running out of available PAT source ports (port exhaustion) causes new outgoing web requests to freeze and time out until existing TCP connections finish and close.",
+    "tags": [
+      "PAT",
+      "Static NAT",
+      "Port Exhaustion",
+      "Overload",
+      "IP Translation"
+    ]
+  },
+  {
+    "id": "static-vs-dynamic-routing",
+    "term": "Static vs Dynamic Routing",
+    "full": "Fixed Administrative Paths vs Protocol-Driven Topology Discovery",
+    "category": "networking",
+    "categoryLabel": "Networking & Protocols",
+    "categoryColor": "#06b6d4",
+    "layman": "Static Routing is writing out exact driving directions on a piece of paper: 'Turn left at Main St, go straight 5km'. It is predictable, but if a bridge collapses, the driver sits there forever because the paper cannot rewrite itself. Dynamic Routing is having live Google Maps GPS in the car: routers talk to their neighbors, detect road closures, and calculate detours in milliseconds.",
+    "technical": "Static routes ('ip route prefix mask next-hop') are manually configured by engineers with a default Administrative Distance of 1. Dynamic routing protocols (OSPF, BGP, EIGRP) exchange topology updates automatically, adapt to physical link failures, and compute optimal loop-free metrics without human intervention.",
+    "whyItMatters": "Static routes do not scale in large enterprise networks; adding or modifying a single subnet would require manually logging into dozens of routers to type updates.",
+    "tags": [
+      "Routing",
+      "Static Route",
+      "Convergence",
+      "AD 1",
+      "Autonomous"
     ]
   },
   {
@@ -1042,6 +1545,24 @@ const LEXICON_DATA = [
     ]
   },
   {
+    "id": "symmetric-vs-asymmetric",
+    "term": "Symmetric vs Asymmetric Encryption",
+    "full": "Shared Secret Ciphers (AES) vs Public Key Cryptography (RSA/ECC)",
+    "category": "security",
+    "categoryLabel": "Security & Access",
+    "categoryColor": "#f43f5e",
+    "layman": "Symmetric encryption is like a physical safety deposit box with ONE key: you lock the box with your key, and the recipient must have an exact duplicate of that same key (fast, but how do you mail the key safely?). Asymmetric encryption has TWO keys: a public padlock that anyone can snap shut, and a private key that only you keep in your pocket to unlock it.",
+    "technical": "Symmetric ciphers (AES-256, ChaCha20) use a single identical secret key for both encryption and decryption, delivering extreme gigabit-per-second throughput in hardware. Asymmetric ciphers (RSA, ECC, Ed25519) use mathematically linked keypairs; the public key encrypts, while only the private key decrypts. Modern TLS uses Asymmetric encryption to safely exchange a temporary Symmetric session key.",
+    "whyItMatters": "Attempting to encrypt large video streams or database backups directly with RSA is computationally prohibitive; RSA is intended only for key exchange and signatures, while AES handles the bulk data.",
+    "tags": [
+      "AES-256",
+      "RSA",
+      "ECC",
+      "Key Exchange",
+      "Cryptosystems"
+    ]
+  },
+  {
     "id": "syscall",
     "term": "Syscall",
     "full": "System Call (read, write, open, socket, fork)",
@@ -1060,6 +1581,24 @@ const LEXICON_DATA = [
     ]
   },
   {
+    "id": "syslog",
+    "term": "Syslog",
+    "full": "System Logging Protocol (RFC 5424)",
+    "category": "networking",
+    "categoryLabel": "Networking & Protocols",
+    "categoryColor": "#06b6d4",
+    "layman": "Think of Syslog like a ship's official captain logbook. Every time something happens on a switch or firewall (a user logs in, a cable is unplugged, a cyberattack is blocked), the device jots down a timestamped note and sends an exact copy into a central fireproof archive safe.",
+    "technical": "Standardized protocol (RFC 5424, UDP/TCP port 514, or TLS 6514) for sending event notifications over IP networks. Formatted with Facility codes (auth, daemon, kern, local0-7) and Severity levels from 0 (Emergency) to 7 (Debug) into central SIEM analyzers (Splunk, Graylog, ELK).",
+    "whyItMatters": "If a hacker gains root access to a server and wipes the local `/var/log` directory, real-time remote Syslog forwarding ensures the forensic proof was already safely archived off-box.",
+    "tags": [
+      "Logging",
+      "UDP 514",
+      "SIEM",
+      "RFC 5424",
+      "Audit Trail"
+    ]
+  },
+  {
     "id": "tcp-udp",
     "term": "TCP vs UDP",
     "full": "Transmission Control Protocol vs User Datagram Protocol",
@@ -1075,6 +1614,42 @@ const LEXICON_DATA = [
       "3-Way Handshake",
       "SYN/ACK",
       "Low Latency"
+    ]
+  },
+  {
+    "id": "telnet-vs-ssh",
+    "term": "Telnet vs SSH",
+    "full": "Teletype Network vs Secure Shell",
+    "category": "networking",
+    "categoryLabel": "Networking & Protocols",
+    "categoryColor": "#06b6d4",
+    "layman": "Telnet is speaking through a megaphone in a crowded room: anyone standing nearby hears your administrative password letter by letter. SSH is speaking inside a soundproof, bulletproof booth with voice-scrambling technology: outside eavesdroppers hear only garbled white noise.",
+    "technical": "Telnet (TCP port 23) transmits all terminal sessions, usernames, and passwords in unencrypted cleartext. SSH (TCP port 22) negotiates an encrypted channel using asymmetric key exchange (Diffie-Hellman), symmetric ciphers (AES-256), and HMAC data integrity.",
+    "whyItMatters": "Using Telnet to manage network equipment is an immediate critical failure on every cybersecurity audit and leaves routers vulnerable to trivial credential interception.",
+    "tags": [
+      "TCP 23",
+      "TCP 22",
+      "Remote CLI",
+      "Security Audit",
+      "Encryption"
+    ]
+  },
+  {
+    "id": "tftp",
+    "term": "TFTP",
+    "full": "Trivial File Transfer Protocol",
+    "category": "networking",
+    "categoryLabel": "Networking & Protocols",
+    "categoryColor": "#06b6d4",
+    "layman": "TFTP is like a bare-bones mechanical dumbwaiter elevator in a restaurant kitchen: there is no lock, no password, and no buttons other than 'Send Up' or 'Send Down'. You use it only when a device has almost no brains or memory left (like a bricked router recovering firmware over an Ethernet cord).",
+    "technical": "A minimal lock-step file transfer protocol (UDP port 69) with zero authentication and no directory listing. Sends 512-byte blocks and requires an ACK for every single packet before transmitting the next, resulting in high latency sensitivity.",
+    "whyItMatters": "TFTP is the standard recovery mechanism for PXE network booting and uploading Cisco/MikroTik firmware images into bare-metal routers during emergency recovery.",
+    "tags": [
+      "UDP 69",
+      "PXE Boot",
+      "Firmware Recovery",
+      "No Auth",
+      "Lock-Step"
     ]
   },
   {
@@ -1204,6 +1779,23 @@ const LEXICON_DATA = [
     ]
   },
   {
+    "id": "vrf",
+    "term": "VRF",
+    "full": "Virtual Routing and Forwarding",
+    "category": "networking",
+    "categoryLabel": "Networking & Protocols",
+    "categoryColor": "#06b6d4",
+    "layman": "Think of a physical router like a large office building. With VRF, the building builds three completely separate, soundproof mailrooms inside the same walls: one for the Police, one for a Private Bank, and one for a Public Cafe. Even if both the Police and the Bank use the exact same room numbers (IP 192.168.1.1), their mail can NEVER cross over or be seen by each other.",
+    "technical": "A technology virtualizing Layer 3 routing tables within a single physical or virtual router. Each VRF maintains an independent Routing Information Base (RIB) and Forwarding Information Base (FIB), enabling overlapping IP address ranges without conflicts. Extensively used in MPLS L3VPNs and corporate network segmentation.",
+    "whyItMatters": "Forgetting to bind an interface to its designated VRF ('ip vrf forwarding <name>') typically erases the previously assigned IP address on that interface in Cisco IOS, immediately disconnecting the link.",
+    "tags": [
+      "Segmentation",
+      "Multi-Tenant",
+      "MPLS L3VPN",
+      "RIB Virtualization"
+    ]
+  },
+  {
     "id": "zero-trust",
     "term": "Zero-Trust",
     "full": "Zero-Trust Network Architecture (ZTNA)",
@@ -1259,7 +1851,22 @@ const LEXICON_DATA = [
 
   function setupCategoryFilters() {
     const filterButtons = document.querySelectorAll('.lexicon-cat-btn');
+    
+    // Dynamic count calculation
+    const counts = { all: LEXICON_DATA.length };
+    LEXICON_DATA.forEach(item => {
+      counts[item.category] = (counts[item.category] || 0) + 1;
+    });
+
     filterButtons.forEach(btn => {
+      const cat = btn.getAttribute('data-category');
+      if (counts[cat] !== undefined) {
+        const countSpan = btn.querySelector('.cat-count');
+        if (countSpan) {
+          countSpan.textContent = counts[cat];
+        }
+      }
+
       btn.addEventListener('click', () => {
         filterButtons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
