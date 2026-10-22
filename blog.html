@@ -182,7 +182,25 @@
           Architectural deep dives, field engineering handbooks, and operational guides organized from foundational networking to carrier infrastructure.
         </p>
 
-                <!-- Category Filter Tabs -->
+                
+        <!-- Plain-English Lexicon Callout Banner -->
+        <div class="reveal" style="margin: 24px auto 0 auto; max-width: 860px; padding: 16px 22px; border-radius: var(--radius-md); background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%); border: 1px solid rgba(6, 182, 212, 0.25); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+          <div style="display: flex; align-items: center; gap: 12px; text-align: left;">
+            <span style="font-size: 1.6rem; flex-shrink: 0;">📖</span>
+            <div>
+              <div style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; color: var(--accent-secondary); letter-spacing: 0.06em;">THE PLAIN-ENGLISH TECH &amp; NETWORK LEXICON</div>
+              <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 3px 0 0 0; line-height: 1.45;">
+                67+ technical terms &amp; acronyms explained with 10-second beginner analogies across networking, systems, fiber optics, and cloud.
+              </p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <a href="#lexicon" class="btn btn-outline btn-sm" style="font-size: 0.76rem; border-color: var(--accent-secondary); color: var(--accent-secondary); padding: 6px 14px;">Explore Lexicon &darr;</a>
+            <a href="lexicon.html" class="btn btn-secondary btn-sm" style="font-size: 0.76rem; padding: 6px 14px;">Standalone Page &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Category Filter Tabs -->
         <div class="category-filters-container reveal" style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; justify-content: center;">
           <button type="button" class="category-filter-btn active" data-category="all" style="padding: 9px 20px; border-radius: 20px; font-size: 0.82rem; font-family: var(--font-mono); font-weight: 600; cursor: pointer; border: 1px solid var(--border-accent); background: var(--surface-card); color: var(--text-primary); transition: all var(--transition-fast);">
             ● All Articles (27)
@@ -828,6 +846,93 @@
     </div>
   </section>
 
+  
+  <!-- ==========================================================================
+       SECTION: THE PLAIN-ENGLISH TECH & NETWORK LEXICON (JARGON BUSTER)
+       ========================================================================== -->
+  <section id="lexicon" class="section" style="border-top: 1px solid var(--border); padding-top: 80px; padding-bottom: 80px;">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-badge" style="border-color: rgba(6, 182, 212, 0.4); color: var(--accent-secondary);">THE JARGON BUSTER</div>
+        <h2 class="section-title">The Plain-English Tech &amp; Network Lexicon</h2>
+        <p class="section-description">
+          Complex acronyms, network protocols, operating system internals, and fiber optic hardware translated into simple, real-world analogies anyone can understand.
+        </p>
+      </div>
+
+      <!-- Live Search Bar -->
+      <div class="lexicon-search-wrapper reveal">
+        <div class="lexicon-search-bar">
+          <svg class="lexicon-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="lexicon-search-input" class="lexicon-search-input" placeholder="Search any term, acronym, protocol, or concept (e.g. DNS, MTU, SFP, Kernel, OOM)..." autocomplete="off" spellcheck="false" aria-label="Search tech lexicon terms">
+          <button type="button" id="lexicon-clear-search" class="lexicon-clear-btn" aria-label="Clear search query" title="Clear search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="lexicon-filters-bar reveal">
+        <button type="button" class="lexicon-cat-btn active" data-category="all">
+          <span>●</span> All Categories (67)
+        </button>
+        <button type="button" class="lexicon-cat-btn" data-category="networking">
+          <span style="color: #06b6d4;">🌐</span> Networking &amp; Protocols (23)
+        </button>
+        <button type="button" class="lexicon-cat-btn" data-category="systems">
+          <span style="color: #10b981;">🐧</span> Systems &amp; Linux OS (15)
+        </button>
+        <button type="button" class="lexicon-cat-btn" data-category="fiber">
+          <span style="color: #f59e0b;">⚡</span> Fiber Optics &amp; Hardware (12)
+        </button>
+        <button type="button" class="lexicon-cat-btn" data-category="cloud">
+          <span style="color: #38bdf8;">☁️</span> Cloud &amp; Architecture (10)
+        </button>
+        <button type="button" class="lexicon-cat-btn" data-category="security">
+          <span style="color: #f43f5e;">🛡️</span> Security &amp; Access (8)
+        </button>
+      </div>
+
+      <!-- A-Z Alphabet Quick Jump Bar -->
+      <div class="lexicon-alphabet-container reveal" id="lexicon-alphabet-bar">
+        <!-- Rendered dynamically by js/lexicon.js -->
+      </div>
+
+      <!-- Stats Bar & Reset -->
+      <div class="lexicon-stats-row reveal">
+        <span class="mono-label" id="lexicon-count-indicator" style="color: var(--text-secondary); font-size: 0.82rem;">
+          Showing all 67 technical terms
+        </span>
+        <button type="button" id="lexicon-reset-filters" class="btn btn-outline btn-sm" style="font-size: 0.74rem; padding: 4px 12px;">
+          Reset All Filters
+        </button>
+      </div>
+
+      <!-- Dynamic Cards Grid -->
+      <div class="lexicon-grid reveal" id="lexicon-grid">
+        <!-- Rendered dynamically by js/lexicon.js -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="lexicon-empty-state" class="card" style="display: none; text-align: center; padding: 48px 24px; margin-top: 20px;">
+        <div style="font-size: 2.2rem; margin-bottom: 12px;">🔍</div>
+        <h3 style="font-size: 1.2rem; margin-bottom: 8px;">No Matching Technical Terms Found</h3>
+        <p class="body-sm" style="color: var(--text-muted); max-width: 480px; margin: 0 auto 20px auto;">
+          We couldn't find any terms matching your current search or category filter. Try clearing your search or checking another category.
+        </p>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('lexicon-reset-filters')?.click()">
+          Reset Search &amp; Show All
+        </button>
+      </div>
+    </div>
+  </section>
+
   <!-- Interactive Article Reader Modal -->
   <div id="article-reader-modal" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="article-reader-title">
     <div class="modal-card article-modal-card">
@@ -929,6 +1034,7 @@
   <script src="js/animations.js"></script>
   <script src="js/main.js"></script>
   
+  <script src="js/lexicon.js"></script>
   <script src="js/blog.js"></script>
 </body>
 </html>
