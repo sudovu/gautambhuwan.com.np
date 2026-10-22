@@ -8,6 +8,7 @@
   <meta name="keywords" content="Bhuwan Gautam, Gautam Bhuwan, Bhuwan Gautam Nepal, Vhuwon Mathers, sudovu, gautambhuwan.com.np, Network Engineer Nepal, Enterprise Network Expert, SD-WAN, Network Isolation, Campus Networks Nepal, Schools and Municipalities Network, Cisco CCNA, Systems Administrator, Linux, Docker, VLSM IPAM Engine, GAMATUBE, GAM.AI, Project Gama, OSPF, BGP, Juniper Junos">
   <meta name="author" content="Bhuwan Gautam (Vhuwon Mathers)">
   <meta name="theme-color" content="#080b12">
+  <meta name="color-scheme" content="dark light">
   <link rel="canonical" href="https://gautambhuwan.com.np/">
   <link rel="manifest" href="site.webmanifest">
   <meta name="google-site-verification" content="lRKHCBZxsldwo-zEapmbUdW8s4pile8GDLfzlMr05os">
@@ -138,6 +139,8 @@
     ]
   }
   </script>
+  <script>try{var t=localStorage.getItem('vm_theme_preference');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+  <link rel="preload" as="image" href="assets/images/profile/me1.webp" type="image/webp" fetchpriority="high">
 </head>
 <body>
 
@@ -291,14 +294,19 @@
 
             <!-- Profile Image Container -->
             <div style="position: relative; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); aspect-ratio: 1/1; background: #000;">
-              <img 
-                src="assets/images/profile/me1.jpeg" 
-                alt="Bhuwan Gautam (Vhuwon Mathers) — Network and Systems Engineer" 
-                width="800" 
-                height="800" 
-                style="width: 100%; height: 100%; object-fit: cover;"
-                loading="eager"
-              >
+              <picture>
+                <source srcset="assets/images/profile/me1.webp" type="image/webp">
+                <img 
+                  src="assets/images/profile/me1.jpeg" 
+                  alt="Bhuwan Gautam (Vhuwon Mathers) — Network and Systems Engineer" 
+                  width="640" 
+                  height="800" 
+                  style="width: 100%; height: 100%; object-fit: cover;" 
+                  loading="eager"
+                  fetchpriority="high"
+                  decoding="async"
+                >
+              </picture>
             </div>
 
             <div style="margin-top: 14px; padding: 4px 8px; display: flex; justify-content: space-between; align-items: center;">
@@ -547,10 +555,10 @@
   </button>
 
   <!-- Core Scripts -->
-  <script src="js/data.js"></script>
-  <script src="js/navigation.js"></script>
-  <script src="js/animations.js"></script>
-  <script src="js/main.js"></script>
+  <script defer src="js/data.js"></script>
+  <script defer src="js/navigation.js"></script>
+  <script defer src="js/animations.js"></script>
+  <script defer src="js/main.js"></script>
   
 </body>
 </html>

@@ -1,9 +1,11 @@
 /**
  * VHUWON MATHERS — Navigation System
- * Accessible Mobile Drawer, Active Page State, Back-to-Top
+ * Accessible Mobile Drawer, Active Page State, 60fps Back-to-Top
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  'use strict';
+
   // 1. Mobile Drawer
   const toggleBtn = document.querySelector('.mobile-nav-toggle');
   const drawer = document.querySelector('.mobile-nav-drawer');
@@ -53,16 +55,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 3. Back to Top Button
+  // 3. Back to Top Button (Throttled 60fps with requestAnimationFrame & passive listener)
   const backToTopBtn = document.querySelector('.back-to-top');
   if (backToTopBtn) {
+    let ticking = false;
     window.addEventListener('scroll', () => {
-      if (window.scrollY > 400) {
-        backToTopBtn.classList.add('visible');
-      } else {
-        backToTopBtn.classList.remove('visible');
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (window.scrollY > 350) {
+            backToTopBtn.classList.add('visible');
+          } else {
+            backToTopBtn.classList.remove('visible');
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
-    });
+    }, { passive: true });
 
     backToTopBtn.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -8,6 +8,7 @@
   <meta name="keywords" content="Bhuwan Gautam Developments, GAMATUBE, GAM.AI, GAMA Music, IELTS by GAMA, Bhuwan Gautam Apps, sudovu, Vhuwon Mathers">
   <meta name="author" content="Bhuwan Gautam (Vhuwon Mathers)">
   <meta name="theme-color" content="#080b12">
+  <meta name="color-scheme" content="dark light">
   <link rel="canonical" href="https://gautambhuwan.com.np/developments.html">
   <link rel="manifest" href="site.webmanifest">
 
@@ -189,6 +190,7 @@
       color: var(--text-secondary);
     }
   </style>
+  <script>try{var t=localStorage.getItem('vm_theme_preference');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 </head>
 <body>
 
@@ -1562,7 +1564,10 @@
               <span class="mono-label" style="color: var(--text-dim);">ANDROID 11+ // iOS (IPHONE &amp; IPAD) // WINDOWS // PWA</span>
             </div>
             <h2 style="font-size: clamp(1.4rem, 2.6vw, 2rem); margin-bottom: 8px; color: var(--text-primary); display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-              <img src="assets/images/ielts-logo.png" alt="IELTS by GAMA Logo" style="width: 44px; height: 44px; border-radius: 10px; object-fit: contain; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">
+              <picture>
+                <source srcset="assets/images/ielts-logo.webp" type="image/webp">
+                <img src="assets/images/ielts-logo.png" alt="IELTS by GAMA Logo" width="44" height="44" loading="lazy" decoding="async" style="width: 44px; height: 44px; border-radius: 10px; object-fit: contain; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">
+              </picture>
               IELTS by GAMA: Hybrid Online + Offline AI English &amp; IELTS Tutor Platform
             </h2>
           </div>
@@ -2407,8 +2412,9 @@
   </button>
 
   <!-- Scripts -->
-  <script src="js/main.js"></script>
-  <script src="js/navigation.js"></script>
-  <script src="js/animations.js"></script>
+  <script defer src="js/data.js"></script>
+  <script defer src="js/main.js"></script>
+  <script defer src="js/navigation.js"></script>
+  <script defer src="js/animations.js"></script>
 </body>
 </html>

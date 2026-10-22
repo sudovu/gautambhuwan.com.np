@@ -1300,6 +1300,7 @@ const LEXICON_DATA = [
     });
   }
 
+  let searchDebounceTimer = null;
   function setupSearchListeners() {
     if (searchInput) {
       searchInput.addEventListener('input', (e) => {
@@ -1307,7 +1308,8 @@ const LEXICON_DATA = [
         if (clearSearchBtn) {
           clearSearchBtn.style.display = searchQuery.length > 0 ? 'inline-flex' : 'none';
         }
-        renderCards();
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(renderCards, 60);
       });
     }
 
