@@ -1436,7 +1436,7 @@ const LEXICON_DATA = [
         <div class="lexicon-layman-box">
           <div class="lexicon-box-title">
             <span class="lexicon-bulb-icon">💡</span>
-            <strong>In Plain English (The 10-Second Layman Analogy):</strong>
+            <strong>In Plain English:</strong>
           </div>
           <p class="lexicon-layman-text">${escapeHtml(item.layman)}</p>
         </div>
