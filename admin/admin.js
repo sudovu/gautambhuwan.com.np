@@ -17,6 +17,7 @@
 
   // Constants & Storage Keys
   const STORAGE_KEYS = {
+    TOTP_SECRET: 'vm_admin_totp_secret',
     PIN_HASH: 'vm_admin_pin_hash',
     SESSION_AUTH: 'vm_admin_authenticated',
     GITHUB_PAT: 'vm_github_pat',
@@ -26,9 +27,9 @@
     REPO_BRANCH: 'main'
   };
 
-  // Default master PIN is 1337 (can be changed in settings)
-  // SHA-256 for '1337': 4e26ebcc65243bc5943b7f16802ab6556b6277cb309f454f0a205a2f507eeef3
-  const DEFAULT_PIN_HASH = '5db1fee4b5703808c48078a76768b155b421b210c0761cd6a5d223f4d99f1eaa'; // sha256('1337')
+  // Google Authenticator Default Secret (16-char Base32)
+  const DEFAULT_TOTP_SECRET = 'GAUTAMBHUWAN2FA1';
+  const EMERGENCY_PIN = '1337';
 
   // Application State
   let enteredPin = '';
@@ -88,6 +89,60 @@
   /* ==========================================================================
      Authentication & PIN Lock
      ========================================================================== */
+  /* ==========================================================================
+     RFC 6238 TOTP (Google Authenticator) Implementation via Web Crypto API
+     ========================================================================== */
+  function base32Decode(base32) {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+    let bits = 0, value = 0, index = 0;
+    const clean = base32.toUpperCase().replace(/=+$/, '').replace(/\s+/g, '');
+    const bytes = new Uint8Array(Math.floor(clean.length * 5 / 8));
+    for (let i = 0; i < clean.length; i++) {
+      const val = alphabet.indexOf(clean[i]);
+      if (val === -1) continue;
+      value = (value << 5) | val;
+      bits += 5;
+      if (bits >= 8) {
+        bytes[index++] = (value >>> (bits - 8)) & 255;
+        bits -= 8;
+      }
+    }
+    return bytes;
+  }
+
+  async function computeTOTP(secretBase32, counterOffset = 0) {
+    const keyBytes = base32Decode(secretBase32);
+    const epoch = Math.floor(Date.now() / 1000);
+    const counter = Math.floor(epoch / 30) + counterOffset;
+
+    // 8-byte big-endian counter
+    const counterBuffer = new ArrayBuffer(8);
+    const view = new DataView(counterBuffer);
+    view.setUint32(0, Math.floor(counter / 0x100000000), false);
+    view.setUint32(4, counter >>> 0, false);
+
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      keyBytes,
+      { name: 'HMAC', hash: { name: 'SHA-1' } },
+      false,
+      ['sign']
+    );
+
+    const signature = await crypto.subtle.sign('HMAC', cryptoKey, counterBuffer);
+    const hmac = new Uint8Array(signature);
+    const offset = hmac[hmac.length - 1] & 0x0f;
+    const binary = ((hmac[offset] & 0x7f) << 24) |
+                   ((hmac[offset + 1] & 0xff) << 16) |
+                   ((hmac[offset + 2] & 0xff) << 8) |
+                   (hmac[offset + 3] & 0xff);
+    const otp = binary % 1000000;
+    return otp.toString().padStart(6, '0');
+  }
+
+  function getActiveTotpSecret() {
+    return localStorage.getItem(STORAGE_KEYS.TOTP_SECRET) || DEFAULT_TOTP_SECRET;
+  }
   async function sha256(message) {
     const msgBuffer = new TextEncoder().encode(message);
     const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -117,6 +172,44 @@
         if (e.key === 'Enter') {
           verifyPin();
         }
+      });
+    }
+
+
+    // Setup Google Authenticator Modal
+    const openSetupBtn = document.getElementById('open-totp-setup-btn');
+    const closeSetupBtn = document.getElementById('close-totp-setup-btn');
+    const confirmSetupBtn = document.getElementById('confirm-totp-setup-btn');
+    const setupModal = document.getElementById('totp-setup-modal-overlay');
+    const qrImg = document.getElementById('totp-qr-image');
+    const secretText = document.getElementById('totp-secret-text');
+    const copySecretBtn = document.getElementById('copy-totp-secret-btn');
+
+    function openTotpSetup() {
+      const secret = getActiveTotpSecret();
+      if (secretText) secretText.textContent = secret;
+      const otpauth = `otpauth://totp/Bhuwan%20Admin:admin@gautambhuwan.com.np?secret=${secret}&issuer=Bhuwan%20Gautam`;
+      if (qrImg) {
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=8&data=${encodeURIComponent(otpauth)}`;
+      }
+      if (setupModal) setupModal.classList.add('active');
+    }
+
+    if (openSetupBtn) openSetupBtn.addEventListener('click', openTotpSetup);
+    if (closeSetupBtn) closeSetupBtn.addEventListener('click', () => setupModal.classList.remove('active'));
+    if (confirmSetupBtn) confirmSetupBtn.addEventListener('click', () => {
+      setupModal.classList.remove('active');
+      const keyInput = document.getElementById('pin-keyboard-input');
+      if (keyInput) keyInput.focus();
+    });
+
+    if (copySecretBtn) {
+      copySecretBtn.addEventListener('click', () => {
+        const secret = getActiveTotpSecret();
+        navigator.clipboard.writeText(secret).then(() => {
+          copySecretBtn.textContent = 'COPIED!';
+          setTimeout(() => copySecretBtn.textContent = 'COPY', 1800);
+        });
       });
     }
 
@@ -189,30 +282,47 @@
   }
 
   async function verifyPin() {
-    const customHash = localStorage.getItem(STORAGE_KEYS.PIN_HASH);
-    const inputHash = await sha256(enteredPin);
+    if (enteredPin.length < 4) return;
 
-    const isMatch = customHash
-      ? (inputHash === customHash)
-      : (inputHash === DEFAULT_PIN_HASH || enteredPin === '1337');
+    // Check emergency master passcode
+    if (enteredPin === EMERGENCY_PIN) {
+      sessionStorage.setItem(STORAGE_KEYS.SESSION_AUTH, 'true');
+      unlockAdmin();
+      showToast('Emergency master authorization granted.', 'success');
+      enteredPin = '';
+      updatePinDots();
+      return;
+    }
+
+    if (enteredPin.length < 6) return;
+
+    // Check Google Authenticator (TOTP)
+    const secret = getActiveTotpSecret();
+    const [currentTotp, prevTotp, nextTotp] = await Promise.all([
+      computeTOTP(secret, 0),
+      computeTOTP(secret, -1),
+      computeTOTP(secret, 1)
+    ]);
+
+    const isMatch = (enteredPin === currentTotp || enteredPin === prevTotp || enteredPin === nextTotp);
 
     if (isMatch) {
       sessionStorage.setItem(STORAGE_KEYS.SESSION_AUTH, 'true');
       unlockAdmin();
-      showToast('Welcome, Administrator. Session authorized.', 'success');
+      showToast('Google Authenticator 2FA verified. Welcome!', 'success');
       enteredPin = '';
       updatePinDots();
     } else {
-      if (enteredPin.length >= 4) {
-        const card = document.querySelector('.admin-lock-card');
-        if (card) {
-          card.classList.add('shake-animation');
-          setTimeout(() => card.classList.remove('shake-animation'), 400);
-        }
-        if (lockErrorMsg) lockErrorMsg.textContent = 'Invalid security PIN. Default is 1337.';
-        enteredPin = '';
-        updatePinDots();
+      const card = document.querySelector('.admin-lock-card');
+      if (card) {
+        card.classList.add('shake-animation');
+        setTimeout(() => card.classList.remove('shake-animation'), 400);
       }
+      if (lockErrorMsg) {
+        lockErrorMsg.textContent = 'Invalid Google Authenticator code. Check your phone clock/code.';
+      }
+      enteredPin = '';
+      updatePinDots();
     }
   }
 

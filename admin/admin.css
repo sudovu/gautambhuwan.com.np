@@ -564,3 +564,37 @@
     display: none;
   }
 }
+
+/* 2FA QR Code & Google Authenticator Modal */
+.totp-qr-wrap {
+  background: #ffffff;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  display: inline-block;
+  margin: 14px auto;
+  border: 2px solid var(--accent-secondary);
+  box-shadow: 0 0 24px var(--cyan-glow);
+}
+
+.totp-qr-img {
+  width: 190px;
+  height: 190px;
+  display: block;
+}
+
+.totp-secret-badge {
+  background: var(--surface-elevated);
+  border: 1px dashed var(--accent-secondary);
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  color: var(--accent-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 320px;
+  margin: 12px auto;
+}
