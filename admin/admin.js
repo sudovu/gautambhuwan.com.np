@@ -53,6 +53,7 @@
     initLexiconManager();
     initBlogManager();
     initSettingsTab();
+    initSecurityConfigModal();
   });
 
   /* ==========================================================================
@@ -140,6 +141,29 @@
     return otp.toString().padStart(6, '0');
   }
 
+  
+  function renderOfflineQRCode(elementId, text) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    el.innerHTML = '';
+    try {
+      if (typeof QRCode !== 'undefined') {
+        new QRCode(el, {
+          text: text,
+          width: 180,
+          height: 180,
+          colorDark: '#020617',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      } else {
+        el.innerHTML = '<p style="color: var(--text-dim); font-size: 0.75rem;">(Offline QR script loading...)</p>';
+      }
+    } catch (e) {
+      console.warn('QR render error:', e);
+    }
+  }
+
   function getActiveTotpSecret() {
     return localStorage.getItem(STORAGE_KEYS.TOTP_SECRET) || DEFAULT_TOTP_SECRET;
   }
@@ -189,9 +213,7 @@
       const secret = getActiveTotpSecret();
       if (secretText) secretText.textContent = secret;
       const otpauth = `otpauth://totp/Bhuwan%20Admin:admin@gautambhuwan.com.np?secret=${secret}&issuer=Bhuwan%20Gautam`;
-      if (qrImg) {
-        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=8&data=${encodeURIComponent(otpauth)}`;
-      }
+      renderOfflineQRCode('totp-qr-container', otpauth);
       if (setupModal) setupModal.classList.add('active');
     }
 
@@ -284,35 +306,51 @@
   async function verifyPin() {
     if (enteredPin.length < 4) return;
 
-    // Check emergency master passcode
-    if (enteredPin === EMERGENCY_PIN) {
+    // 1. Check custom configured master password/PIN
+    const customHash = localStorage.getItem(STORAGE_KEYS.PIN_HASH);
+    const inputHash = await sha256(enteredPin);
+
+    if (customHash && inputHash === customHash) {
       sessionStorage.setItem(STORAGE_KEYS.SESSION_AUTH, 'true');
       unlockAdmin();
-      showToast('Emergency master authorization granted.', 'success');
+      showToast('Master password verified. Welcome!', 'success');
       enteredPin = '';
       updatePinDots();
       return;
     }
 
-    if (enteredPin.length < 6) return;
-
-    // Check Google Authenticator (TOTP)
-    const secret = getActiveTotpSecret();
-    const [currentTotp, prevTotp, nextTotp] = await Promise.all([
-      computeTOTP(secret, 0),
-      computeTOTP(secret, -1),
-      computeTOTP(secret, 1)
-    ]);
-
-    const isMatch = (enteredPin === currentTotp || enteredPin === prevTotp || enteredPin === nextTotp);
-
-    if (isMatch) {
+    // 2. Check emergency initial master passcode if not yet configured
+    if (!customHash && enteredPin === EMERGENCY_PIN) {
       sessionStorage.setItem(STORAGE_KEYS.SESSION_AUTH, 'true');
       unlockAdmin();
-      showToast('Google Authenticator 2FA verified. Welcome!', 'success');
+      showToast('Initial authorization granted.', 'success');
       enteredPin = '';
       updatePinDots();
-    } else {
+      return;
+    }
+
+    // 3. Check Google Authenticator (TOTP rolling 6 digits)
+    if (enteredPin.length === 6) {
+      const secret = getActiveTotpSecret();
+      const [currentTotp, prevTotp, nextTotp] = await Promise.all([
+        computeTOTP(secret, 0),
+        computeTOTP(secret, -1),
+        computeTOTP(secret, 1)
+      ]);
+
+      const isTotpMatch = (enteredPin === currentTotp || enteredPin === prevTotp || enteredPin === nextTotp);
+
+      if (isTotpMatch) {
+        sessionStorage.setItem(STORAGE_KEYS.SESSION_AUTH, 'true');
+        unlockAdmin();
+        showToast('Google Authenticator 2FA verified. Welcome!', 'success');
+        enteredPin = '';
+        updatePinDots();
+        return;
+      }
+    }
+
+    if (enteredPin.length >= 4) {
       const card = document.querySelector('.admin-lock-card');
       if (card) {
         card.classList.add('shake-animation');
@@ -333,6 +371,14 @@
       setTimeout(() => lockScreen.style.display = 'none', 300);
     }
     refreshDashboardStats();
+
+    // Check if initial security configuration / password change is needed
+    const isConfigured = localStorage.getItem('vm_admin_password_configured');
+    if (isConfigured !== 'true') {
+      setTimeout(() => {
+        openSecurityConfigModal(true);
+      }, 500);
+    }
   }
 
   function lockAdmin() {
@@ -1002,6 +1048,101 @@
         showToast('Full system backup exported.', 'success');
       });
     }
+  }
+
+
+  /* ==========================================================================
+     Mandatory Post-Login Security Configuration & Password Change Modal
+     ========================================================================== */
+  function initSecurityConfigModal() {
+    const modal = document.getElementById('security-config-modal-overlay');
+    const closeBtn = document.getElementById('close-security-modal-btn');
+    const cancelBtn = document.getElementById('cancel-security-modal-btn');
+    const saveBtn = document.getElementById('save-security-modal-btn');
+    const openFromSettingsBtn = document.getElementById('open-security-modal-from-settings');
+    const copySecretBtn = document.getElementById('cfg-copy-secret-btn');
+
+    if (closeBtn) closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+    if (cancelBtn) cancelBtn.addEventListener('click', () => modal.classList.remove('active'));
+    if (openFromSettingsBtn) openFromSettingsBtn.addEventListener('click', () => openSecurityConfigModal(false));
+
+    if (copySecretBtn) {
+      copySecretBtn.addEventListener('click', () => {
+        const secret = getActiveTotpSecret();
+        navigator.clipboard.writeText(secret).then(() => {
+          copySecretBtn.textContent = 'COPIED!';
+          setTimeout(() => copySecretBtn.textContent = 'COPY', 1800);
+        });
+      });
+    }
+
+    if (saveBtn) {
+      saveBtn.addEventListener('click', async () => {
+        const newPass = document.getElementById('cfg-new-password').value.trim();
+        const confPass = document.getElementById('cfg-confirm-password').value.trim();
+        const totpCode = document.getElementById('cfg-totp-verify-input').value.trim();
+        const errEl = document.getElementById('cfg-verify-error');
+
+        if (errEl) errEl.textContent = '';
+
+        // Validation
+        if (!newPass || newPass.length < 4) {
+          if (errEl) errEl.textContent = 'Password must be at least 4 characters/digits long.';
+          return;
+        }
+
+        if (newPass !== confPass) {
+          if (errEl) errEl.textContent = 'Passwords do not match.';
+          return;
+        }
+
+        if (!totpCode || totpCode.length !== 6) {
+          if (errEl) errEl.textContent = 'Please enter the 6-digit code currently showing in Google Authenticator.';
+          return;
+        }
+
+        // Verify the 6-digit code against current secret
+        const secret = getActiveTotpSecret();
+        const [cur, prev, nxt] = await Promise.all([
+          computeTOTP(secret, 0),
+          computeTOTP(secret, -1),
+          computeTOTP(secret, 1)
+        ]);
+
+        if (totpCode !== cur && totpCode !== prev && totpCode !== nxt) {
+          if (errEl) errEl.textContent = 'Incorrect 6-digit code. Check your phone clock and re-enter code.';
+          return;
+        }
+
+        // Save password hash and mark configured
+        const passHash = await sha256(newPass);
+        localStorage.setItem(STORAGE_KEYS.PIN_HASH, passHash);
+        localStorage.setItem('vm_admin_password_configured', 'true');
+
+        modal.classList.remove('active');
+        showToast('✓ Security credentials successfully updated and locked!', 'success');
+      });
+    }
+  }
+
+  function openSecurityConfigModal(isFirstTime = false) {
+    const modal = document.getElementById('security-config-modal-overlay');
+    if (!modal) return;
+
+    const secret = getActiveTotpSecret();
+    const secretText = document.getElementById('cfg-totp-secret-text');
+    if (secretText) secretText.textContent = secret;
+
+    const otpauth = `otpauth://totp/Bhuwan%20Admin:admin@gautambhuwan.com.np?secret=${secret}&issuer=Bhuwan%20Gautam`;
+    renderOfflineQRCode('cfg-totp-qr-container', otpauth);
+
+    document.getElementById('cfg-new-password').value = '';
+    document.getElementById('cfg-confirm-password').value = '';
+    document.getElementById('cfg-totp-verify-input').value = '';
+    const errEl = document.getElementById('cfg-verify-error');
+    if (errEl) errEl.textContent = '';
+
+    modal.classList.add('active');
   }
 
   function escapeHtml(str) {

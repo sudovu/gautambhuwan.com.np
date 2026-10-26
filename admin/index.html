@@ -68,9 +68,7 @@
         <button type="button" id="open-totp-setup-btn" class="btn btn-outline btn-sm" style="width: 100%; justify-content: center; font-size: 0.8rem; border-color: var(--accent-secondary); color: var(--accent-secondary);">
           <span>📱 Scan QR Code / Setup Google Authenticator</span>
         </button>
-        <div style="font-size: 0.74rem; color: var(--text-dim); font-family: var(--font-mono); margin-top: 4px;">
-          Emergency Master Passcode: <strong style="color: var(--text-primary);">1337</strong>
-        </div>
+        
       </div>
     </div>
   </div>
@@ -94,7 +92,7 @@
 
         <!-- QR Code Image -->
         <div class="totp-qr-wrap">
-          <img id="totp-qr-image" class="totp-qr-img" src="" alt="Google Authenticator QR Code">
+          <div id="totp-qr-container" style="display: flex; justify-content: center; align-items: center; min-height: 190px;"></div>
         </div>
 
         <p class="body-sm" style="color: var(--text-muted); font-size: 0.78rem; margin: 12px 0 6px 0;">
@@ -114,6 +112,73 @@
       <div class="admin-modal-footer" style="justify-content: center;">
         <button type="button" id="confirm-totp-setup-btn" class="btn btn-primary btn-sm" style="width: 100%;">
           <span>Done! I Have Scanned the Code &rarr;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- ==========================================================================
+       FIRST-TIME / UPDATE SECURITY CONFIGURATION MODAL
+       ========================================================================== -->
+  <div id="security-config-modal-overlay" class="admin-modal-overlay">
+    <div class="admin-modal" style="max-width: 580px;">
+      <div class="admin-modal-header">
+        <h3 style="display: flex; align-items: center; gap: 8px;">
+          <span>🛡️</span> Security Configuration &amp; Password Setup
+        </h3>
+        <button type="button" id="close-security-modal-btn" style="background: none; border: none; font-size: 1.4rem; color: var(--text-dim); cursor: pointer;">&times;</button>
+      </div>
+      <div class="admin-modal-body" style="padding: 24px;">
+        <div style="background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.25); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 20px;">
+          <strong style="color: var(--accent-secondary); font-size: 0.88rem;">Set Your Private Admin Password &amp; 2FA</strong>
+          <p class="body-sm" style="color: var(--text-muted); margin: 4px 0 0 0; font-size: 0.8rem;">
+            Please choose a custom master password and pair your Google Authenticator app to safeguard your control panel.
+          </p>
+        </div>
+
+        <!-- 1. Password Setup -->
+        <div class="form-group">
+          <label for="cfg-new-password" class="form-label">New Master Recovery Password / PIN *</label>
+          <input type="password" id="cfg-new-password" class="form-input" placeholder="Choose a strong password or 4-8 digit PIN" style="font-family: var(--font-mono);">
+        </div>
+
+        <div class="form-group">
+          <label for="cfg-confirm-password" class="form-label">Confirm New Password / PIN *</label>
+          <input type="password" id="cfg-confirm-password" class="form-input" placeholder="Re-type your password" style="font-family: var(--font-mono);">
+        </div>
+
+        <!-- 2. Google Authenticator Pairing -->
+        <div style="border-top: 1px solid var(--border); padding-top: 18px; margin-top: 18px;">
+          <label class="form-label" style="margin-bottom: 8px; font-weight: 700;">Google Authenticator Setup</label>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 12px; font-size: 0.8rem;">
+            Scan this QR code with Google Authenticator on your smartphone:
+          </p>
+
+          <div class="totp-qr-wrap" style="display: flex; justify-content: center; margin: 10px auto;">
+            <div id="cfg-totp-qr-container" style="display: flex; justify-content: center; align-items: center; min-height: 180px;"></div>
+          </div>
+
+          <p class="body-sm" style="color: var(--text-dim); font-size: 0.76rem; text-align: center; margin: 8px 0 4px 0;">
+            Or manually enter setup key:
+          </p>
+          <div class="totp-secret-badge" style="max-width: 340px; margin: 0 auto 16px auto;">
+            <span id="cfg-totp-secret-text" style="font-size: 0.95rem;">GAUTAMBHUWAN2FA1</span>
+            <button type="button" id="cfg-copy-secret-btn" class="code-copy-btn" style="position: static; font-size: 0.72rem;">COPY</button>
+          </div>
+
+          <!-- 3. Verify Code -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="cfg-totp-verify-input" class="form-label">Verify: 6-Digit Code from Your Phone *</label>
+            <input type="text" id="cfg-totp-verify-input" class="form-input" maxlength="6" inputmode="numeric" placeholder="e.g. 123456" style="text-align: center; font-size: 1.2rem; font-family: var(--font-mono); letter-spacing: 4px; font-weight: 700; color: var(--accent-secondary);">
+            <div id="cfg-verify-error" style="color: var(--error); font-size: 0.76rem; font-family: var(--font-mono); margin-top: 6px; min-height: 18px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="admin-modal-footer">
+        <button type="button" id="cancel-security-modal-btn" class="btn btn-outline btn-sm">Cancel</button>
+        <button type="button" id="save-security-modal-btn" class="btn btn-primary btn-sm">
+          <span>Save &amp; Protect Admin Panel &rarr;</span>
         </button>
       </div>
     </div>
@@ -541,7 +606,7 @@
             <div style="font-family: var(--font-mono); font-size: 1.05rem; color: var(--accent-secondary); font-weight: 700; letter-spacing: 1.5px;">GAUTAMBHUWAN2FA1</div>
           </div>
 
-          <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('open-totp-setup-btn').click();" style="width: 100%; justify-content: center; margin-bottom: 12px;">
+          <button type="button" class="btn btn-primary btn-sm" id="open-security-modal-from-settings" style="width: 100%; justify-content: center; margin-bottom: 12px;">
             <span>📱 View / Re-scan 2FA QR Code</span>
           </button>
 
@@ -638,6 +703,7 @@
 
   <!-- Scripts -->
   <script src="../js/lexicon.js"></script>
+  <script src="qrcode.min.js"></script>
   <script src="admin.js"></script>
 </body>
 </html>
