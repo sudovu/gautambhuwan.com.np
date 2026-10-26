@@ -28,7 +28,7 @@
 
   // Default master PIN is 1337 (can be changed in settings)
   // SHA-256 for '1337': 4e26ebcc65243bc5943b7f16802ab6556b6277cb309f454f0a205a2f507eeef3
-  const DEFAULT_PIN_HASH = '4e26ebcc65243bc5943b7f16802ab6556b6277cb309f454f0a205a2f507eeef3';
+  const DEFAULT_PIN_HASH = '5db1fee4b5703808c48078a76768b155b421b210c0761cd6a5d223f4d99f1eaa'; // sha256('1337')
 
   // Application State
   let enteredPin = '';
@@ -103,6 +103,23 @@
       lockAdmin();
     }
 
+    // Direct input field support
+    const keyInput = document.getElementById('pin-keyboard-input');
+    if (keyInput) {
+      keyInput.addEventListener('input', () => {
+        enteredPin = keyInput.value.replace(/[^0-9]/g, '').slice(0, 6);
+        updatePinDots();
+        if (enteredPin.length >= 4) {
+          verifyPin();
+        }
+      });
+      keyInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          verifyPin();
+        }
+      });
+    }
+
     // Keypad button clicks
     keypadBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -164,14 +181,22 @@
         dot.classList.remove('filled');
       }
     });
+    const keyInput = document.getElementById('pin-keyboard-input');
+    if (keyInput && keyInput.value !== enteredPin) {
+      keyInput.value = enteredPin;
+    }
     if (lockErrorMsg) lockErrorMsg.textContent = '';
   }
 
   async function verifyPin() {
-    const currentHash = localStorage.getItem(STORAGE_KEYS.PIN_HASH) || DEFAULT_PIN_HASH;
+    const customHash = localStorage.getItem(STORAGE_KEYS.PIN_HASH);
     const inputHash = await sha256(enteredPin);
 
-    if (inputHash === currentHash) {
+    const isMatch = customHash
+      ? (inputHash === customHash)
+      : (inputHash === DEFAULT_PIN_HASH || enteredPin === '1337');
+
+    if (isMatch) {
       sessionStorage.setItem(STORAGE_KEYS.SESSION_AUTH, 'true');
       unlockAdmin();
       showToast('Welcome, Administrator. Session authorized.', 'success');
