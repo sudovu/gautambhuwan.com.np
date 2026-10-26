@@ -28,7 +28,7 @@
   };
 
   // Google Authenticator Default Secret (16-char Base32)
-  const DEFAULT_TOTP_SECRET = 'GAUTAMBHUWAN2FA1';
+  const DEFAULT_TOTP_SECRET = 'GAUTAMBHUWAN2FA2';
   const EMERGENCY_PIN = '1337';
 
   // Application State
@@ -146,21 +146,35 @@
     const el = document.getElementById(elementId);
     if (!el) return;
     el.innerHTML = '';
-    try {
-      if (typeof QRCode !== 'undefined') {
+    let rendered = false;
+
+    if (typeof QRCode !== 'undefined') {
+      try {
         new QRCode(el, {
           text: text,
-          width: 180,
-          height: 180,
+          width: 200,
+          height: 200,
           colorDark: '#020617',
           colorLight: '#ffffff',
           correctLevel: QRCode.CorrectLevel.M
         });
-      } else {
-        el.innerHTML = '<p style="color: var(--text-dim); font-size: 0.75rem;">(Offline QR script loading...)</p>';
+        if (el.querySelector('canvas') || el.querySelector('img')) {
+          rendered = true;
+        }
+      } catch (err) {
+        console.warn('QRCode JS render error:', err);
       }
-    } catch (e) {
-      console.warn('QR render error:', e);
+    }
+
+    if (!rendered) {
+      const fallbackImg = document.createElement('img');
+      fallbackImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=${encodeURIComponent(text)}`;
+      fallbackImg.alt = 'Google Authenticator QR Code';
+      fallbackImg.style.width = '200px';
+      fallbackImg.style.height = '200px';
+      fallbackImg.style.display = 'block';
+      fallbackImg.style.margin = '0 auto';
+      el.appendChild(fallbackImg);
     }
   }
 
@@ -213,8 +227,10 @@
       const secret = getActiveTotpSecret();
       if (secretText) secretText.textContent = secret;
       const otpauth = `otpauth://totp/Bhuwan%20Admin:admin@gautambhuwan.com.np?secret=${secret}&issuer=Bhuwan%20Gautam`;
-      renderOfflineQRCode('totp-qr-container', otpauth);
       if (setupModal) setupModal.classList.add('active');
+      setTimeout(() => {
+        renderOfflineQRCode('totp-qr-container', otpauth);
+      }, 50);
     }
 
     if (openSetupBtn) openSetupBtn.addEventListener('click', openTotpSetup);
@@ -1134,7 +1150,10 @@
     if (secretText) secretText.textContent = secret;
 
     const otpauth = `otpauth://totp/Bhuwan%20Admin:admin@gautambhuwan.com.np?secret=${secret}&issuer=Bhuwan%20Gautam`;
-    renderOfflineQRCode('cfg-totp-qr-container', otpauth);
+    modal.classList.add('active');
+    setTimeout(() => {
+      renderOfflineQRCode('cfg-totp-qr-container', otpauth);
+    }, 50);
 
     document.getElementById('cfg-new-password').value = '';
     document.getElementById('cfg-confirm-password').value = '';
