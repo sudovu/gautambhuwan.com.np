@@ -428,6 +428,24 @@
             Cryptographically signs your emails. In Zoho Mail Control Panel &rarr; Email Configuration &rarr; DKIM, generate your domain key selector <code>zoho._domainkey</code> and add the TXT record to ClouDNS.
           </p>
         </div>
+
+        <!-- Record 5: Webmail Subdomain (mail.gautambhuwan.com.np) -->
+        <div class="card" style="padding: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <strong style="color: #06b6d4;">5. WEBMAIL SUBDOMAIN (mail.gautambhuwan.com.np)</strong>
+            <span class="tag" style="font-size: 0.72rem; color: #06b6d4; border-color: rgba(6, 182, 212, 0.4);">
+              ADD TO CLOUDNS
+            </span>
+          </div>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 10px;">
+            Points <code>mail.gautambhuwan.com.np</code> to your Zoho webmail portal:
+          </p>
+          <div class="admin-code-box" style="position: relative;">
+            Type: CNAME | Host: mail<br>
+            Points to: zmto.zoho.com
+            <button type="button" class="code-copy-btn" data-copy="zmto.zoho.com">COPY VALUE</button>
+          </div>
+        </div>
       </div>
 
       <!-- Web3Forms Contact Form Integration -->
