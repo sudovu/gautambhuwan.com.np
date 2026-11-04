@@ -90,24 +90,36 @@
           2. Tap <strong>+</strong> and scan this QR code:
         </p>
 
-        <!-- QR Code Image -->
+        <!-- QR Code Image (Guaranteed 1:1 Aspect Ratio) -->
         <div class="totp-qr-wrap">
           <div id="totp-qr-container" style="width: 200px; height: 200px; min-width: 200px; min-height: 200px; display: flex; align-items: center; justify-content: center;"></div>
         </div>
 
+        <!-- Live Sync & Verification Preview -->
+        <div style="background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.25); border-radius: var(--radius-sm); padding: 10px 14px; margin: 12px auto; max-width: 380px; text-align: center; font-family: var(--font-mono); font-size: 0.82rem;">
+          <div style="color: var(--text-muted); font-size: 0.74rem; margin-bottom: 2px;">LIVE 2FA ROLLING CODE (TIME SYNC CHECK):</div>
+          <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <strong id="totp-live-code" style="color: var(--accent-secondary); font-size: 1.4rem; letter-spacing: 3px;">------</strong>
+            <span id="totp-live-countdown" style="color: var(--text-dim); font-size: 0.75rem;">(30s)</span>
+          </div>
+          <div style="color: var(--text-dim); font-size: 0.72rem; margin-top: 4px;">Compare with your phone code to verify sync</div>
+        </div>
+
         <p class="body-sm" style="color: var(--text-muted); font-size: 0.78rem; margin: 12px 0 6px 0;">
-          Cannot scan? Tap <strong>"Enter a setup key"</strong> and enter this secret:
+          Cannot scan? In Google Authenticator, tap <strong>"Enter a setup key"</strong>:
         </p>
 
         <!-- Manual Secret Key -->
         <div class="totp-secret-badge">
-          <span id="totp-secret-text" style="user-select: all;">GAUTAMBHUWAN2FA2</span>
-          <button type="button" id="copy-totp-secret-btn" class="code-copy-btn" style="position: static; font-size: 0.72rem;">COPY</button>
+          <span id="totp-secret-text" style="user-select: all; font-weight: 700;">GAUTAMBHUWAN2FA2</span>
+          <button type="button" id="copy-totp-secret-btn" class="code-copy-btn" style="position: static; font-size: 0.72rem;">COPY KEY</button>
         </div>
 
-        <p class="body-sm" style="color: var(--text-dim); font-size: 0.76rem; margin-top: 14px;">
-          Account Name: <code>Bhuwan Admin</code> | Key Type: <code>Time-based</code>
-        </p>
+        <div style="background: var(--surface-elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; margin-top: 10px; font-family: var(--font-mono); font-size: 0.74rem; text-align: left; color: var(--text-secondary); line-height: 1.6;">
+          <div>&bull; <strong>Account:</strong> Bhuwan Admin</div>
+          <div>&bull; <strong>Key:</strong> GAUTAMBHUWAN2FA2</div>
+          <div>&bull; <strong>Type:</strong> Time based</div>
+        </div>
       </div>
       <div class="admin-modal-footer" style="justify-content: center;">
         <button type="button" id="confirm-totp-setup-btn" class="btn btn-primary btn-sm" style="width: 100%;">

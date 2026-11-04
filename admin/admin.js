@@ -142,6 +142,13 @@
   }
 
   
+  function getOtpAuthUri(secret) {
+    const issuer = 'Bhuwan Gautam';
+    const account = 'admin@gautambhuwan.com.np';
+    // Standard RFC 6238 URI format with matching issuer in label & parameter
+    return `otpauth://totp/${encodeURIComponent(issuer)}:${encodeURIComponent(account)}?secret=${secret}&issuer=${encodeURIComponent(issuer)}&algorithm=SHA1&digits=6&period=30`;
+  }
+
   function renderOfflineQRCode(elementId, text) {
     const el = document.getElementById(elementId);
     if (!el) return;
@@ -154,26 +161,49 @@
           text: text,
           width: 200,
           height: 200,
-          colorDark: '#020617',
+          colorDark: '#000000',
           colorLight: '#ffffff',
           correctLevel: QRCode.CorrectLevel.M
         });
-        if (el.querySelector('canvas') || el.querySelector('img')) {
-          rendered = true;
-        }
+
+        // Resolve canvas/image conflicts: ensure only one perfectly square element renders
+        setTimeout(() => {
+          const canvas = el.querySelector('canvas');
+          const img = el.querySelector('img');
+          if (canvas) {
+            canvas.style.display = 'block';
+            canvas.style.margin = '0 auto';
+            canvas.style.width = '200px';
+            canvas.style.height = '200px';
+            canvas.style.aspectRatio = '1 / 1';
+            if (img && (!img.src || img.src === '')) {
+              img.style.display = 'none';
+            }
+          } else if (img && img.src) {
+            img.style.display = 'block';
+            img.style.margin = '0 auto';
+            img.style.width = '200px';
+            img.style.height = '200px';
+            img.style.aspectRatio = '1 / 1';
+          }
+        }, 30);
+
+        rendered = true;
       } catch (err) {
         console.warn('QRCode JS render error:', err);
       }
     }
 
-    if (!rendered) {
+    if (!rendered || !el.hasChildNodes()) {
+      el.innerHTML = '';
       const fallbackImg = document.createElement('img');
-      fallbackImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=${encodeURIComponent(text)}`;
+      fallbackImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=6&data=${encodeURIComponent(text)}`;
       fallbackImg.alt = 'Google Authenticator QR Code';
       fallbackImg.style.width = '200px';
       fallbackImg.style.height = '200px';
       fallbackImg.style.display = 'block';
       fallbackImg.style.margin = '0 auto';
+      fallbackImg.loading = 'eager';
       el.appendChild(fallbackImg);
     }
   }
@@ -181,6 +211,7 @@
   function getActiveTotpSecret() {
     return localStorage.getItem(STORAGE_KEYS.TOTP_SECRET) || DEFAULT_TOTP_SECRET;
   }
+
   async function sha256(message) {
     const msgBuffer = new TextEncoder().encode(message);
     const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -202,51 +233,71 @@
       keyInput.addEventListener('input', () => {
         enteredPin = keyInput.value.replace(/[^0-9]/g, '').slice(0, 6);
         updatePinDots();
-        if (enteredPin.length >= 4) {
-          verifyPin();
+        // Only auto-verify once all 6 digits are typed
+        if (enteredPin.length === 6) {
+          verifyPin(false);
         }
       });
       keyInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
-          verifyPin();
+          verifyPin(true);
         }
       });
     }
-
 
     // Setup Google Authenticator Modal
     const openSetupBtn = document.getElementById('open-totp-setup-btn');
     const closeSetupBtn = document.getElementById('close-totp-setup-btn');
     const confirmSetupBtn = document.getElementById('confirm-totp-setup-btn');
     const setupModal = document.getElementById('totp-setup-modal-overlay');
-    const qrImg = document.getElementById('totp-qr-image');
     const secretText = document.getElementById('totp-secret-text');
     const copySecretBtn = document.getElementById('copy-totp-secret-btn');
+    let liveTotpInterval = null;
+
+    async function updateLiveTotpPreview() {
+      const liveCodeEl = document.getElementById('totp-live-code');
+      const liveTimerEl = document.getElementById('totp-live-countdown');
+      if (!liveCodeEl) return;
+      const secret = getActiveTotpSecret();
+      const code = await computeTOTP(secret, 0);
+      const remainingSecs = 30 - (Math.floor(Date.now() / 1000) % 30);
+      liveCodeEl.textContent = code;
+      if (liveTimerEl) liveTimerEl.textContent = `(${remainingSecs}s)`;
+    }
 
     function openTotpSetup() {
       const secret = getActiveTotpSecret();
       if (secretText) secretText.textContent = secret;
-      const otpauth = `otpauth://totp/Bhuwan%20Admin:admin@gautambhuwan.com.np?secret=${secret}&issuer=Bhuwan%20Gautam`;
+      const otpauth = getOtpAuthUri(secret);
       if (setupModal) setupModal.classList.add('active');
-      setTimeout(() => {
-        renderOfflineQRCode('totp-qr-container', otpauth);
-      }, 50);
+      renderOfflineQRCode('totp-qr-container', otpauth);
+      updateLiveTotpPreview();
+      if (liveTotpInterval) clearInterval(liveTotpInterval);
+      liveTotpInterval = setInterval(updateLiveTotpPreview, 1000);
     }
 
     if (openSetupBtn) openSetupBtn.addEventListener('click', openTotpSetup);
-    if (closeSetupBtn) closeSetupBtn.addEventListener('click', () => setupModal.classList.remove('active'));
-    if (confirmSetupBtn) confirmSetupBtn.addEventListener('click', () => {
-      setupModal.classList.remove('active');
-      const keyInput = document.getElementById('pin-keyboard-input');
-      if (keyInput) keyInput.focus();
-    });
+    if (closeSetupBtn) {
+      closeSetupBtn.addEventListener('click', () => {
+        setupModal.classList.remove('active');
+        if (liveTotpInterval) clearInterval(liveTotpInterval);
+      });
+    }
+    if (confirmSetupBtn) {
+      confirmSetupBtn.addEventListener('click', () => {
+        setupModal.classList.remove('active');
+        if (liveTotpInterval) clearInterval(liveTotpInterval);
+        const keyInput = document.getElementById('pin-keyboard-input');
+        if (keyInput) keyInput.focus();
+      });
+    }
 
     if (copySecretBtn) {
       copySecretBtn.addEventListener('click', () => {
         const secret = getActiveTotpSecret();
         navigator.clipboard.writeText(secret).then(() => {
           copySecretBtn.textContent = 'COPIED!';
-          setTimeout(() => copySecretBtn.textContent = 'COPY', 1800);
+          setTimeout(() => copySecretBtn.textContent = 'COPY KEY', 1800);
         });
       });
     }
@@ -291,15 +342,16 @@
     }
 
     if (val === 'enter') {
-      verifyPin();
+      verifyPin(true);
       return;
     }
 
     if (enteredPin.length < 6) {
       enteredPin += val;
       updatePinDots();
-      if (enteredPin.length >= 4) {
-        verifyPin();
+      // Auto-verify on 6th digit
+      if (enteredPin.length === 6) {
+        verifyPin(false);
       }
     }
   }
@@ -319,33 +371,10 @@
     if (lockErrorMsg) lockErrorMsg.textContent = '';
   }
 
-  async function verifyPin() {
-    if (enteredPin.length < 4) return;
+  async function verifyPin(isExplicitSubmit = false) {
+    if (enteredPin.length === 0) return;
 
-    // 1. Check custom configured master password/PIN
-    const customHash = localStorage.getItem(STORAGE_KEYS.PIN_HASH);
-    const inputHash = await sha256(enteredPin);
-
-    if (customHash && inputHash === customHash) {
-      sessionStorage.setItem(STORAGE_KEYS.SESSION_AUTH, 'true');
-      unlockAdmin();
-      showToast('Master password verified. Welcome!', 'success');
-      enteredPin = '';
-      updatePinDots();
-      return;
-    }
-
-    // 2. Check emergency initial master passcode if not yet configured
-    if (!customHash && enteredPin === EMERGENCY_PIN) {
-      sessionStorage.setItem(STORAGE_KEYS.SESSION_AUTH, 'true');
-      unlockAdmin();
-      showToast('Initial authorization granted.', 'success');
-      enteredPin = '';
-      updatePinDots();
-      return;
-    }
-
-    // 3. Check Google Authenticator (TOTP rolling 6 digits)
+    // 1. If 6 digits, check Google Authenticator (TOTP rolling 6 digits with clock drift window [-1, 0, 1])
     if (enteredPin.length === 6) {
       const secret = getActiveTotpSecret();
       const [currentTotp, prevTotp, nextTotp] = await Promise.all([
@@ -366,14 +395,39 @@
       }
     }
 
-    if (enteredPin.length >= 4) {
+    // 2. Check custom configured master password/PIN
+    const customHash = localStorage.getItem(STORAGE_KEYS.PIN_HASH);
+    if (customHash && enteredPin.length >= 4) {
+      const inputHash = await sha256(enteredPin);
+      if (inputHash === customHash) {
+        sessionStorage.setItem(STORAGE_KEYS.SESSION_AUTH, 'true');
+        unlockAdmin();
+        showToast('Master password verified. Welcome!', 'success');
+        enteredPin = '';
+        updatePinDots();
+        return;
+      }
+    }
+
+    // 3. Check emergency initial master passcode if not yet configured (1337)
+    if (!customHash && enteredPin === EMERGENCY_PIN) {
+      sessionStorage.setItem(STORAGE_KEYS.SESSION_AUTH, 'true');
+      unlockAdmin();
+      showToast('Initial authorization granted.', 'success');
+      enteredPin = '';
+      updatePinDots();
+      return;
+    }
+
+    // Fail & shake ONLY when full 6 digits were entered OR user explicitly hit Enter
+    if (enteredPin.length === 6 || isExplicitSubmit) {
       const card = document.querySelector('.admin-lock-card');
       if (card) {
         card.classList.add('shake-animation');
         setTimeout(() => card.classList.remove('shake-animation'), 400);
       }
       if (lockErrorMsg) {
-        lockErrorMsg.textContent = 'Invalid Google Authenticator code. Check your phone clock/code.';
+        lockErrorMsg.textContent = 'Invalid code. Check Google Authenticator on your phone (or enter emergency 1337).';
       }
       enteredPin = '';
       updatePinDots();
@@ -1149,7 +1203,7 @@
     const secretText = document.getElementById('cfg-totp-secret-text');
     if (secretText) secretText.textContent = secret;
 
-    const otpauth = `otpauth://totp/Bhuwan%20Admin:admin@gautambhuwan.com.np?secret=${secret}&issuer=Bhuwan%20Gautam`;
+    const otpauth = getOtpAuthUri(secret);
     modal.classList.add('active');
     setTimeout(() => {
       renderOfflineQRCode('cfg-totp-qr-container', otpauth);

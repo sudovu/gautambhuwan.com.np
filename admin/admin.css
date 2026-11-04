@@ -568,25 +568,53 @@
 /* 2FA QR Code & Google Authenticator Modal */
 .totp-qr-wrap {
   background: #ffffff !important;
-  padding: 14px;
-  border-radius: var(--radius-md);
+  padding: 14px !important;
+  border-radius: var(--radius-md) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   width: 228px !important;
   height: 228px !important;
-  min-width: 228px !important;
-  min-height: 228px !important;
   margin: 14px auto !important;
-  border: 2px solid var(--accent-secondary);
-  box-shadow: 0 0 24px var(--cyan-glow);
+  border: 2px solid var(--accent-secondary) !important;
+  box-shadow: 0 0 24px var(--cyan-glow) !important;
   box-sizing: border-box !important;
+  overflow: hidden !important;
 }
 
-.totp-qr-img {
-  width: 190px;
-  height: 190px;
+#totp-qr-container,
+#cfg-totp-qr-container {
+  width: 200px !important;
+  height: 200px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  margin: 0 auto !important;
+  background: #ffffff !important;
+}
+
+.totp-qr-wrap canvas {
+  display: block !important;
+  margin: 0 auto !important;
+  width: 200px !important;
+  height: 200px !important;
+  aspect-ratio: 1 / 1 !important;
+  border-radius: 4px !important;
+}
+
+.totp-qr-wrap img {
   display: block;
+  margin: 0 auto;
+  max-width: 200px !important;
+  max-height: 200px !important;
+  aspect-ratio: 1 / 1 !important;
+  border-radius: 4px !important;
+}
+
+/* Ensure dummy/empty sibling image created by QRCode does not squash the canvas */
+.totp-qr-wrap canvas + img {
+  display: none !important;
 }
 
 .totp-secret-badge {
@@ -604,16 +632,4 @@
   gap: 12px;
   max-width: 320px;
   margin: 12px auto;
-}
-
-/* QR Container & Canvas */
-.totp-qr-wrap canvas,
-.totp-qr-wrap img {
-  display: block !important;
-  margin: 0 auto !important;
-  width: 200px !important;
-  height: 200px !important;
-  min-width: 200px !important;
-  min-height: 200px !important;
-  border-radius: var(--radius-sm);
 }
