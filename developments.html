@@ -59,9 +59,27 @@
 
   <!-- Structured Data (Schema.org JSON-LD) -->
   <script type="application/ld+json">
-  [
+{
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://gautambhuwan.com.np/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Developments",
+          "item": "https://gautambhuwan.com.np/developments.html"
+        }
+      ]
+    },
+    {
       "@type": "SoftwareApplication",
       "name": "GAMATUBE: Clean, Multi-Platform Privacy Video Platform",
       "operatingSystem": "Android, Web, Windows, iOS, macOS",
@@ -69,14 +87,17 @@
       "author": {
         "@type": "Person",
         "name": "Bhuwan Gautam",
-        "alternateName": ["Gautam Bhuwan", "Vhuwon Mathers", "sudovu"],
+        "alternateName": [
+          "Gautam Bhuwan",
+          "Vhuwon Mathers",
+          "sudovu"
+        ],
         "url": "https://gautambhuwan.com.np"
       },
       "downloadUrl": "https://gautambhuwan.com.np/downloads/gamatube/GAMATUBE-v1.3.11-arm64.apk",
       "softwareVersion": "1.3.7"
     },
     {
-      "@context": "https://schema.org",
       "@type": "SoftwareApplication",
       "name": "GAM.AI: Edge AI & Universal Offline Intelligence Platform",
       "operatingSystem": "Android, Windows, Linux, Web",
@@ -84,14 +105,17 @@
       "author": {
         "@type": "Person",
         "name": "Bhuwan Gautam",
-        "alternateName": ["Gautam Bhuwan", "Vhuwon Mathers", "sudovu"],
+        "alternateName": [
+          "Gautam Bhuwan",
+          "Vhuwon Mathers",
+          "sudovu"
+        ],
         "url": "https://gautambhuwan.com.np"
       },
       "downloadUrl": "https://gautambhuwan.com.np/downloads/gam-ai/gam-ai-v1.5.1.apk",
       "softwareVersion": "1.5.1"
     },
     {
-      "@context": "https://schema.org",
       "@type": "SoftwareApplication",
       "name": "GAMA: Cybernetic Music & Frequency Audio Platform",
       "operatingSystem": "Android, Windows, iOS, Web",
@@ -99,14 +123,17 @@
       "author": {
         "@type": "Person",
         "name": "Bhuwan Gautam",
-        "alternateName": ["Gautam Bhuwan", "Vhuwon Mathers", "sudovu"],
+        "alternateName": [
+          "Gautam Bhuwan",
+          "Vhuwon Mathers",
+          "sudovu"
+        ],
         "url": "https://gautambhuwan.com.np"
       },
       "downloadUrl": "https://gautambhuwan.com.np/downloads/gamma/GAMA-v2.3.6.apk",
       "softwareVersion": "2.3.6"
     },
     {
-      "@context": "https://schema.org",
       "@type": "SoftwareApplication",
       "name": "IELTS by GAMA: Hybrid Online + Offline AI English & IELTS Tutor",
       "operatingSystem": "Android",
@@ -114,14 +141,17 @@
       "author": {
         "@type": "Person",
         "name": "Bhuwan Gautam",
-        "alternateName": ["Gautam Bhuwan", "Vhuwon Mathers", "sudovu"],
+        "alternateName": [
+          "Gautam Bhuwan",
+          "Vhuwon Mathers",
+          "sudovu"
+        ],
         "url": "https://gautambhuwan.com.np"
       },
       "downloadUrl": "https://gautambhuwan.com.np/downloads/ielts-by-gama/ielts-by-gama-release.apk",
       "softwareVersion": "1.5.3"
     },
     {
-      "@context": "https://schema.org",
       "@type": "SoftwareApplication",
       "name": "Social Automation Hub: Multi-Platform Automation, AI Scheduling & Unified Inbox",
       "operatingSystem": "Linux, Cloud, Docker, Web",
@@ -129,13 +159,18 @@
       "author": {
         "@type": "Person",
         "name": "Bhuwan Gautam",
-        "alternateName": ["Gautam Bhuwan", "Vhuwon Mathers", "sudovu"],
+        "alternateName": [
+          "Gautam Bhuwan",
+          "Vhuwon Mathers",
+          "sudovu"
+        ],
         "url": "https://gautambhuwan.com.np"
       },
       "downloadUrl": "https://github.com/sudovu/automation_social_media",
       "softwareVersion": "1.0.0"
     }
   ]
+}
   </script>
 
   <style>
