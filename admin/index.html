@@ -15,7 +15,7 @@
   <!-- Core Design Tokens & Stylesheet -->
   <link rel="stylesheet" href="../css/style.css">
   <!-- Dedicated Admin Stylesheet -->
-  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="admin.css?v=2.5">
 </head>
 <body class="admin-body">
 
@@ -65,9 +65,12 @@
 
       <!-- Setup & Emergency Shortcuts -->
       <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px;">
-        <button type="button" id="open-totp-setup-btn" class="btn btn-outline btn-sm" style="width: 100%; justify-content: center; font-size: 0.8rem; border-color: var(--accent-secondary); color: var(--accent-secondary);">
+        <button type="button" id="open-totp-setup-btn" class="btn btn-outline btn-sm" style="width: 100%; justify-content: center; font-size: 0.85rem; border-color: var(--accent-secondary); color: var(--accent-secondary); font-weight: 600;">
           <span>📱 Scan QR Code / Setup Google Authenticator</span>
         </button>
+        <div style="margin-top: 8px; font-size: 0.76rem; color: var(--text-dim); font-family: var(--font-mono); text-align: center;">
+          Emergency Master Passcode: <span id="quick-emergency-fill" style="color: var(--accent-secondary); cursor: pointer; text-decoration: underline; font-weight: 700;" title="Click to auto-authenticate using emergency PIN">1337</span>
+        </div>
         
       </div>
     </div>
@@ -93,6 +96,13 @@
         <!-- QR Code Image (Guaranteed 1:1 Aspect Ratio) -->
         <div class="totp-qr-wrap">
           <div id="totp-qr-container" style="width: 200px; height: 200px; min-width: 200px; min-height: 200px; display: flex; align-items: center; justify-content: center;"></div>
+        </div>
+
+        <!-- 1-Tap Mobile Direct Import -->
+        <div style="margin: 12px auto 14px auto; max-width: 380px;">
+          <a id="totp-direct-open-link" href="#" class="btn btn-outline btn-sm" style="width: 100%; justify-content: center; font-size: 0.82rem; border-color: var(--accent-secondary); color: var(--accent-secondary); text-decoration: none; padding: 8px; font-weight: 600;">
+            <span>📲 Tap to Add Directly to Authenticator App (Mobile)</span>
+          </a>
         </div>
 
         <!-- Live Sync & Verification Preview -->
@@ -733,7 +743,7 @@
 
   <!-- Scripts -->
   <script src="../js/lexicon.js"></script>
-  <script src="qrcode.min.js"></script>
-  <script src="admin.js"></script>
+  <script src="qrcode.min.js?v=2.5"></script>
+  <script src="admin.js?v=2.5"></script>
 </body>
 </html>

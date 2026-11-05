@@ -269,6 +269,8 @@
       const secret = getActiveTotpSecret();
       if (secretText) secretText.textContent = secret;
       const otpauth = getOtpAuthUri(secret);
+      const directLink = document.getElementById('totp-direct-open-link');
+      if (directLink) directLink.href = otpauth;
       if (setupModal) setupModal.classList.add('active');
       renderOfflineQRCode('totp-qr-container', otpauth);
       updateLiveTotpPreview();
@@ -281,6 +283,24 @@
       closeSetupBtn.addEventListener('click', () => {
         setupModal.classList.remove('active');
         if (liveTotpInterval) clearInterval(liveTotpInterval);
+      });
+    }
+    if (setupModal) {
+      setupModal.addEventListener('click', (e) => {
+        if (e.target === setupModal) {
+          setupModal.classList.remove('active');
+          if (liveTotpInterval) clearInterval(liveTotpInterval);
+        }
+      });
+    }
+
+    // Emergency quick fill
+    const emergFill = document.getElementById('quick-emergency-fill');
+    if (emergFill) {
+      emergFill.addEventListener('click', () => {
+        enteredPin = EMERGENCY_PIN;
+        updatePinDots();
+        verifyPin(true);
       });
     }
     if (confirmSetupBtn) {
