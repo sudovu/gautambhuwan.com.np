@@ -279,40 +279,200 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!streamList) return;
     const row = document.createElement('div');
     row.className = 'stream-item new-entry';
+
+    if (item.isRealLive) {
+      row.style.background = 'rgba(16, 185, 129, 0.14)';
+      row.style.borderLeft = '3px solid #10b981';
+      row.style.boxShadow = '0 0 15px rgba(16, 185, 129, 0.2)';
+    }
+
+    const badge = item.isRealLive
+      ? `<span style="color: #10b981; font-weight: 800; font-size: 0.72rem; background: rgba(16, 185, 129, 0.25); padding: 2px 7px; border-radius: 4px; border: 1px solid #10b981;">● REAL LIVE</span>`
+      : `<span style="color: var(--success); text-align: right;">${item.tls || 'TLS 1.3 / GCM'}</span>`;
+
     row.innerHTML = `
       <span style="color: var(--text-muted);">${item.time}</span>
-      <span style="color: var(--accent-secondary); font-weight: 600;">${item.ip}</span>
+      <span style="color: var(--accent-secondary); font-weight: 700;">${item.ip}</span>
       <span style="color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-        <strong style="color: #fff;">${item.city}</strong> · <span style="color: var(--text-dim);">${item.path}</span>
+        <strong style="color: #fff;">${item.city}</strong> · <span style="color: var(--accent-tertiary); font-weight: 600;">${item.path}</span> · <span style="color: var(--text-dim);">${item.device || item.asn || ''}</span>
       </span>
-      <span style="color: var(--success); text-align: right;">${item.tls}</span>
+      <div style="text-align: right;">${badge}</div>
     `;
 
     streamList.insertBefore(row, streamList.firstChild);
 
     // Keep stream length bounded
-    if (streamList.children.length > 25) {
+    if (streamList.children.length > 30) {
       streamList.removeChild(streamList.lastChild);
     }
   }
 
-  // Pre-seed stream with 6 entries
-  for (let i = 0; i < 6; i++) {
+  // Pre-seed stream with initial sample entries
+  for (let i = 0; i < 4; i++) {
     pushStreamItem(generateRandomVisitor());
   }
 
-  // Live packet interval
+  // =========================================================================
+  // REAL-TIME INGRESS ENGINE: SSE CLOUD STREAM + BROADCAST CHANNEL + RTDB
+  // =========================================================================
+  const activeSessions = new Map();
+  const seenPings = new Set();
+
+  function updateActiveVisitorDisplay() {
+    if (!liveVisitorCountEl) return;
+    const realCount = activeSessions.size;
+    const totalCount = 12 + realCount;
+    DashboardState.liveVisitors = totalCount;
+    liveVisitorCountEl.innerHTML = `${totalCount} <span style="font-size: 0.72rem; color: #10b981; font-weight: 700; display: block; margin-top: 2px;">● ${realCount} VERIFIED REAL DEVICE${realCount === 1 ? '' : 'S'}</span>`;
+    
+    // Live Cloud Status indicator update
+    const cloudStatusEl = document.getElementById('cloud-telemetry-status');
+    if (cloudStatusEl) {
+      cloudStatusEl.innerHTML = realCount > 0
+        ? `<span class="led-pulse green"></span> <span>CLOUD REALTIME: ${realCount} DEVICE${realCount === 1 ? '' : 'S'} LIVE</span>`
+        : `<span class="led-pulse green"></span> <span>CLOUD REALTIME: ACTIVE (STANDBY)</span>`;
+    }
+  }
+
+  function handleIncomingRealtimePing(data) {
+    if (!data || !data.sessionId) return;
+
+    if (data.pingId) {
+      if (seenPings.has(data.pingId)) return;
+      seenPings.add(data.pingId);
+      if (seenPings.size > 200) {
+        const first = seenPings.values().next().value;
+        seenPings.delete(first);
+      }
+    }
+
+    if (data.action === 'leave') {
+      activeSessions.delete(data.sessionId);
+      updateActiveVisitorDisplay();
+      return;
+    }
+
+    const isNew = !activeSessions.has(data.sessionId);
+    activeSessions.set(data.sessionId, {
+      ...data,
+      lastSeen: Date.now()
+    });
+
+    updateActiveVisitorDisplay();
+
+    // Flash entry to visual stream if ping or new navigation
+    if (isNew || data.action === 'ping') {
+      DashboardState.totalVisits++;
+      localStorage.setItem('vm_total_site_visits', DashboardState.totalVisits.toString());
+      const totalVisitsEl = document.getElementById('total-visits-metric');
+      if (totalVisitsEl) totalVisitsEl.textContent = DashboardState.totalVisits.toLocaleString();
+
+      pushStreamItem({
+        time: data.time || new Date().toLocaleTimeString(),
+        ip: data.ip || 'Live Client',
+        city: data.city || 'Nepal (NP)',
+        asn: data.asn || '',
+        path: data.path || '/',
+        device: data.device || 'Web Browser',
+        isRealLive: true
+      });
+
+      // SOC Ribbon Pulse Alert
+      const socRibbon = document.querySelector('.soc-ribbon');
+      if (socRibbon) {
+        socRibbon.style.boxShadow = '0 0 25px rgba(16, 185, 129, 0.4)';
+        setTimeout(() => { socRibbon.style.boxShadow = ''; }, 700);
+      }
+    }
+  }
+
+  // 1. Native EventSource connection to Global Cloud Stream (ntfy.sh SSE)
+  try {
+    const sse = new EventSource('https://ntfy.sh/gautambhuwan_soc_telemetry_stream/sse');
+    sse.onopen = () => {
+      const cloudStatusEl = document.getElementById('cloud-telemetry-status');
+      if (cloudStatusEl && activeSessions.size === 0) {
+        cloudStatusEl.innerHTML = '<span class="led-pulse green"></span> <span>CLOUD REALTIME: CONNECTED</span>';
+      }
+    };
+    sse.onmessage = (event) => {
+      try {
+        const payload = JSON.parse(event.data);
+        if (payload && payload.message) {
+          const inner = typeof payload.message === 'string' ? JSON.parse(payload.message) : payload.message;
+          handleIncomingRealtimePing(inner);
+        } else if (payload && payload.sessionId) {
+          handleIncomingRealtimePing(payload);
+        }
+      } catch (err) {}
+    };
+    sse.onerror = () => {
+      console.warn('Antigravity SOC: Reconnecting cloud telemetry stream...');
+    };
+  } catch (err) {
+    console.warn('SSE not supported or blocked:', err);
+  }
+
+  // 2. BroadcastChannel for instant 0ms cross-tab updates on same device
+  if ('BroadcastChannel' in window) {
+    try {
+      const bc = new BroadcastChannel('antigravity_telemetry');
+      bc.onmessage = (e) => {
+        handleIncomingRealtimePing(e.data);
+      };
+    } catch (e) {}
+  }
+
+  // 3. LocalStorage storage event fallback
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'ag_latest_visitor_ping' && e.newValue) {
+      try {
+        handleIncomingRealtimePing(JSON.parse(e.newValue));
+      } catch (err) {}
+    }
+  });
+
+  // 4. Optional Firebase Realtime Database SSE Stream (if configured)
+  if (window.FIREBASE_DATABASE_URL) {
+    try {
+      const fbUrl = `${window.FIREBASE_DATABASE_URL.replace(/\/$/, '')}/telemetry/active_sessions.json`;
+      const fbSource = new EventSource(fbUrl);
+      fbSource.addEventListener('put', (e) => {
+        try {
+          const parsed = JSON.parse(e.data);
+          if (parsed && parsed.data) {
+            if (parsed.data.sessionId) {
+              handleIncomingRealtimePing(parsed.data);
+            } else if (typeof parsed.data === 'object') {
+              Object.values(parsed.data).forEach(sess => {
+                if (sess && sess.sessionId) handleIncomingRealtimePing(sess);
+              });
+            }
+          }
+        } catch (err) {}
+      });
+    } catch (err) {}
+  }
+
+  // Prune inactive sessions older than 45s without heartbeat
+  setInterval(() => {
+    const now = Date.now();
+    let changed = false;
+    for (const [id, sess] of activeSessions.entries()) {
+      if (now - sess.lastSeen > 45000) {
+        activeSessions.delete(id);
+        changed = true;
+      }
+    }
+    if (changed) updateActiveVisitorDisplay();
+  }, 10000);
+
+  // Background baseline ambient activity interval
   setInterval(() => {
     if (DashboardState.isPaused) return;
-
-    // Random jitter in active visitors
-    const jitter = Math.floor(Math.random() * 3) - 1; // -1, 0, 1
-    DashboardState.liveVisitors = Math.max(9, Math.min(32, DashboardState.liveVisitors + jitter));
-    if (liveVisitorCountEl) liveVisitorCountEl.textContent = DashboardState.liveVisitors;
-
-    // Push new packet stream
+    // Ambient stream simulation
     pushStreamItem(generateRandomVisitor());
-  }, 3200);
+  }, 4500);
 
   // Pause / Resume Stream
   const pauseBtn = document.getElementById('btn-pause-stream');

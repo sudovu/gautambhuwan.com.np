@@ -183,6 +183,10 @@
           <span class="led-pulse green"></span>
           <span>FIM: VERIFIED</span>
         </div>
+        <div class="soc-indicator" id="cloud-telemetry-status">
+          <span class="led-pulse green"></span>
+          <span>CLOUD REALTIME: ACTIVE</span>
+        </div>
         <div class="soc-indicator" id="admin-clearance-badge">
           <span class="led-pulse amber"></span>
           <span>MFA: ENFORCED (READ-ONLY)</span>
@@ -252,7 +256,7 @@
           <span>Total Recorded Visits</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
         </div>
-        <div class="kpi-value">48,920</div>
+        <div class="kpi-value" id="total-visits-metric">48,920</div>
         <div class="kpi-subtext">
           <span class="kpi-trend-up">+14.2%</span>
           <span>vs previous 30-day baseline</span>
@@ -814,6 +818,8 @@
   <script defer src="js/navigation.js"></script>
   <script defer src="js/animations.js"></script>
   <script defer src="js/parsun-particles.js"></script>
+  <script defer src="js/firebase-config.js"></script>
+  <script defer src="js/tracker.js"></script>
   <script defer src="js/analytics.js"></script>
   <script defer src="js/main.js"></script>
 </body>
