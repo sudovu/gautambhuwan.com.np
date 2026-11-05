@@ -1,3 +1,24 @@
+
+/* Antigravity SOC Gated Lock Screen Styles */
+@keyframes pinShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-9px); }
+  40%, 80% { transform: translateX(9px); }
+}
+
+html.soc-locked .analytics-dashboard,
+.analytics-dashboard.locked {
+  filter: blur(30px) !important;
+  opacity: 0.02 !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  transition: filter 0.35s ease, opacity 0.35s ease;
+}
+
+html.soc-locked #mfa-modal,
+#mfa-modal.open {
+  display: flex !important;
+}
 /* ==========================================================================
    ANTIGRAVITY SECURITY & ANALYTICS DASHBOARD — STYLESHEET
    Domain: gautambhuwan.com.np/analytics
@@ -517,9 +538,9 @@ canvas#traffic-chart-canvas {
 .mfa-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(4, 6, 11, 0.85);
-  backdrop-filter: blur(8px);
-  z-index: 10000;
+  background: rgba(4, 6, 11, 0.95);
+  backdrop-filter: blur(16px);
+  z-index: 100000;
   display: none;
   align-items: center;
   justify-content: center;

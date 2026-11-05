@@ -42,7 +42,7 @@
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/particles.css">
-  <link rel="stylesheet" href="css/analytics.css?v=3.0">
+  <link rel="stylesheet" href="css/analytics.css?v=3.5">
 
   <!-- Schema.org BreadcrumbList -->
   <script type="application/ld+json">
@@ -65,7 +65,10 @@
     ]
   }
   </script>
-  <script>try{var t=localStorage.getItem('vm_theme_preference');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+  <script>
+    try{var t=localStorage.getItem('vm_theme_preference');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+    try{if(sessionStorage.getItem('ag_analytics_authenticated')!=='true'){document.documentElement.classList.add('soc-locked');}}catch(e){}
+  </script>
 </head>
 <body>
   <!-- 3D Interactive Texture Canvas from Parsun -->
@@ -154,7 +157,7 @@
   </aside>
 
   <!-- Main Content Dashboard -->
-  <main class="analytics-dashboard">
+  <main class="analytics-dashboard locked" id="analytics-main-container">
     <!-- Hero / Title Section -->
     <div style="margin-bottom: 28px;">
       <div class="section-badge" style="margin-bottom: 12px;">
@@ -717,7 +720,8 @@
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
         </div>
         <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Admin Root Clearance</h3>
-        <p style="font-size: 0.82rem; color: var(--text-muted);">Enter 4-Digit Security PIN to unlock administrative controls (Default Master PIN: <code>2026</code>)</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Enter 4-Digit Security PIN to access Antigravity Security &amp; Analytics SOC</p>
+        <div id="pin-error-alert" style="color: #ef4444; font-size: 0.82rem; font-weight: 600; min-height: 20px; margin-top: 8px;"></div>
       </div>
 
       <div class="pin-display">
@@ -744,7 +748,7 @@
 
       <div style="margin-top: 20px; text-align: center;">
         <button class="cyber-btn" id="btn-close-mfa" style="width: 100%; justify-content: center;">
-          Cancel &amp; Close
+          &larr; Exit to Homepage
         </button>
       </div>
     </div>
@@ -818,9 +822,9 @@
   <script defer src="js/navigation.js"></script>
   <script defer src="js/animations.js"></script>
   <script defer src="js/parsun-particles.js"></script>
-  <script defer src="js/firebase-config.js?v=3.0"></script>
-  <script defer src="js/tracker.js?v=3.0"></script>
-  <script defer src="js/analytics.js?v=3.0"></script>
+  <script defer src="js/firebase-config.js?v=3.5"></script>
+  <script defer src="js/tracker.js?v=3.5"></script>
+  <script defer src="js/analytics.js?v=3.5"></script>
   <script defer src="js/main.js"></script>
 </body>
 </html>

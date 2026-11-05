@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
       { ip: '103.151.124.9', origin: 'Jakarta (ID)', reason: 'Aggressive Bot Scraper (Rate Limit Exceeded)', expires: 1250 }
     ],
     auditLogs: JSON.parse(localStorage.getItem('vm_audit_trail') || '[]'),
-    masterPIN: '2026'
+    masterPIN: '4997'
   };
 
   // Record genuine local visit increment
@@ -743,24 +743,97 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =========================================================================
-  // 8. MULTI-FACTOR AUTHENTICATION (MFA) & ADMIN CLEARANCE
+  // 8. MULTI-FACTOR AUTHENTICATION (MFA) & GATED SOC ACCESS (PIN: 4997)
   // =========================================================================
+  const AUTH_STORAGE_KEY = 'ag_analytics_authenticated';
   const mfaModal = document.getElementById('mfa-modal');
   const openMfaBtn = document.getElementById('btn-open-mfa');
   const closeMfaBtn = document.getElementById('btn-close-mfa');
   const pinDots = document.querySelectorAll('.pin-dot');
   const keypadBtns = document.querySelectorAll('.keypad-btn');
   const adminBadge = document.getElementById('admin-clearance-badge');
+  const pinErrorEl = document.getElementById('pin-error-alert');
   let currentPin = '';
+
+  function isUnlocked() {
+    return sessionStorage.getItem(AUTH_STORAGE_KEY) === 'true';
+  }
+
+  function applyLockState() {
+    const unlocked = isUnlocked();
+    const mainEl = document.getElementById('analytics-main-container') || document.querySelector('.analytics-dashboard');
+
+    if (unlocked) {
+      DashboardState.isAdmin = true;
+      document.documentElement.classList.remove('soc-locked');
+      if (mainEl) mainEl.classList.remove('locked');
+      if (mfaModal) mfaModal.classList.remove('open');
+
+      if (adminBadge) {
+        adminBadge.innerHTML = '<span class="led-pulse green"></span> <span>ROOT CLEARANCE: ACTIVE</span>';
+        adminBadge.style.color = '#10b981';
+      }
+
+      if (openMfaBtn) {
+        openMfaBtn.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          Lock SOC
+        `;
+        openMfaBtn.classList.add('danger');
+        openMfaBtn.title = 'Lock Dashboard and Sign Out';
+        openMfaBtn.onclick = () => {
+          sessionStorage.removeItem(AUTH_STORAGE_KEY);
+          location.reload();
+        };
+      }
+
+      // Re-render chart to ensure full crisp width upon unblur
+      setTimeout(() => {
+        if (typeof renderTrafficChart === 'function') renderTrafficChart();
+      }, 100);
+    } else {
+      DashboardState.isAdmin = false;
+      document.documentElement.classList.add('soc-locked');
+      if (mainEl) mainEl.classList.add('locked');
+      if (mfaModal) mfaModal.classList.add('open');
+
+      if (adminBadge) {
+        adminBadge.innerHTML = '<span class="led-pulse amber"></span> <span>MFA: ENFORCED (LOCKED)</span>';
+        adminBadge.style.color = '';
+      }
+
+      if (openMfaBtn) {
+        openMfaBtn.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          MFA Auth
+        `;
+        openMfaBtn.classList.remove('danger');
+        openMfaBtn.title = 'Enter PIN to Unlock SOC';
+        openMfaBtn.onclick = openMfa;
+      }
+    }
+  }
 
   function openMfa() {
     if (!mfaModal) return;
     currentPin = '';
+    if (pinErrorEl) pinErrorEl.textContent = '';
     updatePinDisplay();
     mfaModal.classList.add('open');
   }
 
   function closeMfa() {
+    if (!isUnlocked()) {
+      // Gated SOC: If locked, exit takes user safely back to home page
+      window.location.href = 'index.html';
+      return;
+    }
     if (!mfaModal) return;
     mfaModal.classList.remove('open');
   }
@@ -775,40 +848,53 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function handlePinInput(val) {
+    if (pinErrorEl) pinErrorEl.textContent = '';
+
+    if (val === 'clear') {
+      currentPin = '';
+      updatePinDisplay();
+    } else if (val === 'back') {
+      currentPin = currentPin.slice(0, -1);
+      updatePinDisplay();
+    } else if (currentPin.length < 4) {
+      currentPin += val;
+      updatePinDisplay();
+
+      if (currentPin.length === 4) {
+        setTimeout(verifyPin, 120);
+      }
+    }
+  }
+
   keypadBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       const val = btn.getAttribute('data-val');
-      if (val === 'clear') {
-        currentPin = '';
-        updatePinDisplay();
-      } else if (val === 'back') {
-        currentPin = currentPin.slice(0, -1);
-        updatePinDisplay();
-      } else if (currentPin.length < 4) {
-        currentPin += val;
-        updatePinDisplay();
-
-        if (currentPin.length === 4) {
-          setTimeout(verifyPin, 150);
-        }
-      }
+      handlePinInput(val);
     });
+  });
+
+  // Physical Keyboard Support (Numbers 0-9, Backspace, Escape/Clear)
+  window.addEventListener('keydown', (e) => {
+    if (!mfaModal || !mfaModal.classList.contains('open')) return;
+
+    if (e.key >= '0' && e.key <= '9') {
+      e.preventDefault();
+      handlePinInput(e.key);
+    } else if (e.key === 'Backspace') {
+      e.preventDefault();
+      handlePinInput('back');
+    } else if (e.key === 'Escape' || e.key.toLowerCase() === 'c') {
+      e.preventDefault();
+      if (e.key === 'Escape') closeMfa();
+      else handlePinInput('clear');
+    }
   });
 
   function verifyPin() {
     if (currentPin === DashboardState.masterPIN) {
-      DashboardState.isAdmin = true;
-      if (adminBadge) {
-        adminBadge.innerHTML = '<span class="led-pulse green"></span> ROOT CLEARANCE: ACTIVE';
-        adminBadge.style.color = '#10b981';
-      }
-      if (openMfaBtn) {
-        openMfaBtn.textContent = 'Lock Admin Console';
-        openMfaBtn.classList.add('danger');
-        openMfaBtn.onclick = () => {
-          location.reload();
-        };
-      }
+      sessionStorage.setItem(AUTH_STORAGE_KEY, 'true');
+      if (pinErrorEl) pinErrorEl.textContent = '';
 
       // Log to audit trail
       const auditEntry = {
@@ -822,19 +908,24 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('vm_audit_trail', JSON.stringify(DashboardState.auditLogs));
       renderAuditLogs();
 
-      closeMfa();
+      applyLockState();
     } else {
       // Failed PIN
       const modalBox = document.querySelector('.mfa-modal-box');
       if (modalBox) {
-        modalBox.style.animation = 'shake 0.4s ease-in-out';
+        modalBox.style.animation = 'pinShake 0.4s ease-in-out';
         setTimeout(() => { modalBox.style.animation = ''; }, 400);
+      }
+      if (pinErrorEl) {
+        pinErrorEl.textContent = 'Access Denied: Invalid Security PIN.';
       }
       currentPin = '';
       updatePinDisplay();
-      alert('Authentication Failed: Invalid Security PIN.');
     }
   }
+
+  // Initialize Gated State on page load
+  applyLockState();
 
   // Audit Logs Renderer
   const auditContainer = document.getElementById('audit-trail-list');
