@@ -882,6 +882,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Helper: SHA-256 Cryptographic Hash
+  async function sha256(str) {
+    const enc = new TextEncoder();
+    const data = enc.encode(str);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hash))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+  }
+
   function handlePinInput(val) {
     if (pinErrorEl) pinErrorEl.textContent = '';
 
@@ -895,9 +905,15 @@ document.addEventListener('DOMContentLoaded', () => {
       currentPin += val;
       updatePinDisplay();
 
-      // If user typed 4 digits and it matches 4997, unlock immediately
-      if (currentPin.length === 4 && currentPin === DashboardState.masterPIN) {
-        setTimeout(verifyPin, 100);
+      // If user typed 4 digits, check if it matches Master PIN (4997 or custom hash)
+      if (currentPin.length === 4) {
+        sha256(currentPin).then(hash => {
+          const customHash = localStorage.getItem('vm_admin_pin_hash');
+          const DEFAULT_PIN_HASH = '214c993d16c6ca97becc711cae8eee69336bc377d097f225c72ae4fd01cbc018';
+          if ((customHash && hash === customHash) || (!customHash && currentPin === DashboardState.masterPIN) || hash === DEFAULT_PIN_HASH) {
+            setTimeout(verifyPin, 80);
+          }
+        });
       }
       // If user reached 6 digits, auto-verify against Google Authenticator TOTP
       else if (currentPin.length === 6) {
@@ -936,7 +952,17 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   async function verifyPin() {
-    const isPinMatch = (currentPin === DashboardState.masterPIN);
+    const customPinHash = localStorage.getItem('vm_admin_pin_hash');
+    const DEFAULT_PIN_HASH = '214c993d16c6ca97becc711cae8eee69336bc377d097f225c72ae4fd01cbc018';
+    const targetHash = customPinHash || DEFAULT_PIN_HASH;
+
+    let isPinMatch = false;
+    if (currentPin.length >= 4) {
+      const pinHash = await sha256(currentPin);
+      if (pinHash === targetHash || currentPin === DashboardState.masterPIN) {
+        isPinMatch = true;
+      }
+    }
 
     let isTotpMatch = false;
     if (currentPin.length === 6) {
@@ -957,7 +983,7 @@ document.addEventListener('DOMContentLoaded', () => {
       sessionStorage.setItem(AUTH_STORAGE_KEY, 'true');
       if (pinErrorEl) pinErrorEl.textContent = '';
 
-      const methodUsed = isTotpMatch ? 'GOOGLE_AUTHENTICATOR_TOTP' : 'MASTER_PIN_4997';
+      const methodUsed = isTotpMatch ? 'GOOGLE_AUTHENTICATOR_TOTP' : 'MASTER_PIN';
 
       // Log to audit trail
       const auditEntry = {

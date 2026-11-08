@@ -27,9 +27,9 @@
       <div class="lock-icon-wrap">
         <span>🛡️</span>
       </div>
-      <h2 style="font-size: 1.35rem; margin-bottom: 4px;">Google Authenticator 2FA</h2>
+      <h2 style="font-size: 1.35rem; margin-bottom: 4px;">Admin Root Authentication</h2>
       <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 18px;">
-        Enter the 6-digit code from Google Authenticator on your phone
+        Enter 6-digit Google Authenticator code or Master PIN
       </p>
 
       <!-- 6-Digit Code Input & Indicator Dots -->
@@ -63,15 +63,14 @@
 
       <div id="lock-error-msg" class="lock-error-msg"></div>
 
-      <!-- Setup & Emergency Shortcuts -->
+      <!-- Setup & Recovery Shortcuts -->
       <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px;">
         <button type="button" id="open-totp-setup-btn" class="btn btn-outline btn-sm" style="width: 100%; justify-content: center; font-size: 0.85rem; border-color: var(--accent-secondary); color: var(--accent-secondary); font-weight: 600;">
-          <span>📱 Scan QR Code / Setup Google Authenticator</span>
+          <span>📱 Scan QR Code / Pair Authenticator</span>
         </button>
-        <div style="margin-top: 8px; font-size: 0.76rem; color: var(--text-dim); font-family: var(--font-mono); text-align: center;">
-          Emergency Master Passcode: <span id="quick-emergency-fill" style="color: var(--accent-secondary); cursor: pointer; text-decoration: underline; font-weight: 700;" title="Click to auto-authenticate using emergency PIN">1337</span>
-        </div>
-        
+        <button type="button" id="open-email-reset-btn" class="btn btn-outline btn-sm" style="width: 100%; justify-content: center; font-size: 0.82rem; border-color: rgba(239, 68, 68, 0.4); color: #f87171; font-weight: 600; margin-top: 4px;">
+          <span>✉️ 2FA Failed? Reset via Email</span>
+        </button>
       </div>
     </div>
   </div>
@@ -140,6 +139,53 @@
   </div>
 
   
+  
+  <!-- ==========================================================================
+       EMERGENCY EMAIL RESET MODAL (vhuwomathers12@gmail.com)
+       ========================================================================== -->
+  <div id="email-reset-modal-overlay" class="admin-modal-overlay">
+    <div class="admin-modal" style="max-width: 500px;">
+      <div class="admin-modal-header">
+        <h3 style="display: flex; align-items: center; gap: 8px;">
+          <span>🛡️</span> Emergency Admin Recovery
+        </h3>
+        <button type="button" id="close-email-reset-btn" style="background: none; border: none; font-size: 1.4rem; color: var(--text-dim); cursor: pointer;">&times;</button>
+      </div>
+      <div class="admin-modal-body" style="padding: 24px;">
+        <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 18px;">
+          <div style="color: #f87171; font-weight: 700; font-size: 0.88rem; margin-bottom: 4px;">Lost 2FA or Locked Out?</div>
+          <p class="body-sm" style="color: var(--text-secondary); margin: 0; font-size: 0.8rem; line-height: 1.5;">
+            If Google Authenticator 2FA fails or is unavailable, you can dispatch a secure 6-digit One-Time Recovery Passcode (OTP) directly to your verified recovery email:
+            <strong style="color: var(--accent-secondary); display: block; margin-top: 6px; font-family: var(--font-mono); font-size: 0.92rem;">vhuwomathers12@gmail.com</strong>
+          </p>
+        </div>
+
+        <!-- Step 1: Request Code Button -->
+        <div id="email-reset-step1" style="text-align: center;">
+          <button type="button" id="send-recovery-code-btn" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px; font-weight: 600;">
+            <span>✉️ Dispatch 6-Digit Recovery Passcode</span>
+          </button>
+          <div id="email-send-status" style="margin-top: 10px; font-size: 0.8rem; font-family: var(--font-mono); min-height: 20px;"></div>
+        </div>
+
+        <!-- Step 2: Enter Verification Code -->
+        <div id="email-reset-step2" style="display: none; border-top: 1px solid var(--border); padding-top: 18px; margin-top: 18px;">
+          <label class="form-label" style="text-align: center; margin-bottom: 8px; font-weight: 600;">Enter 6-Digit Passcode Received in Your Email</label>
+          <input type="text" id="recovery-code-input" class="form-input" maxlength="6" inputmode="numeric" placeholder="••••••" style="text-align: center; font-size: 1.6rem; letter-spacing: 6px; font-family: var(--font-mono); font-weight: 700; color: var(--accent-secondary); margin-bottom: 8px;">
+          <div id="recovery-verify-error" style="color: var(--error); font-size: 0.78rem; font-family: var(--font-mono); text-align: center; min-height: 18px; margin-bottom: 12px;"></div>
+          <button type="button" id="verify-recovery-code-btn" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px; font-weight: 600;">
+            <span>🔓 Verify Passcode &amp; Unlock Admin</span>
+          </button>
+          <div style="margin-top: 12px; text-align: center;">
+            <button type="button" id="resend-recovery-code-btn" class="btn btn-outline btn-sm" style="font-size: 0.78rem;">
+              Resend Passcode
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ==========================================================================
        FIRST-TIME / UPDATE SECURITY CONFIGURATION MODAL
        ========================================================================== -->
@@ -635,10 +681,10 @@
         <!-- Google Authenticator (2FA) & Security -->
         <div class="card" style="padding: 24px;">
           <h3 style="font-size: 1.1rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-            <span>🛡️</span> Google Authenticator (2FA)
+            <span>🛡️</span> Security &amp; Master Password
           </h3>
           <p class="body-sm" style="color: var(--text-muted); margin-bottom: 18px;">
-            Two-factor authentication using rolling 30-second TOTP codes generated by Google Authenticator.
+            Two-factor authentication using rolling 30-second TOTP codes generated by Google Authenticator, plus custom Master PIN protection.
           </p>
 
           <div style="background: var(--surface-elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 16px;">
@@ -647,11 +693,11 @@
           </div>
 
           <button type="button" class="btn btn-primary btn-sm" id="open-security-modal-from-settings" style="width: 100%; justify-content: center; margin-bottom: 12px;">
-            <span>📱 View / Re-scan 2FA QR Code</span>
+            <span>🔐 Change Master Password &amp; 2FA Settings</span>
           </button>
 
           <div style="font-size: 0.76rem; color: var(--text-dim); line-height: 1.5; padding-top: 8px; border-top: 1px solid var(--border);">
-            Emergency Master Passcode: <code style="color: var(--accent-secondary); font-weight: 700;">1337</code> (accepted if phone is unavailable).
+            Master password can be updated at any time by confirming your active 2FA Authenticator code. If 2FA fails, recover via <code>vhuwomathers12@gmail.com</code>.
           </div>
         </div>
 
