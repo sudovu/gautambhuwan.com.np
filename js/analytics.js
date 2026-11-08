@@ -230,65 +230,53 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(renderTrafficChart, 100);
 
   // =========================================================================
-  // 5. LIVE VISITOR STREAM & REAL-TIME SIMULATION
+  // 5. LIVE VISITOR STREAM (100% REAL LIVE DATA ONLY - ZERO SIMULATION)
   // =========================================================================
   const streamList = document.getElementById('live-stream-list');
   const liveVisitorCountEl = document.getElementById('live-visitor-count');
 
-  const VISITOR_CITIES = [
-    { city: 'Kathmandu, NP', asn: 'AS4007 (NTC)', ipPrefix: '202.70.78.' },
-    { city: 'Pokhara, NP', asn: 'AS25459 (WorldLink)', ipPrefix: '103.10.30.' },
-    { city: 'Lalitpur, NP', asn: 'AS17501 (Subisu)', ipPrefix: '27.34.20.' },
-    { city: 'San Jose, US', asn: 'AS16509 (AWS)', ipPrefix: '54.183.21.' },
-    { city: 'Frankfurt, DE', asn: 'AS13335 (Cloudflare)', ipPrefix: '104.28.14.' },
-    { city: 'London, UK', asn: 'AS2856 (BT Group)', ipPrefix: '81.134.12.' },
-    { city: 'Tokyo, JP', asn: 'AS2516 (KDDI)', ipPrefix: '118.238.6.' },
-    { city: 'Singapore, SG', asn: 'AS4657 (StarHub)', ipPrefix: '116.14.88.' },
-    { city: 'Sydney, AU', asn: 'AS1221 (Telstra)', ipPrefix: '144.130.4.' }
-  ];
-
-  const SITE_PATHS = [
-    '/',
-    '/projects.html',
-    '/labs.html',
-    '/services.html',
-    '/developments.html',
-    '/resume.html',
-    '/blog.html',
-    '/skills.html'
-  ];
-
-  function generateRandomVisitor() {
-    const loc = VISITOR_CITIES[Math.floor(Math.random() * VISITOR_CITIES.length)];
-    const path = SITE_PATHS[Math.floor(Math.random() * SITE_PATHS.length)];
-    const ip = loc.ipPrefix + Math.floor(Math.random() * 254 + 1);
-    const now = new Date();
-    const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-    
-    return {
-      time: timeStr,
-      ip: ip,
-      city: loc.city,
-      asn: loc.asn,
-      path: path,
-      tls: 'TLS 1.3 / GCM'
-    };
+  function renderEmptyStreamNotice() {
+    if (!streamList) return;
+    const existing = document.getElementById('stream-empty-notice');
+    if (existing) return;
+    if (streamList.children.length === 0) {
+      const notice = document.createElement('div');
+      notice.id = 'stream-empty-notice';
+      notice.style.padding = '36px 20px';
+      notice.style.textAlign = 'center';
+      notice.style.color = 'var(--text-dim)';
+      notice.style.fontSize = '0.86rem';
+      notice.style.border = '1px dashed var(--border)';
+      notice.style.borderRadius = 'var(--radius-sm)';
+      notice.style.margin = '8px 0';
+      notice.innerHTML = `
+        <div style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+          <span class="led-pulse green"></span>
+          <strong style="color: var(--text-primary); font-size: 0.9rem;">REAL-TIME TELEMETRY ACTIVE &bull; LIVE INGRESS ONLY</strong>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0; line-height: 1.5;">
+          Ambient simulation disabled. Stream exclusively displays 100% verified real visitor sessions arriving on <code style="color: var(--accent-secondary);">gautambhuwan.com.np</code>.
+        </p>
+      `;
+      streamList.appendChild(notice);
+    }
   }
 
   function pushStreamItem(item) {
     if (!streamList) return;
+
+    // Remove empty placeholder notice if present
+    const notice = document.getElementById('stream-empty-notice');
+    if (notice) notice.remove();
+
     const row = document.createElement('div');
     row.className = 'stream-item new-entry';
 
-    if (item.isRealLive) {
-      row.style.background = 'rgba(16, 185, 129, 0.14)';
-      row.style.borderLeft = '3px solid #10b981';
-      row.style.boxShadow = '0 0 15px rgba(16, 185, 129, 0.2)';
-    }
+    row.style.background = 'rgba(16, 185, 129, 0.14)';
+    row.style.borderLeft = '3px solid #10b981';
+    row.style.boxShadow = '0 0 15px rgba(16, 185, 129, 0.2)';
 
-    const badge = item.isRealLive
-      ? `<span style="color: #10b981; font-weight: 800; font-size: 0.72rem; background: rgba(16, 185, 129, 0.25); padding: 2px 7px; border-radius: 4px; border: 1px solid #10b981;">● REAL LIVE</span>`
-      : `<span style="color: var(--success); text-align: right;">${item.tls || 'TLS 1.3 / GCM'}</span>`;
+    const badge = `<span style="color: #10b981; font-weight: 800; font-size: 0.72rem; background: rgba(16, 185, 129, 0.25); padding: 2px 7px; border-radius: 4px; border: 1px solid #10b981;">● REAL LIVE</span>`;
 
     row.innerHTML = `
       <span style="color: var(--text-muted);">${item.time}</span>
@@ -307,10 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Pre-seed stream with initial sample entries
-  for (let i = 0; i < 4; i++) {
-    pushStreamItem(generateRandomVisitor());
-  }
+  renderEmptyStreamNotice();
 
   // =========================================================================
   // REAL-TIME INGRESS ENGINE: SSE CLOUD STREAM + BROADCAST CHANNEL + RTDB
@@ -321,9 +306,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateActiveVisitorDisplay() {
     if (!liveVisitorCountEl) return;
     const realCount = activeSessions.size;
-    const totalCount = 12 + realCount;
+    const totalCount = realCount;
     DashboardState.liveVisitors = totalCount;
-    liveVisitorCountEl.innerHTML = `${totalCount} <span style="font-size: 0.72rem; color: #10b981; font-weight: 700; display: block; margin-top: 2px;">● ${realCount} VERIFIED REAL DEVICE${realCount === 1 ? '' : 'S'}</span>`;
+    liveVisitorCountEl.innerHTML = realCount > 0
+      ? `${realCount} <span style="font-size: 0.72rem; color: #10b981; font-weight: 700; display: block; margin-top: 2px;">● ${realCount} VERIFIED REAL DEVICE${realCount === 1 ? '' : 'S'} LIVE</span>`
+      : `0 <span style="font-size: 0.72rem; color: var(--text-dim); font-weight: 600; display: block; margin-top: 2px;">● STANDBY (NO ACTIVE VISITORS)</span>`;
     
     // Live Cloud Status indicator update
     const cloudStatusEl = document.getElementById('cloud-telemetry-status');
@@ -467,12 +454,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (changed) updateActiveVisitorDisplay();
   }, 10000);
 
-  // Background baseline ambient activity interval
-  setInterval(() => {
-    if (DashboardState.isPaused) return;
-    // Ambient stream simulation
-    pushStreamItem(generateRandomVisitor());
-  }, 4500);
+  // Ambient stream simulation completely removed (Live Data Only)
 
   // Pause / Resume Stream
   const pauseBtn = document.getElementById('btn-pause-stream');
@@ -743,9 +725,62 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =========================================================================
-  // 8. MULTI-FACTOR AUTHENTICATION (MFA) & GATED SOC ACCESS (PIN: 4997)
+  // 8. MULTI-FACTOR AUTHENTICATION (MFA) & GATED SOC ACCESS (TOTP / PIN: 4997)
   // =========================================================================
   const AUTH_STORAGE_KEY = 'ag_analytics_authenticated';
+  const DEFAULT_TOTP_SECRET = 'GAUTAMBHUWAN2FA2';
+
+  function getActiveTotpSecret() {
+    return localStorage.getItem('vm_admin_totp_secret') || DEFAULT_TOTP_SECRET;
+  }
+
+  function base32Decode(base32) {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+    let bits = 0, value = 0, index = 0;
+    const clean = base32.toUpperCase().replace(/=+$/, '').replace(/\s+/g, '');
+    const bytes = new Uint8Array(Math.floor(clean.length * 5 / 8));
+    for (let i = 0; i < clean.length; i++) {
+      const val = alphabet.indexOf(clean[i]);
+      if (val === -1) continue;
+      value = (value << 5) | val;
+      bits += 5;
+      if (bits >= 8) {
+        bytes[index++] = (value >>> (bits - 8)) & 255;
+        bits -= 8;
+      }
+    }
+    return bytes;
+  }
+
+  async function computeTOTP(secretBase32, counterOffset = 0) {
+    const keyBytes = base32Decode(secretBase32);
+    const epoch = Math.floor(Date.now() / 1000);
+    const counter = Math.floor(epoch / 30) + counterOffset;
+
+    const counterBuffer = new ArrayBuffer(8);
+    const view = new DataView(counterBuffer);
+    view.setUint32(0, Math.floor(counter / 0x100000000), false);
+    view.setUint32(4, counter >>> 0, false);
+
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      keyBytes,
+      { name: 'HMAC', hash: { name: 'SHA-1' } },
+      false,
+      ['sign']
+    );
+
+    const signature = await crypto.subtle.sign('HMAC', cryptoKey, counterBuffer);
+    const hmac = new Uint8Array(signature);
+    const offset = hmac[hmac.length - 1] & 0x0f;
+    const binary = ((hmac[offset] & 0x7f) << 24) |
+                   ((hmac[offset + 1] & 0xff) << 16) |
+                   ((hmac[offset + 2] & 0xff) << 8) |
+                   (hmac[offset + 3] & 0xff);
+    const otp = binary % 1000000;
+    return otp.toString().padStart(6, '0');
+  }
+
   const mfaModal = document.getElementById('mfa-modal');
   const openMfaBtn = document.getElementById('btn-open-mfa');
   const closeMfaBtn = document.getElementById('btn-close-mfa');
@@ -814,7 +849,7 @@ document.addEventListener('DOMContentLoaded', () => {
           MFA Auth
         `;
         openMfaBtn.classList.remove('danger');
-        openMfaBtn.title = 'Enter PIN to Unlock SOC';
+        openMfaBtn.title = 'Enter PIN or Authenticator Code to Unlock SOC';
         openMfaBtn.onclick = openMfa;
       }
     }
@@ -830,7 +865,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function closeMfa() {
     if (!isUnlocked()) {
-      // Gated SOC: If locked, exit takes user safely back to home page
       window.location.href = 'index.html';
       return;
     }
@@ -857,11 +891,16 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (val === 'back') {
       currentPin = currentPin.slice(0, -1);
       updatePinDisplay();
-    } else if (currentPin.length < 4) {
+    } else if (currentPin.length < 6) {
       currentPin += val;
       updatePinDisplay();
 
-      if (currentPin.length === 4) {
+      // If user typed 4 digits and it matches 4997, unlock immediately
+      if (currentPin.length === 4 && currentPin === DashboardState.masterPIN) {
+        setTimeout(verifyPin, 100);
+      }
+      // If user reached 6 digits, auto-verify against Google Authenticator TOTP
+      else if (currentPin.length === 6) {
         setTimeout(verifyPin, 120);
       }
     }
@@ -874,7 +913,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Physical Keyboard Support (Numbers 0-9, Backspace, Escape/Clear)
+  // Physical Keyboard Support
   window.addEventListener('keydown', (e) => {
     if (!mfaModal || !mfaModal.classList.contains('open')) return;
 
@@ -884,6 +923,11 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (e.key === 'Backspace') {
       e.preventDefault();
       handlePinInput('back');
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (currentPin.length >= 4) {
+        verifyPin();
+      }
     } else if (e.key === 'Escape' || e.key.toLowerCase() === 'c') {
       e.preventDefault();
       if (e.key === 'Escape') closeMfa();
@@ -891,17 +935,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  function verifyPin() {
-    if (currentPin === DashboardState.masterPIN) {
+  async function verifyPin() {
+    const isPinMatch = (currentPin === DashboardState.masterPIN);
+
+    let isTotpMatch = false;
+    if (currentPin.length === 6) {
+      try {
+        const secret = getActiveTotpSecret();
+        const [cur, prev, nxt] = await Promise.all([
+          computeTOTP(secret, 0),
+          computeTOTP(secret, -1),
+          computeTOTP(secret, 1)
+        ]);
+        isTotpMatch = (currentPin === cur || currentPin === prev || currentPin === nxt);
+      } catch (e) {
+        console.warn('TOTP validation error:', e);
+      }
+    }
+
+    if (isPinMatch || isTotpMatch) {
       sessionStorage.setItem(AUTH_STORAGE_KEY, 'true');
       if (pinErrorEl) pinErrorEl.textContent = '';
+
+      const methodUsed = isTotpMatch ? 'GOOGLE_AUTHENTICATOR_TOTP' : 'MASTER_PIN_4997';
 
       // Log to audit trail
       const auditEntry = {
         timestamp: new Date().toISOString(),
         action: 'MFA_AUTH_SUCCESS',
         operator: 'Bhuwan Gautam (Vhuwon Mathers)',
-        method: 'CRYPTOGRAPHIC_PIN_VERIFY',
+        method: methodUsed,
         hmac: 'SHA256:' + Math.random().toString(36).substring(2, 15)
       };
       DashboardState.auditLogs.unshift(auditEntry);
@@ -910,14 +973,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
       applyLockState();
     } else {
-      // Failed PIN
+      // Failed PIN / TOTP
       const modalBox = document.querySelector('.mfa-modal-box');
       if (modalBox) {
         modalBox.style.animation = 'pinShake 0.4s ease-in-out';
         setTimeout(() => { modalBox.style.animation = ''; }, 400);
       }
       if (pinErrorEl) {
-        pinErrorEl.textContent = 'Access Denied: Invalid Security PIN.';
+        pinErrorEl.textContent = currentPin.length === 6
+          ? 'Access Denied: Invalid 6-digit Authenticator code.'
+          : 'Access Denied: Invalid Security Code or PIN.';
       }
       currentPin = '';
       updatePinDisplay();

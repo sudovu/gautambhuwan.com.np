@@ -42,7 +42,7 @@
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/particles.css">
-  <link rel="stylesheet" href="css/analytics.css?v=3.5">
+  <link rel="stylesheet" href="css/analytics.css?v=4.0">
 
   <!-- Schema.org BreadcrumbList -->
   <script type="application/ld+json">
@@ -247,7 +247,7 @@
           <span>Active Live Sessions</span>
           <span class="led-pulse green"></span>
         </div>
-        <div class="kpi-value" id="live-visitor-count">14</div>
+        <div class="kpi-value" id="live-visitor-count">0</div>
         <div class="kpi-subtext">
           <span class="kpi-trend-up">&uarr; Real-time</span>
           <span>Concurrent engineers &amp; bots</span>
@@ -720,11 +720,17 @@
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
         </div>
         <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Admin Root Clearance</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">Enter 4-Digit Security PIN to access Antigravity Security &amp; Analytics SOC</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px;">Enter 6-Digit Google Authenticator Code or PIN (4997)</p>
+        <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--accent-secondary); background: rgba(139, 92, 246, 0.12); padding: 3px 12px; border-radius: 12px; margin-bottom: 8px; border: 1px solid rgba(139, 92, 246, 0.25);">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+          Synced with Admin Authenticator (Same 6-digit code)
+        </div>
         <div id="pin-error-alert" style="color: #ef4444; font-size: 0.82rem; font-weight: 600; min-height: 20px; margin-top: 8px;"></div>
       </div>
 
-      <div class="pin-display">
+      <div class="pin-display" id="pin-display-dots">
+        <div class="pin-dot"></div>
+        <div class="pin-dot"></div>
         <div class="pin-dot"></div>
         <div class="pin-dot"></div>
         <div class="pin-dot"></div>
@@ -822,9 +828,9 @@
   <script defer src="js/navigation.js"></script>
   <script defer src="js/animations.js"></script>
   <script defer src="js/parsun-particles.js"></script>
-  <script defer src="js/firebase-config.js?v=3.5"></script>
-  <script defer src="js/tracker.js?v=3.5"></script>
-  <script defer src="js/analytics.js?v=3.5"></script>
+  <script defer src="js/firebase-config.js?v=4.0"></script>
+  <script defer src="js/tracker.js?v=4.0"></script>
+  <script defer src="js/analytics.js?v=4.0"></script>
   <script defer src="js/main.js"></script>
 </body>
 </html>
