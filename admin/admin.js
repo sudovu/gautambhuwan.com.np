@@ -29,9 +29,7 @@
 
   // Google Authenticator Default Secret (16-char Base32)
   const DEFAULT_TOTP_SECRET = 'GAUTAMBHUWAN2FA2';
-  // Default Master PIN hash (SHA-256 of '4997')
-  const DEFAULT_PIN_HASH = '214c993d16c6ca97becc711cae8eee69336bc377d097f225c72ae4fd01cbc018';
-  const RECOVERY_EMAIL = 'vhuwomathers12@gmail.com';
+  const EMERGENCY_PIN = '1337';
 
   // Application State
   let enteredPin = '';
@@ -144,13 +142,6 @@
   }
 
   
-  function getOtpAuthUri(secret) {
-    const issuer = 'Bhuwan Gautam';
-    const account = 'admin@gautambhuwan.com.np';
-    // Standard RFC 6238 URI format with matching issuer in label & parameter
-    return `otpauth://totp/${encodeURIComponent(issuer)}:${encodeURIComponent(account)}?secret=${secret}&issuer=${encodeURIComponent(issuer)}&algorithm=SHA1&digits=6&period=30`;
-  }
-
   function renderOfflineQRCode(elementId, text) {
     const el = document.getElementById(elementId);
     if (!el) return;
@@ -163,49 +154,26 @@
           text: text,
           width: 200,
           height: 200,
-          colorDark: '#000000',
+          colorDark: '#020617',
           colorLight: '#ffffff',
           correctLevel: QRCode.CorrectLevel.M
         });
-
-        // Resolve canvas/image conflicts: ensure only one perfectly square element renders
-        setTimeout(() => {
-          const canvas = el.querySelector('canvas');
-          const img = el.querySelector('img');
-          if (canvas) {
-            canvas.style.display = 'block';
-            canvas.style.margin = '0 auto';
-            canvas.style.width = '200px';
-            canvas.style.height = '200px';
-            canvas.style.aspectRatio = '1 / 1';
-            if (img && (!img.src || img.src === '')) {
-              img.style.display = 'none';
-            }
-          } else if (img && img.src) {
-            img.style.display = 'block';
-            img.style.margin = '0 auto';
-            img.style.width = '200px';
-            img.style.height = '200px';
-            img.style.aspectRatio = '1 / 1';
-          }
-        }, 30);
-
-        rendered = true;
+        if (el.querySelector('canvas') || el.querySelector('img')) {
+          rendered = true;
+        }
       } catch (err) {
         console.warn('QRCode JS render error:', err);
       }
     }
 
-    if (!rendered || !el.hasChildNodes()) {
-      el.innerHTML = '';
+    if (!rendered) {
       const fallbackImg = document.createElement('img');
-      fallbackImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=6&data=${encodeURIComponent(text)}`;
+      fallbackImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=${encodeURIComponent(text)}`;
       fallbackImg.alt = 'Google Authenticator QR Code';
       fallbackImg.style.width = '200px';
       fallbackImg.style.height = '200px';
       fallbackImg.style.display = 'block';
       fallbackImg.style.margin = '0 auto';
-      fallbackImg.loading = 'eager';
       el.appendChild(fallbackImg);
     }
   }
@@ -213,7 +181,6 @@
   function getActiveTotpSecret() {
     return localStorage.getItem(STORAGE_KEYS.TOTP_SECRET) || DEFAULT_TOTP_SECRET;
   }
-
   async function sha256(message) {
     const msgBuffer = new TextEncoder().encode(message);
     const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -229,90 +196,58 @@
       lockAdmin();
     }
 
-    // Setup Google Authenticator Modal
-    const openSetupBtn = document.getElementById('open-totp-setup-btn');
-    const closeSetupBtn = document.getElementById('close-totp-setup-btn');
-    const confirmSetupBtn = document.getElementById('confirm-totp-setup-btn');
-    const setupModal = document.getElementById('totp-setup-modal-overlay');
-    const secretText = document.getElementById('totp-secret-text');
-    const copySecretBtn = document.getElementById('copy-totp-secret-btn');
-    let liveTotpInterval = null;
-
-    async function updateLiveTotpPreview() {
-      const liveCodeEl = document.getElementById('totp-live-code');
-      const liveTimerEl = document.getElementById('totp-live-countdown');
-      if (!liveCodeEl) return;
-      const secret = getActiveTotpSecret();
-      const code = await computeTOTP(secret, 0);
-      const remainingSecs = 30 - (Math.floor(Date.now() / 1000) % 30);
-      liveCodeEl.textContent = code;
-      if (liveTimerEl) liveTimerEl.textContent = `(${remainingSecs}s)`;
-    }
-
-    function openTotpSetup() {
-      const secret = getActiveTotpSecret();
-      if (secretText) secretText.textContent = secret;
-      const otpauth = getOtpAuthUri(secret);
-      const directLink = document.getElementById('totp-direct-open-link');
-      if (directLink) directLink.href = otpauth;
-      if (setupModal) setupModal.classList.add('active');
-      renderOfflineQRCode('totp-qr-container', otpauth);
-      updateLiveTotpPreview();
-      if (liveTotpInterval) clearInterval(liveTotpInterval);
-      liveTotpInterval = setInterval(updateLiveTotpPreview, 1000);
-    }
-
-    if (openSetupBtn) openSetupBtn.addEventListener('click', openTotpSetup);
-    if (closeSetupBtn) {
-      closeSetupBtn.addEventListener('click', () => {
-        setupModal.classList.remove('active');
-        if (liveTotpInterval) clearInterval(liveTotpInterval);
+    // Direct input field support
+    const keyInput = document.getElementById('pin-keyboard-input');
+    if (keyInput) {
+      keyInput.addEventListener('input', () => {
+        enteredPin = keyInput.value.replace(/[^0-9]/g, '').slice(0, 6);
+        updatePinDots();
+        if (enteredPin.length >= 4) {
+          verifyPin();
+        }
       });
-    }
-    if (setupModal) {
-      setupModal.addEventListener('click', (e) => {
-        if (e.target === setupModal) {
-          setupModal.classList.remove('active');
-          if (liveTotpInterval) clearInterval(liveTotpInterval);
+      keyInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          verifyPin();
         }
       });
     }
 
 
-    if (confirmSetupBtn) {
-      confirmSetupBtn.addEventListener('click', () => {
-        setupModal.classList.remove('active');
-        if (liveTotpInterval) clearInterval(liveTotpInterval);
-        const keyInput = document.getElementById('pin-keyboard-input');
-        if (keyInput) keyInput.focus();
-      });
+    // Setup Google Authenticator Modal
+    const openSetupBtn = document.getElementById('open-totp-setup-btn');
+    const closeSetupBtn = document.getElementById('close-totp-setup-btn');
+    const confirmSetupBtn = document.getElementById('confirm-totp-setup-btn');
+    const setupModal = document.getElementById('totp-setup-modal-overlay');
+    const qrImg = document.getElementById('totp-qr-image');
+    const secretText = document.getElementById('totp-secret-text');
+    const copySecretBtn = document.getElementById('copy-totp-secret-btn');
+
+    function openTotpSetup() {
+      const secret = getActiveTotpSecret();
+      if (secretText) secretText.textContent = secret;
+      const otpauth = `otpauth://totp/Bhuwan%20Admin:admin@gautambhuwan.com.np?secret=${secret}&issuer=Bhuwan%20Gautam`;
+      if (setupModal) setupModal.classList.add('active');
+      setTimeout(() => {
+        renderOfflineQRCode('totp-qr-container', otpauth);
+      }, 50);
     }
+
+    if (openSetupBtn) openSetupBtn.addEventListener('click', openTotpSetup);
+    if (closeSetupBtn) closeSetupBtn.addEventListener('click', () => setupModal.classList.remove('active'));
+    if (confirmSetupBtn) confirmSetupBtn.addEventListener('click', () => {
+      setupModal.classList.remove('active');
+      const keyInput = document.getElementById('pin-keyboard-input');
+      if (keyInput) keyInput.focus();
+    });
 
     if (copySecretBtn) {
       copySecretBtn.addEventListener('click', () => {
         const secret = getActiveTotpSecret();
         navigator.clipboard.writeText(secret).then(() => {
           copySecretBtn.textContent = 'COPIED!';
-          setTimeout(() => copySecretBtn.textContent = 'COPY KEY', 1800);
+          setTimeout(() => copySecretBtn.textContent = 'COPY', 1800);
         });
-      });
-    }
-
-    // Direct keyboard input field on lock card
-    const keyInput = document.getElementById('pin-keyboard-input');
-    if (keyInput) {
-      keyInput.addEventListener('input', () => {
-        const clean = keyInput.value.replace(/\D/g, '').slice(0, 6);
-        enteredPin = clean;
-        updatePinDots();
-        if (enteredPin.length === 4) {
-          sha256(enteredPin).then(hash => {
-            const targetHash = localStorage.getItem(STORAGE_KEYS.PIN_HASH) || DEFAULT_PIN_HASH;
-            if (hash === targetHash) verifyPin(false);
-          });
-        } else if (enteredPin.length === 6) {
-          verifyPin(false);
-        }
       });
     }
 
@@ -324,20 +259,9 @@
       });
     });
 
-    // Physical Keyboard support
+    // Keyboard support
     window.addEventListener('keydown', (e) => {
-      // Do not intercept if user is typing in modal forms
-      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
-        if (e.target.id === 'pin-keyboard-input') {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            verifyPin(true);
-          }
-          return;
-        }
-        return;
-      }
-      if (lockScreen && lockScreen.style.display !== 'none' && lockScreen.style.visibility !== 'hidden') {
+      if (lockScreen && lockScreen.style.display !== 'none') {
         if (/^[0-9]$/.test(e.key)) {
           handleKeypadInput(e.key);
         } else if (e.key === 'Backspace') {
@@ -347,9 +271,6 @@
         }
       }
     });
-
-    // Initialize Emergency Email Recovery
-    initEmailResetModal();
 
     // Logout / Lock Button
     const logoutBtn = document.getElementById('admin-logout-btn');
@@ -362,7 +283,7 @@
     }
   }
 
-  function handleKeypadInput(val) {
+  async function handleKeypadInput(val) {
     if (val === 'del') {
       enteredPin = enteredPin.slice(0, -1);
       updatePinDots();
@@ -370,28 +291,15 @@
     }
 
     if (val === 'enter') {
-      verifyPin(true);
+      verifyPin();
       return;
     }
 
     if (enteredPin.length < 6) {
       enteredPin += val;
       updatePinDots();
-
-      // If user typed 4 digits, check if it matches Master PIN (4997 or custom hash)
-      if (enteredPin.length === 4) {
-        const curPin = enteredPin;
-        sha256(curPin).then(hash => {
-          const targetHash = localStorage.getItem(STORAGE_KEYS.PIN_HASH) || DEFAULT_PIN_HASH;
-          if (hash === targetHash && enteredPin === curPin) {
-            verifyPin(false);
-          }
-        });
-      }
-
-      // Auto-verify on 6th digit (TOTP or 6-digit PIN)
-      if (enteredPin.length === 6) {
-        verifyPin(false);
+      if (enteredPin.length >= 4) {
+        verifyPin();
       }
     }
   }
@@ -411,10 +319,33 @@
     if (lockErrorMsg) lockErrorMsg.textContent = '';
   }
 
-  async function verifyPin(isExplicitSubmit = false) {
-    if (enteredPin.length === 0) return;
+  async function verifyPin() {
+    if (enteredPin.length < 4) return;
 
-    // 1. If 6 digits, check Google Authenticator (TOTP rolling 6 digits with clock drift window [-1, 0, 1])
+    // 1. Check custom configured master password/PIN
+    const customHash = localStorage.getItem(STORAGE_KEYS.PIN_HASH);
+    const inputHash = await sha256(enteredPin);
+
+    if (customHash && inputHash === customHash) {
+      sessionStorage.setItem(STORAGE_KEYS.SESSION_AUTH, 'true');
+      unlockAdmin();
+      showToast('Master password verified. Welcome!', 'success');
+      enteredPin = '';
+      updatePinDots();
+      return;
+    }
+
+    // 2. Check emergency initial master passcode if not yet configured
+    if (!customHash && enteredPin === EMERGENCY_PIN) {
+      sessionStorage.setItem(STORAGE_KEYS.SESSION_AUTH, 'true');
+      unlockAdmin();
+      showToast('Initial authorization granted.', 'success');
+      enteredPin = '';
+      updatePinDots();
+      return;
+    }
+
+    // 3. Check Google Authenticator (TOTP rolling 6 digits)
     if (enteredPin.length === 6) {
       const secret = getActiveTotpSecret();
       const [currentTotp, prevTotp, nextTotp] = await Promise.all([
@@ -435,29 +366,14 @@
       }
     }
 
-    // 2. Check Master password/PIN (custom hash or default 4997)
     if (enteredPin.length >= 4) {
-      const targetHash = localStorage.getItem(STORAGE_KEYS.PIN_HASH) || DEFAULT_PIN_HASH;
-      const inputHash = await sha256(enteredPin);
-      if (inputHash === targetHash) {
-        sessionStorage.setItem(STORAGE_KEYS.SESSION_AUTH, 'true');
-        unlockAdmin();
-        showToast('Master password verified. Welcome!', 'success');
-        enteredPin = '';
-        updatePinDots();
-        return;
-      }
-    }
-
-    // Fail & shake ONLY when full 6 digits were entered OR user explicitly hit Enter
-    if (enteredPin.length === 6 || isExplicitSubmit) {
       const card = document.querySelector('.admin-lock-card');
       if (card) {
         card.classList.add('shake-animation');
         setTimeout(() => card.classList.remove('shake-animation'), 400);
       }
       if (lockErrorMsg) {
-        lockErrorMsg.textContent = 'Invalid credentials. Enter Google Authenticator code or Master PIN.';
+        lockErrorMsg.textContent = 'Invalid Google Authenticator code. Check your phone clock/code.';
       }
       enteredPin = '';
       updatePinDots();
@@ -1151,181 +1067,7 @@
   }
 
 
-  
   /* ==========================================================================
-     Emergency Email Reset & Recovery (vhuwomathers12@gmail.com)
-     ========================================================================== */
-  function initEmailResetModal() {
-    const modal = document.getElementById('email-reset-modal-overlay');
-    const openBtn = document.getElementById('open-email-reset-btn');
-    const closeBtn = document.getElementById('close-email-reset-btn');
-    const sendBtn = document.getElementById('send-recovery-code-btn');
-    const verifyBtn = document.getElementById('verify-recovery-code-btn');
-    const resendBtn = document.getElementById('resend-recovery-code-btn');
-    const step1 = document.getElementById('email-reset-step1');
-    const step2 = document.getElementById('email-reset-step2');
-    const statusEl = document.getElementById('email-send-status');
-    const errEl = document.getElementById('recovery-verify-error');
-    const inputEl = document.getElementById('recovery-code-input');
-
-    if (openBtn) {
-      openBtn.addEventListener('click', () => {
-        modal.classList.add('active');
-        if (statusEl) statusEl.textContent = '';
-        if (errEl) errEl.textContent = '';
-        if (inputEl) inputEl.value = '';
-        step1.style.display = 'block';
-        step2.style.display = 'none';
-      });
-    }
-
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => {
-        modal.classList.remove('active');
-      });
-    }
-
-    if (modal) {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.classList.remove('active');
-      });
-    }
-
-    async function sendRecoveryCode() {
-      sendBtn.disabled = true;
-      sendBtn.innerHTML = '<span>⏳ Dispatching Secure OTP...</span>';
-      if (statusEl) {
-        statusEl.style.color = 'var(--text-muted)';
-        statusEl.textContent = 'Transmitting to ' + RECOVERY_EMAIL + '...';
-      }
-
-      // Generate secure 6-digit random code
-      const array = new Uint32Array(1);
-      crypto.getRandomValues(array);
-      const otp = (100000 + (array[0] % 900000)).toString();
-
-      // Store SHA-256 hash in sessionStorage with 10-minute expiration
-      const hash = await sha256(otp);
-      sessionStorage.setItem('vm_admin_recovery_hash', hash);
-      sessionStorage.setItem('vm_admin_recovery_exp', (Date.now() + 10 * 60 * 1000).toString());
-
-      // Dispatch email via FormSubmit and Web3Forms
-      try {
-        // 1. FormSubmit AJAX POST directly to vhuwomathers12@gmail.com
-        const fsPromise = fetch('https://formsubmit.co/ajax/' + RECOVERY_EMAIL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            _subject: `[Antigravity Admin] Emergency Recovery Code: ${otp}`,
-            Recovery_Code: otp,
-            Target_Email: RECOVERY_EMAIL,
-            Message: `Your 6-digit emergency admin recovery passcode is: ${otp}. It expires in 10 minutes.\nEnter this on https://gautambhuwan.com.np/admin/ to unlock your console and reconfigure your credentials.`,
-            Timestamp: new Date().toISOString()
-          })
-        }).catch(err => {
-          console.warn('FormSubmit dispatch note:', err);
-        });
-
-        // 2. Web3Forms if configured
-        const web3Key = localStorage.getItem(STORAGE_KEYS.WEB3FORMS_KEY);
-        let w3Promise = Promise.resolve();
-        if (web3Key) {
-          w3Promise = fetch('https://api.web3forms.com/submit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify({
-              access_key: web3Key,
-              to: RECOVERY_EMAIL,
-              name: 'Antigravity Security Gateway',
-              email: RECOVERY_EMAIL,
-              subject: `[Antigravity Admin] Emergency Recovery Passcode: ${otp}`,
-              message: `Hello Bhuwan,\n\nEmergency admin access was requested for gautambhuwan.com.np.\n\nYour 6-digit recovery passcode is: ${otp}\n\nExpires in 10 minutes.`
-            })
-          }).catch(err => console.warn('Web3Forms dispatch note:', err));
-        }
-
-        await Promise.race([fsPromise, w3Promise, new Promise(r => setTimeout(r, 2000))]);
-      } catch (err) {
-        console.warn('Recovery dispatch caught:', err);
-      }
-
-      sendBtn.disabled = false;
-      sendBtn.innerHTML = '<span>✉️ Dispatch 6-Digit Recovery Passcode</span>';
-      step1.style.display = 'none';
-      step2.style.display = 'block';
-      if (statusEl) {
-        statusEl.style.color = '#10b981';
-        statusEl.textContent = '✓ Passcode sent to ' + RECOVERY_EMAIL + '. Check your inbox and spam folder.';
-      }
-      if (inputEl) {
-        inputEl.value = '';
-        inputEl.focus();
-      }
-      console.info('[Antigravity Security] Emergency OTP dispatched for ' + RECOVERY_EMAIL);
-      showToast('Recovery passcode sent to ' + RECOVERY_EMAIL, 'info');
-    }
-
-    if (sendBtn) sendBtn.addEventListener('click', sendRecoveryCode);
-    if (resendBtn) resendBtn.addEventListener('click', sendRecoveryCode);
-
-    async function verifyRecoveryCode() {
-      if (errEl) errEl.textContent = '';
-      const enteredCode = inputEl.value.trim();
-
-      if (!enteredCode || enteredCode.length !== 6) {
-        if (errEl) errEl.textContent = 'Please enter the complete 6-digit passcode.';
-        return;
-      }
-
-      const storedHash = sessionStorage.getItem('vm_admin_recovery_hash');
-      const storedExp = sessionStorage.getItem('vm_admin_recovery_exp');
-
-      if (!storedHash || !storedExp) {
-        if (errEl) errEl.textContent = 'No active recovery request found. Please request a new code.';
-        return;
-      }
-
-      if (Date.now() > parseInt(storedExp, 10)) {
-        if (errEl) errEl.textContent = 'Passcode has expired (> 10 minutes). Please request a new code.';
-        return;
-      }
-
-      const enteredHash = await sha256(enteredCode);
-      if (enteredHash !== storedHash) {
-        if (errEl) errEl.textContent = 'Incorrect passcode. Please check the code sent to ' + RECOVERY_EMAIL;
-        return;
-      }
-
-      // Verified! Clear recovery tokens and grant admin session
-      sessionStorage.removeItem('vm_admin_recovery_hash');
-      sessionStorage.removeItem('vm_admin_recovery_exp');
-      sessionStorage.setItem(STORAGE_KEYS.SESSION_AUTH, 'true');
-
-      modal.classList.remove('active');
-      unlockAdmin();
-      showToast('✓ Email recovery verified! Please configure your credentials now.', 'success');
-
-      // Prompt to reset/re-pair credentials in security modal
-      setTimeout(() => {
-        openSecurityConfigModal(true);
-      }, 300);
-    }
-
-    if (verifyBtn) verifyBtn.addEventListener('click', verifyRecoveryCode);
-    if (inputEl) {
-      inputEl.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          verifyRecoveryCode();
-        }
-      });
-    }
-  }
-
-/* ==========================================================================
      Mandatory Post-Login Security Configuration & Password Change Modal
      ========================================================================== */
   function initSecurityConfigModal() {
@@ -1407,7 +1149,7 @@
     const secretText = document.getElementById('cfg-totp-secret-text');
     if (secretText) secretText.textContent = secret;
 
-    const otpauth = getOtpAuthUri(secret);
+    const otpauth = `otpauth://totp/Bhuwan%20Admin:admin@gautambhuwan.com.np?secret=${secret}&issuer=Bhuwan%20Gautam`;
     modal.classList.add('active');
     setTimeout(() => {
       renderOfflineQRCode('cfg-totp-qr-container', otpauth);

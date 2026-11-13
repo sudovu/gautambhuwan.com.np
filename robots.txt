@@ -1,39 +1,17 @@
-# ==============================================================================
-# Robots.txt — Bhuwan Gautam (Vhuwon Mathers) | gautambhuwan.com.np
-# Architecture: High-Performance Search Crawler Directives & Asset Indexing
-# ==============================================================================
-
 User-agent: *
 Allow: /
-Allow: /css/
-Allow: /js/
-Allow: /assets/
 Disallow: /private/
 Disallow: /downloads/tmp/
-Disallow: /admin/
-Disallow: /admin.html
-Disallow: /mail.html
-Disallow: /gama.html
-Disallow: /gamma.html
 
 # Major Search Engine Sitemaps
 Sitemap: https://gautambhuwan.com.np/sitemap.xml
 
-# Explicit Crawler Allowances
+# Search Crawlers Directives
 User-agent: Googlebot
 Allow: /
-Allow: /css/
-Allow: /js/
-Allow: /assets/
-
-User-agent: Googlebot-Image
-Allow: /assets/images/
 
 User-agent: Bingbot
 Allow: /
-Allow: /css/
-Allow: /js/
-Allow: /assets/
 
 User-agent: Applebot
 Allow: /
