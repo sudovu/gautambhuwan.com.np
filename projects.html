@@ -209,6 +209,9 @@
           <button type="button" class="architect-preset-chip" data-preset="fortigate_firewall">Fortinet FortiGate &amp; CGNAT HA</button>
           <button type="button" class="architect-preset-chip" data-preset="enterprise_sdwan">Enterprise SD-WAN (Corporate / Municipal / Schools)</button>
           <button type="button" class="architect-preset-chip" data-preset="campus_isolation">Campus &amp; Municipal LAN Isolation (VRF-Lite &amp; PVLAN)</button>
+          <button type="button" class="architect-preset-chip" data-preset="huawei_mpls_vpls">Huawei Core (IS-IS, OSPF &amp; VPLS)</button>
+          <button type="button" class="architect-preset-chip" data-preset="huawei_olt_ma5608t">Huawei MA5608T OLT (Basic to FTTH)</button>
+          <button type="button" class="architect-preset-chip" data-preset="huawei_olt_ma5800">Huawei MA5800-X7 OLT (XGS-PON &amp; QinQ)</button>
         </div>
 
         <!-- Main 2-Column Grid: Configurator vs Live Blueprint & Code -->
@@ -251,6 +254,11 @@
                   <span class="platform-btn-icon">🐍</span>
                   <span class="platform-btn-name">Python</span>
                   <span class="platform-btn-sub">Netmiko Auto</span>
+                </button>
+                <button type="button" class="platform-btn" data-platform="huawei">
+                  <span class="platform-btn-icon">🌐</span>
+                  <span class="platform-btn-name">Huawei VRP</span>
+                  <span class="platform-btn-sub">Switch &amp; OLT</span>
                 </button>
               </div>
             </div>
@@ -1304,6 +1312,61 @@
           </div>
           <div style="display: flex; gap: 10px;">
             <a href="labs.html#lab-013" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
+            <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
+          </div>
+        </article>
+
+
+        <!-- Project 16: Huawei VRP Enterprise & Metro Backbone -->
+        <article class="card card-interactive project-card" id="project-huawei-backbone" data-category="networking">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <span class="tag" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">HUAWEI CARRIER CORE</span>
+            <span class="mono-label" style="color: var(--accent-secondary);">2026</span>
+          </div>
+          <h3 style="margin-bottom: 10px;">Huawei VRP Enterprise &amp; Metro Backbone: IS-IS, OSPF, MPLS LDP &amp; VPLS</h3>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
+            Architected and configured a carrier-grade metropolitan and enterprise switching core across Huawei CloudEngine S6730 and CE6800 switches running VRP v8. Deployed IS-IS Level-2 with wide metric alongside multi-area OSPF, engineered MPLS LDP label distribution across core P/PE nodes, implemented multi-tenant Layer 2 Virtual Private LAN Service (VPLS) with LDP-signaled pseudo-wires and split-horizon loop prevention, bound 802.1Q attachment circuits to Virtual Switching Instances (VSIs), and configured sub-50ms BFD fast convergence with DiffServ QoS traffic scheduling.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
+            <span class="skill-tag">Huawei VRP v8</span>
+            <span class="skill-tag">CloudEngine S6730</span>
+            <span class="skill-tag">IS-IS Level-2</span>
+            <span class="skill-tag">OSPF Multi-Area</span>
+            <span class="skill-tag">MPLS LDP</span>
+            <span class="skill-tag">VPLS (Martini VSI)</span>
+            <span class="skill-tag">Eth-Trunk LACP</span>
+            <span class="skill-tag">BFD Reroute</span>
+            <span class="skill-tag">DiffServ QoS</span>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <a href="labs.html#lab-014" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
+            <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
+          </div>
+        </article>
+
+        <!-- Project 17: Huawei Multi-Model OLT Infrastructure -->
+        <article class="card card-interactive project-card" id="project-huawei-olt" data-category="networking">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <span class="tag" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-secondary); border-color: rgba(6, 182, 212, 0.3);">CARRIER FTTH &amp; OLT</span>
+            <span class="mono-label" style="color: var(--accent-secondary);">2026</span>
+          </div>
+          <h3 style="margin-bottom: 10px;">Huawei Multi-Model OLT Infrastructure &amp; Carrier FTTH Architecture</h3>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
+            Engineered, deployed, and automated optical line terminal infrastructure across Huawei SmartAX MA5608T (2U mini), MA5800-X7 (6U distributed NG-OLT), and MA5800-X15 (11U central office core) platforms. Implemented from-scratch commissioning: board confirmation (`board confirm 0`), 10GE LACP uplink aggregation, SSHv2/AAA access hardening, Type 1–5 Dynamic Bandwidth Allocation (DBA) profiles, GEM-port to T-CONT mapping, 802.1ad QinQ multi-service VLAN translation (Internet, VoIP SIP, and IPTV), automated serial-number ONT provisioning, and optical budget diagnostics (-8 to -27 dBm) with rogue ONT continuous-mode laser quarantine.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
+            <span class="skill-tag">Huawei MA5608T</span>
+            <span class="skill-tag">Huawei MA5800-X7</span>
+            <span class="skill-tag">Huawei MA5800-X15</span>
+            <span class="skill-tag">GPON / XGS-PON</span>
+            <span class="skill-tag">DBA Profiles (Type 1-5)</span>
+            <span class="skill-tag">T-CONT / GEM</span>
+            <span class="skill-tag">QinQ (802.1ad)</span>
+            <span class="skill-tag">OMCI Auto-Provisioning</span>
+            <span class="skill-tag">Rogue Laser Quarantine</span>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <a href="labs.html#lab-015" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
             <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
           </div>
         </article>

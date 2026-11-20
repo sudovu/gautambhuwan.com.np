@@ -199,6 +199,9 @@
           <button type="button" class="sandbox-chip" data-cmd="show standby brief">show standby brief</button>
           <button type="button" class="sandbox-chip" data-cmd="show ip bgp summary">show ip bgp summary</button>
           <button type="button" class="sandbox-chip" data-cmd="show ip ospf neighbor">show ip ospf neighbor</button>
+          <button type="button" class="sandbox-chip" data-cmd="display isis peer">display isis peer</button>
+          <button type="button" class="sandbox-chip" data-cmd="display vsi verbose">display vsi verbose</button>
+          <button type="button" class="sandbox-chip" data-cmd="display ont optical-info 0/1 0 1">display ont optical-info</button>
           <button type="button" class="sandbox-chip" data-cmd="/ip route print">/ip route print</button>
           <button type="button" class="sandbox-chip" data-cmd="subnet 172.16.0.0/23">subnet 172.16.0.0/23</button>
           <button type="button" class="sandbox-chip" data-cmd="ping 10.255.255.2">ping 10.255.255.2</button>
@@ -1257,6 +1260,641 @@ interface Vlan200
           <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.78rem;">CASE STUDY REFERENCE // REAL-WORLD CAMPUS REDESIGN</span>
           <a href="projects.html#network-transformation" class="btn btn-outline btn-sm">
             <span>Explore Before &amp; After Transformation Case Study &rarr;</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- LAB // 014: Huawei Carrier & Metro Core: IS-IS, OSPF Multi-Area, MPLS LDP & Multi-Tenant VPLS (VRP) -->
+      <article id="lab-014" class="card reveal" style="margin-bottom: 48px; border-left: 4px solid #ef4444;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="mono-label" style="color: #ef4444; font-weight: 700;">LAB // 014</span>
+            <span class="tag" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">HUAWEI CARRIER BACKBONE</span>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <span class="tag">Huawei VRP v8</span>
+            <span class="tag">CloudEngine / S-Series</span>
+            <span class="tag">IS-IS Level-2</span>
+            <span class="tag">MPLS LDP</span>
+            <span class="tag">VPLS (Martini VSI)</span>
+            <span class="tag">OSPF Multi-Area</span>
+            <span class="tag">Eth-Trunk LACP</span>
+            <span class="tag">BFD Fast Reroute</span>
+          </div>
+        </div>
+
+        <h2 style="font-size: 1.6rem; margin-top: 4px; margin-bottom: 12px;">Huawei Enterprise &amp; Metro Core: IS-IS, OSPF Multi-Area, MPLS LDP &amp; Multi-Tenant VPLS (VRP)</h2>
+        <p class="body-sm" style="color: var(--text-secondary); margin-bottom: 24px; line-height: 1.7;">
+          <strong>Objective:</strong> Architect a high-resiliency multi-site enterprise and carrier metro core across Huawei CloudEngine (CE6800/CE12800) and Campus S-Series (S6730/S7700) switches running Huawei Versatile Routing Platform (VRP v8). Configure IS-IS Level-2 with wide metric alongside OSPF Area 0 / Area 1 for dual-IGP convergence, establish MPLS LDP Label Switched Paths (LSPs) across all P/PE nodes, deploy Layer 2 Virtual Private LAN Service (VPLS) with LDP-signaled pseudo-wires (PWs) and split-horizon loop protection, bind customer 802.1Q attachment circuits (ACs) to Virtual Switching Instances (VSIs), enforce BFD for sub-50ms link-down failover, and configure strict MAC learning limits and storm suppression.
+        </p>
+
+        <!-- Topology Blueprint -->
+        <div class="code-block-header">
+          <span class="mono-label">TOPOLOGY BLUEPRINT // HUAWEI IS-IS / OSPF / MPLS-LDP / VPLS VSI BACKBONE</span>
+        </div>
+        <pre class="code-terminal" style="margin-bottom: 24px;"><code>+-------------------------------------------------------------------------------------------------------------------+
+|                               HUAWEI VRP CARRIER METRO &amp; ENTERPRISE MPLS/VPLS BACKBONE                             |
++-------------------------------------------------------------------------------------------------------------------+
+                                                                                                                     
+  [Customer Branch A]                                                                         [Customer Branch B]   
+     (VLAN 100/200)                                                                              (VLAN 100/200)      
+           |                                                                                           |             
+     10GE1/0/1 (Dot1q)                                                                           10GE1/0/1 (Dot1q)   
+           v                                                                                           v             
++-----------------------+     10GE Eth-Trunk 1 (LACP)     +--------------------+     10GE Eth-Trunk 2 (LACP)     +-----------------------+
+|      HW-PE01-CORE     |=================================|     HW-P01-CORE    |=================================|      HW-PE02-CORE     |
+|  CloudEngine S6730    |       10.10.12.0/30 (Vlanif991) |  CloudEngine S6730 |       10.10.23.0/30 (Vlanif992) |  CloudEngine S6730    |
+| Loopback0: 10.255.255.1|                                 |Loopback0: 10.255.255.10|                                 |Loopback0: 10.255.255.2|
+| LSR-ID:    10.255.255.1|                                 |LSR-ID:    10.255.255.10|                                 |LSR-ID:    10.255.255.2|
+| IS-IS Net: 49.0001..01|                                 |IS-IS Net: 49.0001..10|                                 |IS-IS Net: 49.0001..02|
++-----------------------+                                 +--------------------+                                 +-----------------------+
+           |                                                         ^                                                         |     
+           |                                                         |                                                         |     
+           +============================ VPLS Martini Pseudo-Wire (PW) VSI-ID: 100 ====================================+     
+           |                               LDP-Signaled PW Tunnel / Label Switching                                            |     
+           v                                                                                                                   v     
+   [VSI: BIZ_CORP_VPLS]                                                                                        [VSI: BIZ_CORP_VPLS]  
+   - AC: 10GE1/0/1.100                                                                                         - AC: 10GE1/0/1.100   
+   - Split-Horizon Enabled                                                                                     - Split-Horizon Enabled
+   - MAC Limit: 2000 Discard                                                                                   - MAC Limit: 2000 Discard
+   - BFD Echo Session Active                                                                                   - BFD Echo Session Active</code></pre>
+
+        <!-- Configuration Terminal -->
+        <div class="terminal-card" style="margin-bottom: 24px;">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="terminal-dot dot-red"></span>
+              <span class="terminal-dot dot-yellow"></span>
+              <span class="terminal-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">huawei-vrp // HW-PE01-CORE-S6730-MPLS-VPLS.cfg</span>
+            <button class="code-copy-btn" data-target="cfg-huawei-vpls" aria-label="Copy Huawei VRP Configuration">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre class="terminal-body" id="cfg-huawei-vpls"><code>! ====================================================================
+! HUAWEI VRP v8 PRODUCTION CARRIER CORE SWITCH CONFIGURATION
+! Node: HW-PE01-CORE (CloudEngine S6730-H48X6C Aggregation Switch)
+! Protocols: IS-IS Level-2, OSPF Multi-Area, MPLS LDP, VPLS (Martini VSI)
+! High Availability: 10GE LACP Eth-Trunk, BFD Fast-Convergence, DiffServ QoS
+! ====================================================================
+
+sysname HW-PE01-CORE
+#
+vlan batch 10 20 100 200 991
+#
+! --- Bidirectional Forwarding Detection (BFD) Global Enablement ---
+bfd
+#
+! --- Loopback 0: System Management & MPLS LSR-ID ---
+interface Loopback0
+ description SYSTEM_LSR_ROUTER_ID
+ ip address 10.255.255.1 255.255.255.255
+ isis enable 1
+ isis circuit-level level-2
+ ospf 1 area 0.0.0.0
+#
+! --- Uplink Core Aggregation: 10GE Dual-Link LACP Eth-Trunk ---
+interface Eth-Trunk1
+ description BACKBONE_UPLINK_TO_HW_P01_LACP
+ mode lacp-static
+ lacp priority 100
+ port link-type trunk
+ port trunk allow-pass vlan 991
+#
+interface 10GE1/0/23
+ description TRUNK1_MEMBER_LINK1
+ eth-trunk 1
+ lacp priority 100
+#
+interface 10GE1/0/24
+ description TRUNK1_MEMBER_LINK2
+ eth-trunk 1
+ lacp priority 100
+#
+! --- Core Transport SVI: Subnet & MPLS Enablement ---
+interface Vlanif991
+ description BACKBONE_P2P_TRANSIT_TO_P01
+ ip address 10.10.12.1 255.255.255.252
+ ! IS-IS Backbone Routing with Wide Metric & Point-to-Point Circuit
+ isis enable 1
+ isis circuit-type p2p
+ isis circuit-level level-2
+ isis cost 10
+ isis bfd enable
+ ! OSPF Backup IGP & Fast BFD
+ ospf 1 area 0.0.0.0
+ ospf cost 10
+ ospf bfd enable
+ ! MPLS & Label Distribution Protocol
+ mpls
+ mpls ldp
+#
+! --- IS-IS Routing Engine Configuration ---
+isis 1
+ is-level level-2
+ cost-style wide
+ network-entity 49.0001.0000.0000.0001.00
+ bfd all-interfaces enable
+ timer lsp-generation 1 50 50 level-2
+ flash-flood 15
+#
+! --- OSPF Multi-Area IGP Configuration ---
+ospf 1 router-id 10.255.255.1
+ bfd all-interfaces enable
+ area 0.0.0.0
+  network 10.255.255.1 0.0.0.0
+  network 10.10.12.0 0.0.0.3
+  authentication-mode md5 1 cipher Huawei@OspfBackbone2026!
+ area 0.0.0.1
+  network 10.10.10.0 0.0.0.255
+  abr-summary 10.10.0.0 255.255.0.0
+#
+! --- MPLS & LDP Global Configuration ---
+mpls lsr-id 10.255.255.1
+mpls
+ lsp-trigger all
+#
+mpls ldp
+ transport-address interface Loopback0
+#
+! --- Layer 2 VPN (L2VPN) & VPLS Virtual Switching Instance (VSI) ---
+l2vpn enable
+#
+vsi BIZ_VPLS_100 static
+ pwsignal ldp
+  vsi-id 100
+  peer 10.255.255.2
+  peer 10.255.255.3
+ ! Split-Horizon protection prevents loops between pseudo-wires
+ encapsulation ethernet
+ mac-learning enable
+ mac-limit maximum 2000 rate 50 action discard
+ broadcast-suppression 5
+ multicast-suppression 5
+#
+! --- Attachment Circuit (AC): Customer Sub-Interface VSI Binding ---
+interface 10GE1/0/1.100 mode l2
+ description AC_CUSTOMER_ENTERPRISE_HEADQUARTERS_VLAN100
+ encapsulation dot1q vid 100
+ rewrite pop single
+ l2 binding vsi BIZ_VPLS_100
+#
+interface 10GE1/0/1.200 mode l2
+ description AC_CUSTOMER_ENTERPRISE_VOIP_VLAN200
+ encapsulation dot1q vid 200
+ rewrite pop single
+ l2 binding vsi BIZ_VPLS_100
+#
+! --- DiffServ QoS Classifier & Behavior Mapping ---
+traffic classifier TC_EF_VOIP operator or
+ if-match dscp ef
+traffic classifier TC_AF_DATA operator or
+ if-match dscp af31 af32 af33
+#
+traffic behavior TB_EF_VOIP
+ queue ef bandwidth 50000
+traffic behavior TB_AF_DATA
+ queue af bandwidth 200000
+#
+traffic policy TP_CARRIER_EDGE
+ classifier TC_EF_VOIP behavior TB_EF_VOIP
+ classifier TC_AF_DATA behavior TB_AF_DATA
+#
+interface Eth-Trunk1
+ traffic-policy TP_CARRIER_EDGE outbound
+#
+return</code></pre>
+        </div>
+
+        <!-- Verification Output Terminal -->
+        <div class="terminal-card" style="margin-bottom: 24px;">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="terminal-dot dot-red"></span>
+              <span class="terminal-dot dot-yellow"></span>
+              <span class="terminal-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">huawei-vrp-diagnostics // display-isis-mpls-vsi-verification.log</span>
+          </div>
+          <pre class="terminal-body"><code>&lt;HW-PE01-CORE&gt; display isis peer
+
+                          Peer information for ISIS(1)
+                          ----------------------------
+System Id          Interface          Circuit Id        State Holdtime Type     PRI
+-----------------------------------------------------------------------------------
+0000.0000.0010     Eth-Trunk1         p2p               Up    28s      L2       --
+Total Peer(s): 1
+
+&lt;HW-PE01-CORE&gt; display mpls ldp session
+
+                LDP Session(s) in Public Network
+----------------------------------------------------------------------
+Peer LDP ID         Source Interface   State     Role  Hold-Time  KA-Sent
+----------------------------------------------------------------------
+10.255.255.10:0     Loopback0          Operational Active 30         2451
+10.255.255.2:0      Loopback0          Operational Active 30         2449
+----------------------------------------------------------------------
+TOTAL: 2 session(s) Found.
+
+&lt;HW-PE01-CORE&gt; display vsi name BIZ_VPLS_100 verbose
+
+ ***VSI Name               : BIZ_VPLS_100
+    Work Mode              : normal
+    Scope                  : public
+    VSI State              : up
+    VSI ID                 : 100
+    Signaling Protocol     : ldp
+    Encap Type             : ethernet
+    MTU                    : 1500
+    Diffserv Mode          : uniform
+    Mac Learning           : enabled
+    Mac Limit              : 2000
+    Mac Limit Action       : discard
+    Broadcast Suppression  : 5 (cir)
+    Multicast Suppression  : 5 (cir)
+    Total AC Number        : 2
+    Total PW Number        : 1
+   *PW Information:
+    Peer IP                : 10.255.255.2
+    VSI ID                 : 100
+    PW State               : up
+    Inbound Label          : 48120
+    Outbound Label         : 48118
+    Interface Name         : Eth-Trunk1
+    Tunnel ID              : 0x0000000100000002
+
+&lt;HW-PE01-CORE&gt; display vsi remote-mac vsi-name BIZ_VPLS_100
+
+VSI Name: BIZ_VPLS_100
+MAC Address       VLAN    Peer IP         Tunnel ID     Age(s)
+--------------------------------------------------------------
+4857-021b-a101    100     10.255.255.2    0x10000002    18
+4857-021b-a102    200     10.255.255.2    0x10000002    12
+Total MAC addresses: 2</code></pre>
+        </div>
+
+        <div class="grid-2" style="background: var(--surface-elevated); padding: 20px; border-radius: var(--radius-sm); font-size: 0.9rem;">
+          <div>
+            <strong>Problem Diagnosed:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">LDP session flaps between PE nodes due to transport address defaulting to physical interface IPs instead of Loopback0, causing label distribution mismatch and broadcast storms across VPLS pseudo-wires during customer layer 2 topology changes.</p>
+          </div>
+          <div>
+            <strong>Resolution &amp; Takeaway:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Explicitly bound LDP transport-address to Loopback0, enforced IS-IS wide metrics for 32-bit traffic engineering, implemented split-horizon on VSI PWs to prevent multi-hop loopback reflection, and capped MAC address learning at 2,000 entries with drop-on-overflow.</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <span class="mono-label" style="color: #ef4444; font-size: 0.78rem;">PORTFOLIO PROJECT REFERENCE // CARRIER METRO CORE</span>
+          <a href="projects.html#project-huawei-backbone" class="btn btn-outline btn-sm">
+            <span>Inspect Huawei Carrier Backbone Project &rarr;</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- LAB // 015: Huawei Carrier OLT Multi-Model Deployment & FTTH Lifecycle from Basic -->
+      <article id="lab-015" class="card reveal" style="margin-bottom: 48px; border-left: 4px solid var(--accent-secondary);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="mono-label" style="color: var(--accent-secondary); font-weight: 700;">LAB // 015</span>
+            <span class="tag" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-secondary); border-color: rgba(6, 182, 212, 0.3);">CARRIER FTTH OLT LIFECYCLE</span>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <span class="tag">Huawei SmartAX</span>
+            <span class="tag">MA5608T (2U Mini)</span>
+            <span class="tag">MA5800-X7 (6U NG-OLT)</span>
+            <span class="tag">MA5800-X15 (11U Core)</span>
+            <span class="tag">GPON / XGS-PON</span>
+            <span class="tag">DBA Types 1–5</span>
+            <span class="tag">QinQ (802.1ad)</span>
+            <span class="tag">Rogue ONT Quarantine</span>
+          </div>
+        </div>
+
+        <h2 style="font-size: 1.6rem; margin-top: 4px; margin-bottom: 12px;">Huawei Carrier OLT Multi-Model Deployment (MA5608T, MA5800-X7, MA5800-X15) &amp; Full FTTH Lifecycle from Basic</h2>
+        <p class="body-sm" style="color: var(--text-secondary); margin-bottom: 24px; line-height: 1.7;">
+          <strong>Objective:</strong> Commission, configure, and secure carrier-grade Optical Line Terminals across distinct Huawei hardware architectures: the compact 2U centralized bus <strong>MA5608T</strong> (for remote nodes, private enterprise POL, and campus networks), the 6U next-generation distributed architecture <strong>MA5800-X7</strong> (for metro gigabit/XGS-PON aggregation), and the 11U/14U high-density core chassis <strong>MA5800-X15</strong>. Master the complete lifecycle starting from clean out-of-box initialization (board confirmation, in-band and out-of-band management, 10GE LACP uplink aggregation, SSHv2/AAA hardening), through dynamic bandwidth profiling (DBA Types 1 to 5 and CAR traffic tables), GPON/XGS-PON line and service profile definition, ONT auto-discovery and registration, multi-service port tagging (Internet Data, VoIP SIP, IPTV Multicast, and Enterprise QinQ), to optical link budget validation and rogue ONT laser suppression.
+        </p>
+
+        <!-- Hardware Comparison Matrix Table -->
+        <div class="code-block-header">
+          <span class="mono-label">HARDWARE ARCHITECTURE COMPARISON // HUAWEI MA5608T vs MA5800-X7 vs MA5800-X15</span>
+        </div>
+        <div class="card" style="padding: 0; overflow-x: auto; margin-bottom: 24px; border-color: var(--border-accent);">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Specification</th>
+                <th>Huawei SmartAX MA5608T</th>
+                <th>Huawei SmartAX MA5800-X7 (NG-OLT)</th>
+                <th>Huawei SmartAX MA5800-X15 (Carrier Core)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Chassis Form Factor</strong></td>
+                <td>2U Compact Rackmount (442 x 88 x 233 mm)</td>
+                <td>6U Medium Distributed Chassis (442 x 263 x 268 mm)</td>
+                <td>11U Large Distributed Central Office (442 x 486 x 268 mm)</td>
+              </tr>
+              <tr>
+                <td><strong>Switching Architecture</strong></td>
+                <td>Centralized Bus Architecture (200 Gbps backplane)</td>
+                <td>Distributed Architecture (1.4 Tbps backplane / 200G slot)</td>
+                <td>Distributed Core Architecture (3.6 Tbps to 7 Tbps backplane)</td>
+              </tr>
+              <tr>
+                <td><strong>Service Slots</strong></td>
+                <td>2 Service Slots (Slots 1, 2)</td>
+                <td>7 Service Slots (Slots 1 – 7)</td>
+                <td>15 Service Slots (Slots 1 – 15)</td>
+              </tr>
+              <tr>
+                <td><strong>Control &amp; Uplink Boards</strong></td>
+                <td>Dual MCUD / MCUD1 (GE/10GE Uplinks Integrated)</td>
+                <td>Dual H901MPLA / H901MPLB (Integrated 4x10GE/GE Uplinks)</td>
+                <td>Dual H901MPLB / H901MPLA (High-Density Uplink Bundling)</td>
+              </tr>
+              <tr>
+                <td><strong>PON Board Compatibility</strong></td>
+                <td>GPBD (8-port GPON), GPFD (16-port GPON), EPBD</td>
+                <td>H901GPHF (16-port GPON), H901XGHD (10G-GPON), H901CGHF (Combo-PON)</td>
+                <td>H901GPHF, H901XGHD (XGS-PON), H901CGHF (Combo GPON/XGS)</td>
+              </tr>
+              <tr>
+                <td><strong>Power Supply Mode</strong></td>
+                <td>Slot 0: MPWD (AC 220V) or MPWC (DC -48V)</td>
+                <td>Slots 8 &amp; 9: Dual Redundant H901PISA (AC) / PISB (DC)</td>
+                <td>Dual Redundant High-Capacity -48V DC Power Feeds</td>
+              </tr>
+              <tr>
+                <td><strong>Maximum ONT Capacity</strong></td>
+                <td>4,096 ONTs (at 1:128 optical split ratio)</td>
+                <td>14,336 ONTs (at 1:128 optical split ratio)</td>
+                <td>30,720 ONTs (Gigabit/10-Gigabit Massive Density)</td>
+              </tr>
+              <tr>
+                <td><strong>Optical Power Standard</strong></td>
+                <td>Class B+ (-8 to -28 dBm) &amp; Class C+ (-12 to -32 dBm)</td>
+                <td>Class B+, Class C+, Class N1/N2a (XGS-PON 10G)</td>
+                <td>Class B+, Class C+, Class D, Class N1/N2a, Combo WDM1r</td>
+              </tr>
+              <tr>
+                <td><strong>Primary Deployment Target</strong></td>
+                <td>Enterprise POL / Campus / Remote Rural WISP Hub</td>
+                <td>Metropolitan FTTH Aggregation / Gigabit Enterprise</td>
+                <td>Large Metropolitan Central Office / National Telecom Hub</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Configuration Terminal -->
+        <div class="terminal-card" style="margin-bottom: 24px;">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="terminal-dot dot-red"></span>
+              <span class="terminal-dot dot-yellow"></span>
+              <span class="terminal-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">huawei-olt // huawei-olt-complete-lifecycle-commissioning.cfg</span>
+            <button class="code-copy-btn" data-target="cfg-huawei-olt" aria-label="Copy Huawei OLT Configuration">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre class="terminal-body" id="cfg-huawei-olt"><code>! ====================================================================
+! HUAWEI CARRIER OLT MULTI-MODEL COMMISSIONING &amp; FTTH PROVISIONING GUIDE
+! Platforms: SmartAX MA5608T, MA5800-X7, MA5800-X15 (V800R018/R021)
+! Full Lifecycle: Hardware Confirmation, Management, DBA Profiles,
+! Line/Service Profiles, ONT Registration, Multi-Service QinQ, &amp; Diagnostics
+! ====================================================================
+
+! --------------------------------------------------------------------
+! PHASE 1: INITIAL CHASSIS INITIALIZATION &amp; HARDWARE CONFIRMATION
+! --------------------------------------------------------------------
+enable
+config
+sysname OLT-CORE-KTM-01
+
+! Auto-confirm all installed hardware boards in backplane slots
+! On MA5608T: slot 0 (Power), slots 1-2 (Service GPFD), slots 3-4 (MCUD)
+! On MA5800-X7: slots 1-7 (Service GPHF/CGHF), slots 8-9 (MPLA/PISB)
+board confirm 0
+
+! Out-of-Band (OOB) Ethernet Management Port (meth0)
+interface meth0
+ ip address 192.168.1.100 255.255.255.0
+quit
+
+! In-Band Management VLAN &amp; SVI Gateway
+vlan 99 smart
+port vlan 99 0/19 0
+interface vlanif 99
+ ip address 10.99.0.10 255.255.255.0
+ description INBAND_MANAGEMENT_SVI
+quit
+ip route-static 0.0.0.0 0.0.0.0 10.99.0.1
+
+! Uplink Aggregation: 10GE LACP Eth-Trunk to Metro Core Router
+interface eth-trunk 1
+ description UPLINK_TO_METRO_CORE_LACP
+ mode lacp-static
+ port link-type trunk
+ port trunk allow-pass vlan 99 100 200 300 500
+quit
+
+! On MA5608T (Uplink on MCUD 0/19):
+! interface 10ge 0/19/0
+!  eth-trunk 1
+! On MA5800-X7 (Uplink on MPLA control boards 0/8 and 0/9):
+interface 10ge 0/8/0
+ eth-trunk 1
+interface 10ge 0/9/0
+ eth-trunk 1
+quit
+
+! Administrator Security &amp; SSHv2 Hardening
+terminal user name
+ admin
+ Admin@Fiber2026!
+ Admin@Fiber2026!
+ 3
+ 5
+ 1
+ssh user admin authentication-type password
+ssh user admin service-type stelnet
+stelnet server enable
+aaa
+ local-user admin password cipher Admin@Fiber2026!
+ local-user admin service-type stelnet terminal
+ local-user admin level 15
+quit
+
+! --------------------------------------------------------------------
+! PHASE 2: DYNAMIC BANDWIDTH ALLOCATION (DBA) &amp; TRAFFIC RATE TABLES
+! --------------------------------------------------------------------
+! Type 1: Strict Fixed Bandwidth (VoIP Telephony / OAM Management)
+dba-profile add profile-id 10 profile-name "VOIP_FIXED_2M" type1 fix 2048
+
+! Type 2: Assured Bandwidth Only (Enterprise Leased Line SLA)
+dba-profile add profile-id 11 profile-name "BIZ_ASSURED_20M" type2 assure 20480
+
+! Type 3: Assured + Maximum Burst (Prioritized Corporate SLA)
+dba-profile add profile-id 12 profile-name "BIZ_ASSURED_50M_MAX_100M" type3 assure 51200 max 102400
+
+! Type 4: Best-Effort Maximum Burst (Residential FTTH Broadband)
+dba-profile add profile-id 13 profile-name "HOME_BURST_300M" type4 max 307200
+
+! Type 5: Mixed Composite Bandwidth (Triple-Play Data + Voice + Video)
+dba-profile add profile-id 14 profile-name "TRIPLE_PLAY_COMBO" type5 fix 2048 assure 10240 max 204800
+
+! Traffic Rate Shaping Tables (Committed / Peak Information Rate in kbps)
+traffic table ip index 7 name "RATE_100M_SYMMETRIC" cir 102400 pir 102400 priority 0 priority-policy tag-In-Package
+traffic table ip index 8 name "RATE_300M_RESIDENTIAL" cir 51200 pir 307200 priority 0 priority-policy tag-In-Package
+
+! --------------------------------------------------------------------
+! PHASE 3: GPON / XGS-PON LINE PROFILES &amp; SERVICE PROFILES
+! --------------------------------------------------------------------
+ont-lineprofile gpon profile-id 20 profile-name "LINE_FTTH_TRIPLE_PLAY"
+ ! Map T-CONTs to DBA Profiles
+ tcont 1 dba-profile-id 13
+ tcont 2 dba-profile-id 10
+ tcont 3 dba-profile-id 12
+ ! GEM Port 1: Residential Internet Data (VLAN 100)
+ gem add 1 eth tcont 1
+ gem mapping 1 0 vlan 100
+ ! GEM Port 2: VoIP SIP Voice (VLAN 200, 802.1p priority 5)
+ gem add 2 eth tcont 2
+ gem mapping 2 1 vlan 200
+ ! GEM Port 3: Enterprise Leased Traffic (VLAN 500)
+ gem add 3 eth tcont 3
+ gem mapping 3 2 vlan 500
+ commit
+quit
+
+! ONT Service Profile (4xGE Ethernet + 2xPOTS RJ11 Ports)
+ont-srvprofile gpon profile-id 20 profile-name "SRV_4GE_2POTS_ONT"
+ ont-port eth 4 pots 2
+ port vlan eth 1 translation 100 user-vlan 100
+ port vlan eth 2 translation 100 user-vlan 100
+ port vlan eth 3 translation 200 user-vlan 200
+ port vlan eth 4 translation 500 user-vlan 500
+ commit
+quit
+
+! --------------------------------------------------------------------
+! PHASE 4: AUTO-DISCOVERY &amp; ONT REGISTRATION ACROSS SLOTS
+! --------------------------------------------------------------------
+! Inspect discovered unconfigured ONTs on PON distribution frame
+! display ont autofind all
+
+interface gpon 0/1
+ ! Residential Subscriber on Port 0, ONT ID 1 (SN Authenticated)
+ ont add 0 1 sn-auth "48575443F8A1B2C3" omci ont-lineprofile-id 20 ont-srvprofile-id 20 desc "RESIDENTIAL_FTTH_SUB_101"
+ ! Enterprise Leased Line Subscriber on Port 0, ONT ID 2 (Password Authenticated)
+ ont add 0 2 password-auth "EnterprisePass2026" always-on omci ont-lineprofile-id 20 ont-srvprofile-id 20 desc "ENTERPRISE_LEASED_LINE_202"
+ ! Enable Optical Power Monitoring and Rogue ONT Auto-Detection
+ ont optical-alarm-profile 0 1 profile-id 1
+quit
+
+! --------------------------------------------------------------------
+! PHASE 5: MULTI-SERVICE PORT MAPPING (INTERNET, VOIP, QINQ)
+! --------------------------------------------------------------------
+! Residential High-Speed Internet: User VLAN 100 translated to SVLAN 1100
+service-port 100 vlan 1100 gpon 0/1/0 ont 1 gemport 1 multi-service user-vlan 100 tag-transform translate inbound traffic-table index 8 outbound traffic-table index 8
+
+! VoIP Telephony: User VLAN 200 translated to SVLAN 200 with High Priority
+service-port 101 vlan 200 gpon 0/1/0 ont 1 gemport 2 multi-service user-vlan 200 tag-transform translate inbound traffic-table index 7 outbound traffic-table index 7
+
+! Enterprise Layer 2 QinQ Trunk (Outer SVLAN 500, Inner Customer VLANs preserved transparently)
+service-port 102 vlan 500 gpon 0/1/0 ont 2 gemport 3 multi-service user-vlan 500 tag-transform translate-and-add inner-vlan 500 inbound traffic-table index 7 outbound traffic-table index 7
+
+! Save running configuration to permanent flash
+save
+return</code></pre>
+        </div>
+
+        <!-- Verification Output Terminal -->
+        <div class="terminal-card" style="margin-bottom: 24px;">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="terminal-dot dot-red"></span>
+              <span class="terminal-dot dot-yellow"></span>
+              <span class="terminal-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">huawei-olt-diagnostics // display-ont-optical-and-service-port.log</span>
+          </div>
+          <pre class="terminal-body"><code>MA5800-X7# display board 0
+-------------------------------------------------------------------------
+SlotID  BoardName  Status          SubType0 SubType1    Online/Offline
+-------------------------------------------------------------------------
+0/1     H901GPHF   Normal                               Online
+0/2     H901XGHD   Normal                               Online
+0/8     H901MPLA   Active_normal   4*10GE               Online
+0/9     H901MPLA   Standby_normal  4*10GE               Online
+0/10    H901PISA   Normal                               Online
+-------------------------------------------------------------------------
+
+MA5800-X7# display ont optical-info 0/1 0 1
+-------------------------------------------------------------------------
+  ONU NII interface                      : GPON
+  OLT Rx ONT optical power(dBm)          : -19.82
+  ONT Rx optical power(dBm)              : -18.45  (Within -8 to -27 dBm Standard)
+  ONT Tx optical power(dBm)              : 2.34
+  OLT Tx optical power(dBm)              : 2.85
+  Temperature(C)                         : 42
+  Voltage(V)                             : 3.28
+  Bias current(mA)                       : 14
+  Rogue ONT state                        : Normal (Non-Rogue)
+-------------------------------------------------------------------------
+
+MA5800-X7# display ont info 0/1 0 1
+-------------------------------------------------------------------------
+  F/S/P                   : 0/1/0
+  ONT-ID                  : 1
+  Control flag            : active
+  Run state               : online
+  Config state            : normal
+  Match state             : match
+  SN                      : 48575443F8A1B2C3 (HWTC-F8A1B2C3)
+  Type                    : HG8245H5
+  Distance                : 1248m
+  Rx power                : -18.45 dBm
+-------------------------------------------------------------------------
+
+MA5800-X7# display service-port 100
+-------------------------------------------------------------------------
+  Index                   : 100
+  VLAN ID                 : 1100
+  VLAN attr               : common
+  Port type               : gpon
+  F/S/P                   : 0/1/0
+  ONT ID                  : 1
+  GEM index               : 1
+  User VLAN               : 100
+  Tag transform           : translate
+  State                   : up
+-------------------------------------------------------------------------</code></pre>
+        </div>
+
+        <div class="grid-2" style="background: var(--surface-elevated); padding: 20px; border-radius: var(--radius-sm); font-size: 0.9rem;">
+          <div>
+            <strong>Problem Diagnosed:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">A rogue ONT optical transceiver in a residential building failed in continuous-mode transmission, emitting continuous 1310nm optical light that saturated the shared optical splitter and blinded the OLT receiver, knocking all 64 subscribers on PON port 0/1/0 offline.</p>
+          </div>
+          <div>
+            <strong>Resolution &amp; Takeaway:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Enabled automated rogue ONT detection on the OLT (`ont optical-alarm-profile`), executed `display ont optical-info` to identify the continuous-wave laser signature, and triggered automated OLT laser shutdown on the rogue ONT's GEM port within 300ms, restoring fiber service to the remaining 63 subscribers.</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.78rem;">PORTFOLIO PROJECT REFERENCE // CARRIER FTTH OLT</span>
+          <a href="projects.html#project-huawei-olt" class="btn btn-outline btn-sm">
+            <span>Inspect Huawei OLT Architecture Project &rarr;</span>
           </a>
         </div>
       </article>

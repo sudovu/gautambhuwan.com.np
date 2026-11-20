@@ -23,6 +23,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Scenario Catalog by Platform
   const SCENARIOS = {
+    huawei: [
+      {
+        id: 'huawei-mpls-vpls',
+        title: 'Huawei Backbone Core: IS-IS, OSPF, MPLS LDP & VPLS L2VPN',
+        desc: 'Carrier metro core across CloudEngine S6730/CE6800 with IS-IS Level-2 wide metric, OSPF backbone, MPLS LDP, VSI pseudo-wires, and BFD failover.'
+      },
+      {
+        id: 'huawei-switch-campus',
+        title: 'Huawei Enterprise Switch: Multi-Area OSPF & LACP Eth-Trunk',
+        desc: 'Campus enterprise multi-layer switching with multi-area OSPF, dynamic LACP Eth-Trunk port bundles, VRRP gateway redundancy, and BFD.'
+      },
+      {
+        id: 'huawei-olt-ma5608t',
+        title: 'Huawei SmartAX MA5608T Mini-OLT: Basic Setup & GPON FTTH',
+        desc: 'Out-of-box commissioning for 2U MA5608T: board confirmation, in-band management, DBA Types 1-5, line/service profiles, and auto-discovery.'
+      },
+      {
+        id: 'huawei-olt-ma5800',
+        title: 'Huawei Next-Gen MA5800-X7/X15: Combo-PON & Multi-Service QinQ',
+        desc: 'Distributed 6U/11U NG-OLT deployment with 10G-GPON XGS-PON, T-CONT allocation, 802.1ad QinQ service ports, and rogue ONT suppression.'
+      }
+    ],
+
     cisco: [
       {
         id: 'cisco-campus',
@@ -149,6 +172,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Quick Presets
   const PRESETS = {
+    huawei_mpls_vpls: {
+      platform: 'huawei',
+      scenario: 'huawei-mpls-vpls',
+      securityHardened: true,
+      haRedundancy: true,
+      dualStackIPv6: true,
+      telemetryLogging: true,
+      hostname: 'HW-PE01-CORE',
+      subnet: '10.10.12.0/30'
+    },
+    huawei_olt_ma5608t: {
+      platform: 'huawei',
+      scenario: 'huawei-olt-ma5608t',
+      securityHardened: true,
+      haRedundancy: true,
+      dualStackIPv6: false,
+      telemetryLogging: true,
+      hostname: 'HW-MA5608T-01',
+      subnet: '10.99.0.0/24'
+    },
+    huawei_olt_ma5800: {
+      platform: 'huawei',
+      scenario: 'huawei-olt-ma5800',
+      securityHardened: true,
+      haRedundancy: true,
+      dualStackIPv6: true,
+      telemetryLogging: true,
+      hostname: 'HW-MA5800-X7',
+      subnet: '10.100.0.0/24'
+    },
+
     cisco_campus: {
       platform: 'cisco',
       scenario: 'cisco-campus',
@@ -465,6 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let protocolText = '';
     let securityText = securityHardened ? 'Strict ACLs / Drop Invalid' : 'Standard / Permissive';
 
+    // Simulator UI
     if (platform === 'cisco') {
       filename = `${hostname.toLowerCase()}.ios`;
       if (scenario === 'cisco-campus') {
@@ -1403,6 +1458,358 @@ PublicKey = KkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789=
 AllowedIPs = ${baseIP}.10/32
 PersistentKeepalive = 25`;
       }
+} else if (platform === 'huawei') {
+      filename = `${hostname.toLowerCase()}.cfg`;
+      if (scenario === 'huawei-mpls-vpls') {
+        roleText = 'Carrier Metro Core & Aggregation Switch (VRP v8)';
+        interfacesText = 'Eth-Trunk 1 (10GE1/0/23-24) / Vlanif991 / 10GE1/0/1';
+        protocolText = 'IS-IS Level-2, OSPF Multi-Area, MPLS LDP, VPLS VSI';
+
+        code = `! ====================================================================
+! HUAWEI VRP v8 CARRIER METRO & ENTERPRISE CORE CONFIGURATION
+! Hostname: ${hostname}
+! Architecture: IS-IS L2 Wide Metric, OSPF Multi-Area, MPLS LDP & VPLS L2VPN
+! Addressing: ${subnet} ${dualStackIPv6 ? '& 2001:db8:acad::/48' : ''}
+! HA & Convergence: 10GE LACP Eth-Trunk | BFD Hardware Echo (30ms)
+! ====================================================================
+
+sysname ${hostname}
+#
+vlan batch 10 20 100 200 991
+#
+bfd
+#
+interface Loopback0
+ description SYSTEM_LSR_ROUTER_ID
+ ip address 10.255.255.1 255.255.255.255
+ isis enable 1
+ isis circuit-level level-2
+ ospf 1 area 0.0.0.0
+#
+! --- 10GE LACP Eth-Trunk Core Backbone Interconnect ---
+interface Eth-Trunk1
+ description BACKBONE_LACP_TRUNK_TO_P_ROUTER
+ mode lacp-static
+ lacp priority 100
+ port link-type trunk
+ port trunk allow-pass vlan 991
+#
+interface 10GE1/0/23
+ description TRUNK1_MEMBER_PORT1
+ eth-trunk 1
+ lacp priority 100
+#
+interface 10GE1/0/24
+ description TRUNK1_MEMBER_PORT2
+ eth-trunk 1
+ lacp priority 100
+#
+! --- Transport SVI: Routing & MPLS ---
+interface Vlanif991
+ description BACKBONE_P2P_TRANSIT_SUBNET
+ ip address ${baseIP}.1 255.255.255.252
+ isis enable 1
+ isis circuit-type p2p
+ isis circuit-level level-2
+ isis cost 10
+ isis bfd enable
+ ospf 1 area 0.0.0.0
+ ospf cost 10
+ ospf bfd enable
+ mpls
+ mpls ldp
+#
+! --- IS-IS Routing Engine ---
+isis 1
+ is-level level-2
+ cost-style wide
+ network-entity 49.0001.0000.0000.0001.00
+ bfd all-interfaces enable
+ timer lsp-generation 1 50 50 level-2
+ flash-flood 15
+#
+! --- OSPF Multi-Area IGP ---
+ospf 1 router-id 10.255.255.1
+ bfd all-interfaces enable
+ area 0.0.0.0
+  network 10.255.255.1 0.0.0.0
+  network ${baseIP}.0 0.0.0.3
+  authentication-mode md5 1 cipher Huawei@Backbone2026!
+ area 0.0.0.1
+  network 10.10.10.0 0.0.0.255
+  abr-summary 10.10.0.0 255.255.0.0
+#
+! --- MPLS & LDP Global ---
+mpls lsr-id 10.255.255.1
+mpls
+ lsp-trigger all
+#
+mpls ldp
+ transport-address interface Loopback0
+#
+! --- VPLS L2VPN Virtual Switching Instance (VSI) ---
+l2vpn enable
+#
+vsi BIZ_VPLS_100 static
+ pwsignal ldp
+  vsi-id 100
+  peer 10.255.255.2
+  peer 10.255.255.3
+ encapsulation ethernet
+ mac-learning enable
+ mac-limit maximum 2000 rate 50 action discard
+ broadcast-suppression 5
+ multicast-suppression 5
+#
+! --- Customer Attachment Circuit (AC) Binding ---
+interface 10GE1/0/1.100 mode l2
+ description AC_ENTERPRISE_HQ_DATA_VLAN100
+ encapsulation dot1q vid 100
+ rewrite pop single
+ l2 binding vsi BIZ_VPLS_100
+#
+interface 10GE1/0/1.200 mode l2
+ description AC_ENTERPRISE_HQ_VOIP_VLAN200
+ encapsulation dot1q vid 200
+ rewrite pop single
+ l2 binding vsi BIZ_VPLS_100
+#
+! --- DiffServ QoS Classifier & Policy ---
+traffic classifier TC_VOIP operator or
+ if-match dscp ef
+traffic classifier TC_DATA operator or
+ if-match dscp af31 af32 af33
+#
+traffic behavior TB_VOIP
+ queue ef bandwidth 50000
+traffic behavior TB_DATA
+ queue af bandwidth 200000
+#
+traffic policy TP_CARRIER_QOS
+ classifier TC_VOIP behavior TB_VOIP
+ classifier TC_DATA behavior TB_DATA
+#
+interface Eth-Trunk1
+ traffic-policy TP_CARRIER_QOS outbound
+#
+return`;
+      } else if (scenario === 'huawei-switch-campus') {
+        roleText = 'Enterprise Campus Core / Aggregation Switch';
+        interfacesText = 'Eth-Trunk 1 / Vlanif10, Vlanif20, Vlanif99 / 10GE1/0/1-4';
+        protocolText = 'Multi-Area OSPF, VRRP Gateway, LACP Eth-Trunk, BFD';
+
+        code = `! ====================================================================
+! HUAWEI VRP v8 ENTERPRISE CAMPUS CORE SWITCH CONFIGURATION
+! Hostname: ${hostname}
+! Features: Multi-Area OSPF, VRRP Redundancy, LACP Eth-Trunk, BFD Fast-Failover
+! ====================================================================
+
+sysname ${hostname}
+#
+vlan batch 10 20 30 99
+#
+bfd
+#
+interface Eth-Trunk1
+ description LACP_AGGREGATION_DOWNLINK_TO_ACCESS
+ mode lacp-static
+ port link-type trunk
+ port trunk allow-pass vlan 10 20 30 99
+#
+interface GigabitEthernet0/0/1
+ eth-trunk 1
+interface GigabitEthernet0/0/2
+ eth-trunk 1
+#
+interface Vlanif10
+ description CORPORATE_USERS_GATEWAY
+ ip address ${baseIP}.2 255.255.255.0
+ vrrp vrid 10 virtual-ip ${baseIP}.1
+ ${haRedundancy ? 'vrrp vrid 10 priority 120\n vrrp vrid 10 preempt-mode timer delay 20' : 'vrrp vrid 10 priority 100'}
+ vrrp vrid 10 authentication-mode md5 EnterpriseSec2026!
+ ospf 1 area 0.0.0.1
+#
+interface Vlanif20
+ description OOB_MANAGEMENT_SVI
+ ip address ${baseIP.split('.').slice(0, 2).join('.')}.20.2 255.255.255.0
+ vrrp vrid 20 virtual-ip ${baseIP.split('.').slice(0, 2).join('.')}.20.1
+#
+ospf 1 router-id ${baseIP}.2
+ bfd all-interfaces enable
+ area 0.0.0.0
+  network ${baseIP}.0 0.0.0.255
+#
+return`;
+      } else if (scenario === 'huawei-olt-ma5608t') {
+        roleText = 'Huawei SmartAX MA5608T 2U Compact Mini-OLT';
+        interfacesText = 'Uplink 10GE 0/19/0 / GPON 0/1 (GPFD 16-Port Board)';
+        protocolText = 'GPON OMCI, DBA Profiles (Type 1-5), QinQ 802.1ad';
+
+        code = `! ====================================================================
+! HUAWEI SMARTAX MA5608T 2U MINI-OLT COMMISSIONING SCRIPT
+! Target: Clean Out-of-Box Initialization to Live GPON FTTH
+! Platform: MA5608T (Slots: 0=MPWD Power, 1-2=GPFD PON, 3-4=MCUD Uplink)
+! ====================================================================
+
+enable
+config
+sysname ${hostname}
+
+! 1. Auto-Confirm installed hardware in all backplane slots
+board confirm 0
+
+! 2. Out-of-Band & In-Band Management Gateway
+interface meth0
+ ip address 192.168.1.100 255.255.255.0
+quit
+vlan 99 smart
+port vlan 99 0/19 0
+interface vlanif 99
+ ip address ${baseIP}.10 255.255.255.0
+ description OLT_INBAND_MANAGEMENT
+quit
+ip route-static 0.0.0.0 0.0.0.0 ${baseIP}.1
+
+! 3. Uplink LACP Aggregation to Metro Core
+interface eth-trunk 1
+ description UPLINK_TO_METRO_CORE_LACP
+ mode lacp-static
+ port link-type trunk
+ port trunk allow-pass vlan 99 100 200 500
+quit
+interface 10ge 0/19/0
+ eth-trunk 1
+quit
+
+! 4. Administrator Security & SSHv2 Access
+ssh user admin authentication-type password
+ssh user admin service-type stelnet
+stelnet server enable
+aaa
+ local-user admin password cipher Admin@Fiber2026!
+ local-user admin service-type stelnet terminal
+ local-user admin level 15
+quit
+
+! 5. DBA Bandwidth Profiles (Dynamic Bandwidth Allocation)
+dba-profile add profile-id 10 profile-name "VOIP_FIXED_2M" type1 fix 2048
+dba-profile add profile-id 11 profile-name "BIZ_ASSURED_50M" type2 assure 51200
+dba-profile add profile-id 12 profile-name "HOME_BURST_300M" type4 max 307200
+
+! 6. GPON Line Profile & Service Profile
+ont-lineprofile gpon profile-id 20 profile-name "LINE_FTTH_PROFILE"
+ tcont 1 dba-profile-id 12
+ tcont 2 dba-profile-id 10
+ gem add 1 eth tcont 1
+ gem mapping 1 0 vlan 100
+ gem add 2 eth tcont 2
+ gem mapping 2 1 vlan 200
+ commit
+quit
+
+ont-srvprofile gpon profile-id 20 profile-name "SRV_4GE_WIFI_ONT"
+ ont-port eth 4 pots 2
+ port vlan eth 1 translation 100 user-vlan 100
+ port vlan eth 2 translation 100 user-vlan 100
+ port vlan eth 3 translation 200 user-vlan 200
+ commit
+quit
+
+! 7. ONT Registration on GPON Port 0/1/0
+interface gpon 0/1
+ ont add 0 1 sn-auth "48575443F8A1B2C3" omci ont-lineprofile-id 20 ont-srvprofile-id 20 desc "RESIDENTIAL_FTTH_101"
+ ont optical-alarm-profile 0 1 profile-id 1
+quit
+
+! 8. Service Port Binding (Internet SVLAN 1100, VoIP SVLAN 200)
+service-port 100 vlan 1100 gpon 0/1/0 ont 1 gemport 1 multi-service user-vlan 100 tag-transform translate inbound traffic-table index 8 outbound traffic-table index 8
+service-port 101 vlan 200 gpon 0/1/0 ont 1 gemport 2 multi-service user-vlan 200 tag-transform translate inbound traffic-table index 7 outbound traffic-table index 7
+
+save
+return`;
+      } else if (scenario === 'huawei-olt-ma5800') {
+        roleText = 'Huawei SmartAX MA5800-X7/X15 Next-Gen Distributed OLT';
+        interfacesText = 'Uplink 10GE 0/8-9 (MPLA) / GPON 0/1 (H901GPHF) / 10G-GPON 0/2 (H901XGHD)';
+        protocolText = 'Combo-PON / XGS-PON, Distributed Forwarding, 802.1ad QinQ';
+
+        code = `! ====================================================================
+! HUAWEI SMARTAX MA5800-X7 NEXT-GENERATION DISTRIBUTED OLT SCRIPT
+! Architecture: 6U Distributed Chassis (MPLA Control / GPHF GPON / XGHD 10G-PON)
+! Scope: Full Commissioning, XGS-PON 10G Bandwidth, QinQ, & Rogue Protection
+! ====================================================================
+
+enable
+config
+sysname ${hostname}
+
+! 1. Confirm Hardware Boards in Distributed Chassis
+board confirm 0
+
+! 2. In-Band Management SVI on VLAN 99
+vlan 99 smart
+port vlan 99 0/8 0
+interface vlanif 99
+ ip address ${baseIP}.10 255.255.255.0
+ description MA5800_DISTRIBUTED_MANAGEMENT
+quit
+ip route-static 0.0.0.0 0.0.0.0 ${baseIP}.1
+
+! 3. High-Density Dual 10GE Uplink (LACP Eth-Trunk across MPLA Boards)
+interface eth-trunk 1
+ description CORE_AGGREGATION_10GE_TRUNK
+ mode lacp-static
+ port link-type trunk
+ port trunk allow-pass vlan 99 100 200 500 1100
+quit
+interface 10ge 0/8/0
+ eth-trunk 1
+interface 10ge 0/9/0
+ eth-trunk 1
+quit
+
+! 4. Carrier DBA Profiles for Gigabit & 10-Gigabit FTTH
+dba-profile add profile-id 10 profile-name "VOIP_FIXED_2M" type1 fix 2048
+dba-profile add profile-id 12 profile-name "BIZ_ASSURED_100M_MAX_500M" type3 assure 102400 max 512000
+dba-profile add profile-id 14 profile-name "10G_PON_GIGABIT_BURST" type4 max 1024000
+
+! 5. XGS-PON / GPON Line Profile & Service Profile
+ont-lineprofile gpon profile-id 30 profile-name "LINE_10G_PON_TRIPLE"
+ tcont 1 dba-profile-id 14
+ tcont 2 dba-profile-id 10
+ tcont 3 dba-profile-id 12
+ gem add 1 eth tcont 1
+ gem mapping 1 0 vlan 100
+ gem add 2 eth tcont 2
+ gem mapping 2 1 vlan 200
+ gem add 3 eth tcont 3
+ gem mapping 3 2 vlan 500
+ commit
+quit
+
+ont-srvprofile gpon profile-id 30 profile-name "SRV_10G_ONT_4GE_2POTS"
+ ont-port eth 4 pots 2
+ port vlan eth 1 translation 100 user-vlan 100
+ port vlan eth 2 translation 100 user-vlan 100
+ port vlan eth 3 translation 200 user-vlan 200
+ port vlan eth 4 translation 500 user-vlan 500
+ commit
+quit
+
+! 6. ONT Authorization on 16-Port GPON Board (0/1/0)
+interface gpon 0/1
+ ont add 0 1 sn-auth "48575443F8A1B2C3" omci ont-lineprofile-id 30 ont-srvprofile-id 30 desc "RESIDENTIAL_GIGABIT_FTTH"
+ ont add 0 2 sn-auth "48575443E1F2A3B4" omci ont-lineprofile-id 30 ont-srvprofile-id 30 desc "ENTERPRISE_LEASED_LINE"
+ ont optical-alarm-profile 0 1 profile-id 1
+quit
+
+! 7. Multi-Service Ports with 802.1ad QinQ & Traffic Tables
+service-port 100 vlan 1100 gpon 0/1/0 ont 1 gemport 1 multi-service user-vlan 100 tag-transform translate inbound traffic-table index 8 outbound traffic-table index 8
+service-port 101 vlan 200 gpon 0/1/0 ont 1 gemport 2 multi-service user-vlan 200 tag-transform translate inbound traffic-table index 7 outbound traffic-table index 7
+service-port 102 vlan 500 gpon 0/1/0 ont 2 gemport 3 multi-service user-vlan 500 tag-transform translate-and-add inner-vlan 500 inbound traffic-table index 7 outbound traffic-table index 7
+
+save
+return`;
+      }
     } else if (platform === 'docker') {
       filename = 'docker-compose.yml';
       roleText = 'Microservice Containerized Mesh';
@@ -1556,12 +1963,13 @@ if __name__ == "__main__":
     main()`;
     }
 
-    return { code, filename, roleText, interfacesText, protocolText, securityText };
+        return { code, filename, roleText, interfacesText, protocolText, securityText };
   }
 
   // Update simulator prompt & chips
   function updateSimulatorUI() {
     const { platform, hostname } = state;
+    // Simulator UI
     if (platform === 'cisco') {
       simPrompt.textContent = `${hostname}#`;
       renderChips([
@@ -1604,6 +2012,33 @@ if __name__ == "__main__":
         'curl -I https://gautambhuwan.com.np',
         'nft list ruleset'
       ]);
+    } else if (platform === 'huawei') {
+      simPrompt.textContent = state.scenario.includes('olt') ? `${hostname}(config)#` : `<${hostname}>`;
+      if (state.scenario.includes('olt')) {
+        renderChips([
+          'display ont optical-info 0/1 0 1',
+          'display ont info 0/1 0 1',
+          'display board 0',
+          'display service-port 100',
+          'display ont autofind all',
+          'display current-configuration',
+          'help',
+          'clear'
+        ]);
+      } else {
+        renderChips([
+          'display isis peer',
+          'display mpls ldp session',
+          'display vsi verbose',
+          'display vsi remote-mac',
+          'display ospf peer brief',
+          'display isis lsdb',
+          'display mpls lsp',
+          'display current-configuration',
+          'help',
+          'clear'
+        ]);
+      }
     } else if (platform === 'docker') {
       simPrompt.textContent = `developer@${hostname}:~$`;
       renderChips([
@@ -1727,6 +2162,7 @@ if __name__ == "__main__":
     }
 
     // Platform Specific Responses
+    // Simulator UI
     if (platform === 'cisco') {
       if (lower.startsWith('show standby')) {
         appendLog(`                     P indicates configured to preempt.`);
@@ -1902,6 +2338,113 @@ if __name__ == "__main__":
       } else {
         appendLog(`bash: ${raw}: command not found. Check quick action chips.`, false, false, true);
       }
+    } else if (platform === 'huawei') {
+      if (lower.startsWith('display isis peer')) {
+        appendLog(`                          Peer information for ISIS(1)`);
+        appendLog(`                          ----------------------------`);
+        appendLog(`System Id          Interface          Circuit Id        State Holdtime Type     PRI`);
+        appendLog(`-----------------------------------------------------------------------------------`);
+        appendLog(`0000.0000.0010     Eth-Trunk1         p2p               Up    28s      L2       --`);
+        appendLog(`Total Peer(s): 1`);
+        appendLog(`<${hostname}> %ISIS-5-ADJCHANGE: ISIS 1 Neighbor 0000.0000.0010 (Eth-Trunk1) Up.`);
+      } else if (lower.startsWith('display isis')) {
+        appendLog(`                        Database information for ISIS(1)`);
+        appendLog(`LSPID                 Seq Num      Checksum      Holdtime      Length  ATT/P/OL`);
+        appendLog(`0000.0000.0001.00-00* 0x00000012   0x3a4f        1185          148     0/0/0`);
+        appendLog(`0000.0000.0010.00-00  0x0000000e   0x8f22        1172          156     0/0/0`);
+      } else if (lower.startsWith('display mpls ldp')) {
+        appendLog(`                LDP Session(s) in Public Network`);
+        appendLog(`----------------------------------------------------------------------`);
+        appendLog(`Peer LDP ID         Source Interface   State     Role  Hold-Time  KA-Sent`);
+        appendLog(`----------------------------------------------------------------------`);
+        appendLog(`10.255.255.10:0     Loopback0          Operational Active 30         2451`);
+        appendLog(`10.255.255.2:0      Loopback0          Operational Active 30         2449`);
+        appendLog(`----------------------------------------------------------------------`);
+        appendLog(`TOTAL: 2 session(s) Found. LDP Graceful Restart: Enabled.`);
+      } else if (lower.startsWith('display mpls lsp')) {
+        appendLog(`FEC                In/Out Label  In/Out Interface                    Token`);
+        appendLog(`10.255.255.2/32    NULL/48118    Vlanif991                           0x1`);
+        appendLog(`10.255.255.10/32   NULL/3        Vlanif991 (Eth-Trunk1)              0x2`);
+      } else if (lower.startsWith('display vsi remote-mac')) {
+        appendLog(`VSI Name: BIZ_VPLS_100`);
+        appendLog(`MAC Address       VLAN    Peer IP         Tunnel ID     Age(s)`);
+        appendLog(`--------------------------------------------------------------`);
+        appendLog(`4857-021b-a101    100     10.255.255.2    0x10000002    18`);
+        appendLog(`4857-021b-a102    200     10.255.255.2    0x10000002    12`);
+      } else if (lower.startsWith('display vsi')) {
+        appendLog(` ***VSI Name               : BIZ_VPLS_100`);
+        appendLog(`    Work Mode              : normal`);
+        appendLog(`    Scope                  : public`);
+        appendLog(`    VSI State              : up`);
+        appendLog(`    VSI ID                 : 100`);
+        appendLog(`    Signaling Protocol     : ldp`);
+        appendLog(`    Encap Type             : ethernet`);
+        appendLog(`    Mac Learning           : enabled`);
+        appendLog(`    Mac Limit              : 2000 (discard)`);
+        appendLog(`    Total AC Number        : 2`);
+        appendLog(`    Total PW Number        : 1`);
+        appendLog(`   *PW: Peer 10.255.255.2 | State: UP | InLabel: 48120 | OutLabel: 48118`);
+      } else if (lower.startsWith('display ospf')) {
+        appendLog(`          OSPF Process 1 with Router ID 10.255.255.1`);
+        appendLog(` Area Id          Interface                  Neighbor id      State`);
+        appendLog(` 0.0.0.0          Vlanif991                  10.255.255.10    Full`);
+        appendLog(` 0.0.0.1          Vlanif10                   10.10.10.254     Full`);
+      } else if (lower.startsWith('display ont optical')) {
+        appendLog(`-------------------------------------------------------------------------`);
+        appendLog(`  ONU NII interface                      : GPON`);
+        appendLog(`  OLT Rx ONT optical power(dBm)          : -19.82`);
+        appendLog(`  ONT Rx optical power(dBm)              : -18.45  (Nominal: -8 to -27 dBm)`);
+        appendLog(`  ONT Tx optical power(dBm)              : 2.34`);
+        appendLog(`  OLT Tx optical power(dBm)              : 2.85`);
+        appendLog(`  Rogue ONT state                        : Normal (Non-Rogue)`);
+        appendLog(`-------------------------------------------------------------------------`);
+      } else if (lower.startsWith('display ont info')) {
+        appendLog(`-------------------------------------------------------------------------`);
+        appendLog(`  F/S/P                   : 0/1/0`);
+        appendLog(`  ONT-ID                  : 1`);
+        appendLog(`  Run state               : online`);
+        appendLog(`  SN                      : 48575443F8A1B2C3 (HWTC-F8A1B2C3)`);
+        appendLog(`  Distance                : 1248m`);
+        appendLog(`  Rx power                : -18.45 dBm`);
+        appendLog(`-------------------------------------------------------------------------`);
+      } else if (lower.startsWith('display ont autofind')) {
+        appendLog(`----------------------------------------------------------------------------`);
+        appendLog(`  Number: 1 | F/S/P: 0/1/0 | SN: 48575443D4E5F6A7 | Device: HG8546M`);
+        appendLog(`----------------------------------------------------------------------------`);
+      } else if (lower.startsWith('display board')) {
+        appendLog(`SlotID  BoardName  Status          SubType0 SubType1    Online/Offline`);
+        appendLog(`0/1     H901GPHF   Normal          16*GPON              Online`);
+        appendLog(`0/2     H901XGHD   Normal          8*10G-GPON           Online`);
+        appendLog(`0/8     H901MPLA   Active_normal   4*10GE Uplink        Online`);
+        appendLog(`0/10    H901PISA   Normal          Dual-AC Power        Online`);
+      } else if (lower.startsWith('display service-port')) {
+        appendLog(`Index: 100 | VLAN: 1100 (SVLAN) | User VLAN: 100 | State: UP | Port: 0/1/0:1`);
+      } else if (lower.startsWith('display current') || lower === 'dis cur') {
+        const gen = generateConfiguration();
+        appendLog(`! Current Active Huawei VRP / OLT Configuration:\n` + gen.code);
+      } else if (lower.startsWith('ping')) {
+        appendLog(`PING 10.255.255.2: 56  data bytes, press CTRL_C to break`);
+        appendLog(`Reply from 10.255.255.2: bytes=56 Sequence=1 ttl=255 time=1.2 ms`);
+        appendLog(`Reply from 10.255.255.2: bytes=56 Sequence=2 ttl=255 time=0.9 ms`);
+        appendLog(`--- 10.255.255.2 ping statistics ---`);
+        appendLog(`2 packet(s) transmitted, 2 packet(s) received, 0.00% packet loss`);
+      } else if (lower === 'help' || lower === '?') {
+        appendLog(`Available Huawei VRP Commands:`);
+        appendLog(`  display isis peer               - Inspect IS-IS neighbor adjacencies`);
+        appendLog(`  display mpls ldp session        - Inspect operational MPLS LDP sessions`);
+        appendLog(`  display vsi verbose             - Verify VPLS VSI and pseudo-wire status`);
+        appendLog(`  display vsi remote-mac          - Display remote MAC table learned over PW`);
+        appendLog(`  display ospf peer brief         - Inspect multi-area OSPF adjacencies`);
+        appendLog(`  display ont optical-info 0/1 0 1- Check transceiver optical Rx/Tx budget`);
+        appendLog(`  display ont info 0/1 0 1        - Display ONT status and optical distance`);
+        appendLog(`  display board 0                 - Display chassis installed board status`);
+        appendLog(`  display service-port 100        - Inspect service port QinQ mappings`);
+        appendLog(`  display current-configuration   - Output current generated VRP config`);
+        appendLog(`  ping <ip>                       - Test IP ICMP connectivity`);
+        appendLog(`  clear                           - Clear the terminal screen`);
+      } else {
+        appendLog(`Error: Unrecognized command '${raw}'. Type 'help' for available commands.`);
+      }
     } else if (platform === 'docker') {
       if (lower.startsWith('docker compose ps') || lower.startsWith('docker ps')) {
         appendLog(`NAME                     IMAGE              COMMAND                  SERVICE      STATUS              PORTS`);
@@ -1995,6 +2538,7 @@ if __name__ == "__main__":
     const { platform } = state;
     let list = [];
 
+    // Simulator UI
     if (platform === 'cisco') {
       list = ['show ip route', 'show standby brief', 'show etherchannel summary', 'show ip interface brief', 'show running-config', 'ping 8.8.8.8', 'clear', 'help'];
     } else if (platform === 'juniper') {
@@ -2003,6 +2547,8 @@ if __name__ == "__main__":
       list = ['/ip route print', '/ip firewall mangle print', '/ip firewall nat print', '/interface wireguard print', '/system resource print', 'ping 8.8.8.8', 'clear', 'help'];
     } else if (platform === 'linux') {
       list = ['nginx -t', 'systemctl status nginx', 'ip addr show', 'wg show', 'curl -I https://gautambhuwan.com.np', 'nft list ruleset', 'clear', 'help'];
+    } else if (platform === 'huawei') {
+      list = ['display isis peer', 'display isis lsdb', 'display mpls ldp session', 'display mpls lsp', 'display vsi verbose', 'display vsi remote-mac', 'display ospf peer brief', 'display ont optical-info 0/1 0 1', 'display ont info 0/1 0 1', 'display ont autofind all', 'display board 0', 'display service-port 100', 'display current-configuration', 'ping 10.255.255.2', 'clear', 'help'];
     } else if (platform === 'docker') {
       list = ['docker compose ps', 'docker network ls', 'docker compose logs --tail=10', 'docker stats --no-stream', 'clear', 'help'];
     } else {

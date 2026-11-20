@@ -7,6 +7,76 @@
 document.addEventListener('DOMContentLoaded', () => {
   // Comprehensive Hierarchical Command & Help Tree
   const CLI_HELP_CATALOG = {
+    // Huawei VRP & OLT Commands
+    'display': {
+      desc: 'Display system status and configuration information (Huawei VRP)',
+      sub: {
+        'isis': {
+          desc: 'Intermediate System to Intermediate System (IS-IS)',
+          sub: {
+            'peer': { desc: 'Show IS-IS neighbor adjacencies, state and holdtimes' },
+            'lsdb': { desc: 'Show Link-State Database (LSDB) summary' }
+          }
+        },
+        'mpls': {
+          desc: 'Multiprotocol Label Switching (MPLS)',
+          sub: {
+            'ldp': {
+              desc: 'Label Distribution Protocol (LDP)',
+              sub: {
+                'session': { desc: 'Show operational LDP sessions and peer status' }
+              }
+            },
+            'lsp': { desc: 'Show MPLS Label Switched Path (LSP) forwarding database' }
+          }
+        },
+        'vsi': {
+          desc: 'Virtual Switching Instance (VPLS L2VPN)',
+          sub: {
+            'verbose': { desc: 'Show detailed VSI configuration and pseudo-wire status' },
+            'remote-mac': { desc: 'Show dynamically learned remote MAC addresses across PW' }
+          }
+        },
+        'ospf': {
+          desc: 'Open Shortest Path First (OSPF)',
+          sub: {
+            'peer': {
+              desc: 'Show OSPF neighbor states',
+              sub: {
+                'brief': { desc: 'Show OSPF neighbor brief state and addresses' }
+              }
+            }
+          }
+        },
+        'ont': {
+          desc: 'Optical Network Terminal (ONT) diagnostics',
+          sub: {
+            'optical-info': { desc: 'Show ONT transceiver optical Rx/Tx power budget' },
+            'info': { desc: 'Show ONT registration state, distance and serial number' },
+            'autofind': {
+              desc: 'Show auto-discovered unconfigured ONTs on PON ports',
+              sub: {
+                'all': { desc: 'Show all auto-discovered ONTs across all PON cards' }
+              }
+            }
+          }
+        },
+        'board': {
+          desc: 'Hardware board status',
+          sub: {
+            '0': { desc: 'Show slot status of all installed boards in chassis' }
+          }
+        },
+        'service-port': {
+          desc: 'OLT service port mappings',
+          sub: {
+            '100': { desc: 'Show specific service port configuration and state' },
+            'all': { desc: 'Show all active service port mappings' }
+          }
+        }
+      }
+    },
+
     'show': {
       desc: 'Show running system information',
       sub: {
@@ -235,6 +305,150 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Command Output Database
   const SIMULATOR_COMMANDS = {
+    'display isis peer': `                          Peer information for ISIS(1)
+                          ----------------------------
+System Id          Interface          Circuit Id        State Holdtime Type     PRI
+-----------------------------------------------------------------------------------
+0000.0000.0010     Eth-Trunk1         p2p               Up    28s      L2       --
+Total Peer(s): 1
+<HW-PE01-CORE> %ISIS-5-ADJCHANGE: ISIS 1 Neighbor 0000.0000.0010 (Eth-Trunk1) adjacency state Up, Done.`,
+
+    'display isis lsdb': `                        Database information for ISIS(1)
+                        ---------------------------------
+                          Level-2 Link State Database
+LSPID                 Seq Num      Checksum      Holdtime      Length  ATT/P/OL
+-------------------------------------------------------------------------------
+0000.0000.0001.00-00* 0x00000012   0x3a4f        1185          148     0/0/0
+0000.0000.0010.00-00  0x0000000e   0x8f22        1172          156     0/0/0
+0000.0000.0002.00-00  0x00000015   0x11ce        1190          148     0/0/0
+Total LSP(s): 3
+    *(Ino) / Count: Outer(0) Non-zero Outer(0)
+    *(Self) / Count: Directed(1) Non-directed(0)`,
+
+    'display mpls ldp session': `                LDP Session(s) in Public Network
+----------------------------------------------------------------------
+Peer LDP ID         Source Interface   State     Role  Hold-Time  KA-Sent
+----------------------------------------------------------------------
+10.255.255.10:0     Loopback0          Operational Active 30         2451
+10.255.255.2:0      Loopback0          Operational Active 30         2449
+----------------------------------------------------------------------
+TOTAL: 2 session(s) Found. LDP Graceful Restart: Enabled.`,
+
+    'display mpls lsp': `-------------------------------------------------------------------------------
+                 LSP Information: LDP LSP
+-------------------------------------------------------------------------------
+FEC                In/Out Label  In/Out Interface                    Token
+-------------------------------------------------------------------------------
+10.255.255.2/32    NULL/48118    Vlanif991                           0x1
+10.255.255.10/32   NULL/3        Vlanif991 (Eth-Trunk1)              0x2
+10.10.12.0/30      NULL/3        Vlanif991                           0x3
+10.10.23.0/30      48119/48116   Vlanif991                           0x1`,
+
+    'display vsi verbose': ` ***VSI Name               : BIZ_VPLS_100
+    Work Mode              : normal
+    Scope                  : public
+    VSI State              : up
+    VSI ID                 : 100
+    Signaling Protocol     : ldp
+    Encap Type             : ethernet
+    MTU                    : 1500
+    Diffserv Mode          : uniform
+    Mac Learning           : enabled
+    Mac Limit              : 2000
+    Mac Limit Action       : discard
+    Broadcast Suppression  : 5 (cir)
+    Multicast Suppression  : 5 (cir)
+    Total AC Number        : 2 (10GE1/0/1.100, 10GE1/0/1.200)
+    Total PW Number        : 1
+   *PW Information:
+    Peer IP                : 10.255.255.2
+    VSI ID                 : 100
+    PW State               : up
+    Inbound Label          : 48120
+    Outbound Label         : 48118
+    Interface Name         : Eth-Trunk1
+    Tunnel ID              : 0x0000000100000002
+    BFD State              : Admin-Up / Link-Up (30ms echo)`,
+
+    'display vsi remote-mac': `VSI Name: BIZ_VPLS_100
+MAC Address       VLAN    Peer IP         Tunnel ID     Age(s)
+--------------------------------------------------------------
+4857-021b-a101    100     10.255.255.2    0x10000002    18
+4857-021b-a102    200     10.255.255.2    0x10000002    12
+Total MAC addresses: 2`,
+
+    'display ospf peer brief': `          OSPF Process 1 with Router ID 10.255.255.1
+                   Peer Statistic Information
+ -------------------------------------------------------------------
+ Area Id          Interface                  Neighbor id      State
+ 0.0.0.0          Vlanif991                  10.255.255.10    Full
+ 0.0.0.1          Vlanif10                   10.10.10.254     Full
+ -------------------------------------------------------------------
+ Total Peer(s): 2`,
+
+    'display board 0': `-------------------------------------------------------------------------
+SlotID  BoardName  Status          SubType0 SubType1    Online/Offline
+-------------------------------------------------------------------------
+0/1     H901GPHF   Normal          16*GPON              Online
+0/2     H901XGHD   Normal          8*10G-GPON           Online
+0/8     H901MPLA   Active_normal   4*10GE Uplink        Online
+0/9     H901MPLA   Standby_normal  4*10GE Uplink        Online
+0/10    H901PISA   Normal          Dual-AC Power        Online
+-------------------------------------------------------------------------`,
+
+    'display ont optical-info 0/1 0 1': `-------------------------------------------------------------------------
+  ONU NII interface                      : GPON
+  OLT Rx ONT optical power(dBm)          : -19.82
+  ONT Rx optical power(dBm)              : -18.45  (Nominal: -8 to -27 dBm Standard)
+  ONT Tx optical power(dBm)              : 2.34
+  OLT Tx optical power(dBm)              : 2.85
+  Temperature(C)                         : 42
+  Voltage(V)                             : 3.28
+  Bias current(mA)                       : 14
+  Rogue ONT state                        : Normal (Non-Rogue, Burst Mode Confirmed)
+-------------------------------------------------------------------------`,
+
+    'display ont info 0/1 0 1': `-------------------------------------------------------------------------
+  F/S/P                   : 0/1/0
+  ONT-ID                  : 1
+  Control flag            : active
+  Run state               : online
+  Config state            : normal
+  Match state             : match
+  SN                      : 48575443F8A1B2C3 (HWTC-F8A1B2C3)
+  Type                    : HG8245H5 (4GE + 2POTS + 2.4G/5G Wi-Fi)
+  Distance                : 1248m
+  Rx power                : -18.45 dBm
+  Memory usage            : 38%
+  CPU usage               : 8%
+-------------------------------------------------------------------------`,
+
+    'display ont autofind all': `----------------------------------------------------------------------------
+  Number              : 1
+  F/S/P               : 0/1/0
+  Ont SN              : 48575443D4E5F6A7 (HWTC-D4E5F6A7)
+  Password            :
+  Device type         : HG8546M
+  Software Version    : V5R019C00S105
+  Auto-find time      : 2026-11-20 09:40:12
+----------------------------------------------------------------------------`,
+
+    'display service-port 100': `-------------------------------------------------------------------------
+  Index                   : 100
+  VLAN ID                 : 1100 (SVLAN Metro Aggregation)
+  VLAN attr               : common
+  Port type               : gpon
+  F/S/P                   : 0/1/0
+  ONT ID                  : 1
+  GEM index               : 1
+  User VLAN               : 100 (CVLAN Residential Internet)
+  Tag transform           : translate
+  Inbound traffic-table   : 8 (Rate: 300M Residential)
+  Outbound traffic-table  : 8 (Rate: 300M Residential)
+  State                   : up
+  Active state            : active
+-------------------------------------------------------------------------`,
+
     'help': `Available Simulation Commands:
   [Cisco IOS Routing & High Availability]
     show ip ospf neighbor        - Inspect OSPFv2 neighbor state & dead timers (Lab #001)
@@ -529,6 +743,19 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 9/12/17 ms (Recursiv
 
   // Lab Device Configurations
   const LAB_CONFIGS = {
+    'lab-014': {
+      prompt: '<HW-PE01-CORE>',
+      device: 'Huawei CloudEngine S6730 Core Switch (VRP v8)',
+      defaultCmd: 'display vsi verbose',
+      helpCmds: ['display isis peer', 'display mpls ldp session', 'display vsi verbose', 'display vsi remote-mac', 'display ospf peer brief', 'display isis lsdb', 'display mpls lsp', 'display current-configuration', 'help', 'clear']
+    },
+    'lab-015': {
+      prompt: 'MA5800-X7(config)#',
+      device: 'Huawei SmartAX MA5800-X7 Next-Gen OLT',
+      defaultCmd: 'display ont optical-info 0/1 0 1',
+      helpCmds: ['display ont optical-info 0/1 0 1', 'display ont info 0/1 0 1', 'display board 0', 'display service-port 100', 'display ont autofind all', 'display current-configuration', 'help', 'clear']
+    },
+
     'lab-001': {
       prompt: 'Core-ABR#',
       device: 'Cisco IOS Core ABR',
@@ -686,6 +913,33 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 9/12/17 ms (Recursiv
         return `Commands for ${LAB_CONFIGS[labId].device}:\n  ${LAB_CONFIGS[labId].helpCmds.join('\n  ')}\n\nTip: Press TAB to autocomplete. Type '?' after any word for contextual help.`;
       }
       return SIMULATOR_COMMANDS['help'];
+    }
+
+    // Huawei VRP Heuristics
+    if (lower.startsWith('display isis') || (labId === 'lab-014' && lower.includes('isis'))) {
+      return lower.includes('lsdb') ? SIMULATOR_COMMANDS['display isis lsdb'] : SIMULATOR_COMMANDS['display isis peer'];
+    }
+
+    if (lower.startsWith('display mpls') || (labId === 'lab-014' && lower.includes('mpls'))) {
+      return lower.includes('lsp') ? SIMULATOR_COMMANDS['display mpls lsp'] : SIMULATOR_COMMANDS['display mpls ldp session'];
+    }
+
+    if (lower.startsWith('display vsi') || (labId === 'lab-014' && lower.includes('vsi'))) {
+      return lower.includes('mac') ? SIMULATOR_COMMANDS['display vsi remote-mac'] : SIMULATOR_COMMANDS['display vsi verbose'];
+    }
+
+    if (lower.startsWith('display ont') || (labId === 'lab-015' && lower.includes('ont'))) {
+      if (lower.includes('autofind')) return SIMULATOR_COMMANDS['display ont autofind all'];
+      if (lower.includes('optical')) return SIMULATOR_COMMANDS['display ont optical-info 0/1 0 1'];
+      return SIMULATOR_COMMANDS['display ont info 0/1 0 1'];
+    }
+
+    if (lower.startsWith('display board') || (labId === 'lab-015' && lower.includes('board'))) {
+      return SIMULATOR_COMMANDS['display board 0'];
+    }
+
+    if (lower.startsWith('display service-port') || (labId === 'lab-015' && lower.includes('service-port'))) {
+      return SIMULATOR_COMMANDS['display service-port 100'];
     }
 
     // Check show running-config or show run
