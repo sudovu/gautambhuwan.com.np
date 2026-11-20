@@ -220,6 +220,7 @@
           <button type="button" class="architect-preset-chip" data-preset="huawei_olt_ma5800">Huawei MA5800-X7 OLT (XGS-PON &amp; QinQ)</button>
           <button type="button" class="architect-preset-chip" data-preset="huawei_ce_evpn">Huawei CE6800/CE8800 (EVPN VXLAN)</button>
           <button type="button" class="architect-preset-chip" data-preset="huawei_ce_mlag">Huawei CE6800 (M-LAG TOR &amp; RoCEv2)</button>
+          <button type="button" class="architect-preset-chip" data-preset="huawei_beginner_switch">Huawei Switch (Beginner Setup &amp; DHCP)</button>
         </div>
 
         <!-- Main 2-Column Grid: Configurator vs Live Blueprint & Code -->
@@ -949,8 +950,8 @@
       <!-- Project Search & Filter Strip -->
       <div class="reveal" style="display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
         <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
-          <button class="btn btn-secondary btn-sm filter-btn active" data-filter="all">All Disciplines (18)</button>
-          <button class="btn btn-secondary btn-sm filter-btn" data-filter="huawei">Huawei (3)</button>
+          <button class="btn btn-secondary btn-sm filter-btn active" data-filter="all">All Disciplines (19)</button>
+          <button class="btn btn-secondary btn-sm filter-btn" data-filter="huawei">Huawei (4)</button>
           <button class="btn btn-secondary btn-sm filter-btn" data-filter="networking">Networking</button>
           <button class="btn btn-secondary btn-sm filter-btn" data-filter="ai">AI &amp; Systems</button>
           <button class="btn btn-secondary btn-sm filter-btn" data-filter="cloud">Cloud &amp; DevOps</button>
@@ -1419,6 +1420,32 @@
           </div>
           <div style="display: flex; gap: 10px;">
             <a href="labs.html#lab-016" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
+            <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
+          </div>
+        </article>
+
+        <!-- Project 19: Huawei Switch Fundamentals for Beginners -->
+        <article class="card card-interactive project-card" id="project-huawei-beginner" data-category="networking">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3);">HUAWEI BEGINNER QUICKSTART</span>
+            <span class="mono-label" style="color: var(--accent-secondary);">2026</span>
+          </div>
+          <h3 style="margin-bottom: 10px;">Huawei Switch Fundamentals: Beginner Access, VLANs &amp; DHCP Commissioning</h3>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
+            Constructed a comprehensive beginner-friendly commissioning template and architecture guide for Huawei Enterprise access switches (CloudEngine S5700, S5720, and S5735 series). Implemented clean out-of-box initial setup, local administrator AAA authentication with SSHv2 console security, multi-VLAN segmentation (Staff, Guests, and Management), port mode configuration (Access and 802.1Q Trunk), Layer 3 Inter-VLAN routing via virtual interfaces (`interface Vlanif`), embedded DHCP address leasing with DNS options, upstream default static routing, and diagnostic health checks.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
+            <span class="skill-tag">Huawei VRP Basics</span>
+            <span class="skill-tag">CloudEngine S5735</span>
+            <span class="skill-tag">VLAN Batch</span>
+            <span class="skill-tag">Access &amp; Trunk</span>
+            <span class="skill-tag">Inter-VLAN (Vlanif)</span>
+            <span class="skill-tag">Built-in DHCP Server</span>
+            <span class="skill-tag">AAA Security</span>
+            <span class="skill-tag">Cisco Translation</span>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <a href="labs.html#lab-017" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
             <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
           </div>
         </article>

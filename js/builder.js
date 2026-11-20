@@ -53,6 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
         id: 'huawei-ce-mlag',
         title: 'Huawei CloudEngine: M-LAG Dual-Active TOR & Lossless RoCEv2 AI Fabric',
         desc: 'Carrier active-active TOR server multi-homing via M-LAG (Eth-Trunk peer-link & DAD) with RoCEv2 Priority Flow Control (PFC) & ECN on CoS 3.'
+      },
+      {
+        id: 'huawei-beginner-switch',
+        title: 'Huawei Switch Fundamentals: Beginner Setup (VLANs, Trunk & DHCP)',
+        desc: 'Beginner out-of-box setup: hostname, AAA admin, VLANs 10/20/99, Access/Trunk ports, Vlanif routing gateways, and built-in DHCP server.'
       }
     ],
 
@@ -231,6 +236,16 @@ document.addEventListener('DOMContentLoaded', () => {
       telemetryLogging: true,
       hostname: 'HW-CE6881-TOR01',
       subnet: '10.200.10.0/24'
+    },
+    huawei_beginner_switch: {
+      platform: 'huawei',
+      scenario: 'huawei-beginner-switch',
+      securityHardened: true,
+      haRedundancy: false,
+      dualStackIPv6: false,
+      telemetryLogging: false,
+      hostname: 'HW-SW01-ACCESS',
+      subnet: '192.168.10.0/24'
     },
 
     cisco_campus: {
@@ -1869,6 +1884,124 @@ interface 100GE1/0/1
 commit trial 300
 commit
 return`;
+      } else if (scenario === 'huawei-beginner-switch') {
+        roleText = 'Huawei Switch Fundamentals: Beginner Setup (VRP)';
+        interfacesText = 'GE0/0/1 (Access VLAN 10) / GE0/0/2 (Access VLAN 20) / GE0/0/24 (Trunk)';
+        protocolText = 'VLAN Segmentation, 802.1Q Trunk, Vlanif Inter-VLAN Routing, DHCP';
+
+        code = `! ====================================================================
+! HUAWEI VRP SWITCH CONFIGURATION FOR BEGINNERS
+! Hostname: ${hostname} (CloudEngine S5735 / S5720 Series)
+! Purpose: Initial Setup, VLANs, Access/Trunk Ports, Vlanif Gateways & DHCP
+! Network Scope: ${subnet} (Staff LAN) & 192.168.20.0/24 (Guest LAN)
+! ====================================================================
+
+! --- STEP 1: Enter System View & Set Switch Name ---
+system-view
+sysname ${hostname}
+header shell information "Welcome to ${hostname}. Authorized Access Only."
+#
+
+! --- STEP 2: Administrator Account & SSH Security (AAA) ---
+aaa
+ local-user admin password cipher Huawei@Office2026!
+ local-user admin service-type ssh terminal
+ local-user admin privilege level 15
+quit
+#
+rsa local-key-pair create 2048
+stelnet server enable
+ssh user admin authentication-type password
+ssh user admin service-type stelnet
+#
+user-interface vty 0 4
+ authentication-mode aaa
+ protocol inbound ssh
+ idle-timeout 15 0
+quit
+#
+
+! --- STEP 3: Create Local VLANs (Staff, Guest, Management) ---
+vlan batch 10 20 99
+#
+vlan 10
+ description OFFICE_STAFF_USERS
+quit
+#
+vlan 20
+ description GUEST_AND_WIFI_USERS
+quit
+#
+vlan 99
+ description SWITCH_MANAGEMENT
+quit
+#
+
+! --- STEP 4: Configure Access Ports (For Connected Computers) ---
+! Port GE0/0/1 connects to Staff PC in VLAN 10
+interface GigabitEthernet 0/0/1
+ description STAFF_WORKSTATION_PC1
+ port link-type access
+ port default vlan 10
+quit
+#
+! Port GE0/0/2 connects to Guest Device in VLAN 20
+interface GigabitEthernet 0/0/2
+ description GUEST_LAPTOP_OR_AP
+ port link-type access
+ port default vlan 20
+quit
+#
+
+! --- STEP 5: Configure Trunk Port (Uplink to Router or Core) ---
+! Port GE0/0/24 carries traffic for multiple VLANs with 802.1Q tags
+interface GigabitEthernet 0/0/24
+ description UPLINK_TO_EDGE_ROUTER
+ port link-type trunk
+ port trunk allow-pass vlan 10 20 99
+quit
+#
+
+! --- STEP 6: Layer 3 Inter-VLAN Routing (Vlanif Gateways) ---
+interface Vlanif 10
+ description DEFAULT_GATEWAY_FOR_STAFF
+ ip address ${baseIP}.1 255.255.255.0
+quit
+#
+interface Vlanif 20
+ description DEFAULT_GATEWAY_FOR_GUESTS
+ ip address 192.168.20.1 255.255.255.0
+quit
+#
+interface Vlanif 99
+ description SWITCH_MANAGEMENT_IP
+ ip address 192.168.99.10 255.255.255.0
+quit
+#
+
+! --- STEP 7: Built-in DHCP Server for Automatic IP Assignment ---
+dhcp enable
+#
+interface Vlanif 10
+ dhcp select interface
+ dhcp server dns-list 8.8.8.8 1.1.1.1
+ dhcp server lease day 3
+quit
+#
+interface Vlanif 20
+ dhcp select interface
+ dhcp server dns-list 8.8.8.8 1.1.1.1
+ dhcp server lease day 1
+quit
+#
+
+! --- STEP 8: Default Route to Upstream Internet Router ---
+ip route-static 0.0.0.0 0.0.0.0 192.168.99.1
+#
+
+! --- STEP 9: Return to User View & Save to Permanent Flash ---
+return
+save`;
       } else if (scenario === 'huawei-olt-ma5608t') {
         roleText = 'Huawei SmartAX MA5608T 2U Compact Mini-OLT';
         interfacesText = 'Uplink 10GE 0/19/0 / GPON 0/1 (GPFD 16-Port Board)';
@@ -2267,6 +2400,16 @@ if __name__ == "__main__":
           'help',
           'clear'
         ]);
+      } else if (state.scenario.includes('beginner')) {
+        renderChips([
+          'display vlan',
+          'display ip interface brief',
+          'display mac-address',
+          'display current-configuration',
+          'save',
+          'help',
+          'clear'
+        ]);
       } else {
         renderChips([
           'display isis peer',
@@ -2581,7 +2724,28 @@ if __name__ == "__main__":
         appendLog(`bash: ${raw}: command not found. Check quick action chips.`, false, false, true);
       }
     } else if (platform === 'huawei') {
-      if (lower.startsWith('display isis peer')) {
+      if (lower === 'display vlan' || lower === 'dis vlan') {
+        appendLog(`The total number of vlans is : 4`);
+        appendLog(`VID  Type    Ports`);
+        appendLog(`1    common  UT:GE0/0/3(D)  GE0/0/4(D)  GE0/0/5(D)`);
+        appendLog(`10   common  UT:GE0/0/1(U)  TG:GE0/0/24(U) [STAFF]`);
+        appendLog(`20   common  UT:GE0/0/2(U)  TG:GE0/0/24(U) [GUESTS]`);
+        appendLog(`99   common  TG:GE0/0/24(U) [MANAGEMENT]`);
+      } else if (lower.startsWith('display ip int') || lower.startsWith('dis ip int')) {
+        appendLog(`Interface                         IP Address/Mask      Physical   Protocol`);
+        appendLog(`Vlanif10                          192.168.10.1/24      up         up`);
+        appendLog(`Vlanif20                          192.168.20.1/24      up         up`);
+        appendLog(`Vlanif99                          192.168.99.10/24     up         up`);
+        appendLog(`GigabitEthernet0/0/1              unassigned           up         down (L2)`);
+      } else if (lower.startsWith('display mac')) {
+        appendLog(`MAC Address    VLAN/VSI/BD   Learned-From        Type                Aging`);
+        appendLog(`5489-98a1-b2c3 10/-/-        GE0/0/1             dynamic             300`);
+        appendLog(`5489-98d4-e5f6 20/-/-        GE0/0/2             dynamic             285`);
+      } else if (lower === 'save') {
+        appendLog(`The current configuration will be written to the device.`);
+        appendLog(`Are you sure to continue? (y/n)[n]: y`);
+        appendLog(`Info: Configuration saved successfully.`);
+      } else if (lower.startsWith('display isis peer')) {
         appendLog(`                          Peer information for ISIS(1)`);
         appendLog(`                          ----------------------------`);
         appendLog(`System Id          Interface          Circuit Id        State Holdtime Type     PRI`);
@@ -2830,7 +2994,7 @@ if __name__ == "__main__":
     } else if (platform === 'linux') {
       list = ['nginx -t', 'systemctl status nginx', 'ip addr show', 'wg show', 'curl -I https://gautambhuwan.com.np', 'nft list ruleset', 'clear', 'help'];
     } else if (platform === 'huawei') {
-      list = ['display dfs-group 1 m-lag', 'display vxlan vni verbose', 'display evpn routing-table', 'display dcb pfc interface 100ge 1/0/1', 'display device', 'display configuration candidate', 'commit', 'display isis peer', 'display isis lsdb', 'display mpls ldp session', 'display mpls lsp', 'display vsi verbose', 'display vsi remote-mac', 'display ospf peer brief', 'display ont optical-info 0/1 0 1', 'display ont info 0/1 0 1', 'display ont autofind all', 'display board 0', 'display service-port 100', 'display current-configuration', 'ping 10.255.255.2', 'clear', 'help'];
+      list = ['display vlan', 'display ip interface brief', 'display mac-address', 'save', 'display dfs-group 1 m-lag', 'display vxlan vni verbose', 'display evpn routing-table', 'display dcb pfc interface 100ge 1/0/1', 'display device', 'display configuration candidate', 'commit', 'display isis peer', 'display isis lsdb', 'display mpls ldp session', 'display mpls lsp', 'display vsi verbose', 'display vsi remote-mac', 'display ospf peer brief', 'display ont optical-info 0/1 0 1', 'display ont info 0/1 0 1', 'display ont autofind all', 'display board 0', 'display service-port 100', 'display current-configuration', 'ping 10.255.255.2', 'clear', 'help'];
     } else if (platform === 'docker') {
       list = ['docker compose ps', 'docker network ls', 'docker compose logs --tail=10', 'docker stats --no-stream', 'clear', 'help'];
     } else {

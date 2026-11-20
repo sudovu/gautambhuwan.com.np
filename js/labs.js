@@ -356,6 +356,60 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Command Output Database
   const SIMULATOR_COMMANDS = {
+    'display vlan': `The total number of vlans is : 4
+--------------------------------------------------------------------------------
+U: Up;         D: Down;         TG: Tagged;         UT: Untagged;
+MP: Vlan-mapping;               ST: Vlan-stacking;
+#: Protocol VLAN;               +: MAC-based VLAN;  *: Voice VLAN;
+--------------------------------------------------------------------------------
+VID  Type    Ports
+--------------------------------------------------------------------------------
+1    common  UT:GE0/0/3(D)      GE0/0/4(D)      GE0/0/5(D)      GE0/0/6(D)
+10   common  UT:GE0/0/1(U)      TG:GE0/0/24(U)
+20   common  UT:GE0/0/2(U)      TG:GE0/0/24(U)
+99   common  TG:GE0/0/24(U)
+--------------------------------------------------------------------------------
+VLAN 10: STAFF_OFFICE_LAN  |  VLAN 20: GUEST_AND_WIFI  |  VLAN 99: MANAGEMENT`,
+
+    'display ip interface brief': `*down: administratively down
+^down: standby
+(l): loopback
+(s): spoofing
+(E): E-Trunk down
+Interface                         IP Address/Mask      Physical   Protocol
+MEth0/0/1                         unassigned           down       down
+Vlanif10                          192.168.10.1/24      up         up
+Vlanif20                          192.168.20.1/24      up         up
+Vlanif99                          192.168.99.10/24     up         up
+GigabitEthernet0/0/1              unassigned           up         down (L2)
+GigabitEthernet0/0/2              unassigned           up         down (L2)
+GigabitEthernet0/0/24             unassigned           up         down (Trunk)`,
+
+    'display mac-address': `-------------------------------------------------------------------------------
+MAC Address    VLAN/VSI/BD   Learned-From        Type                Aging
+-------------------------------------------------------------------------------
+5489-98a1-b2c3 10/-/-        GE0/0/1             dynamic             300
+5489-98d4-e5f6 20/-/-        GE0/0/2             dynamic             285
+-------------------------------------------------------------------------------
+Total items displayed = 2`,
+
+    'display ip pool interface vlanif10 used': `  Pool-name      : Vlanif10
+  Pool-No        : 0
+  Leased-IP-Num  : 1
+  Gateway-0      : 192.168.10.1
+  Mask           : 255.255.255.0
+  DNS-0          : 8.8.8.8
+  DNS-1          : 1.1.1.1
+----------------------------------------------------------------------------
+IP Address          Client-MAC          Lease-Time(m)       Type
+----------------------------------------------------------------------------
+192.168.10.254      5489-98a1-b2c3      4320 (3 days)       Automatic
+----------------------------------------------------------------------------`,
+
+    'save': `The current configuration will be written to the device.
+Are you sure to continue? (y/n)[n]: y
+Info: Configuration saved successfully.`,
+
     'display isis peer': `                          Peer information for ISIS(1)
                           ----------------------------
 System Id          Interface          Circuit Id        State Holdtime Type     PRI
@@ -886,6 +940,22 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 9/12/17 ms (Recursiv
 
   // Lab Device Configurations
   const LAB_CONFIGS = {
+    'lab-017': {
+      prompt: '<HW-SW01-ACCESS>',
+      device: 'Huawei S5735 Enterprise Access Switch (VRP v5/v8)',
+      defaultCmd: 'display vlan',
+      helpCmds: [
+        'display vlan',
+        'display ip interface brief',
+        'display mac-address',
+        'display current-configuration',
+        'display ip pool interface vlanif10 used',
+        'save',
+        'help',
+        'clear'
+      ]
+    },
+
     'lab-016': {
       prompt: '<HW-CE6881-LEAF01>',
       device: 'Huawei CloudEngine CE6881-48T6CQ TOR Leaf (VRPv8)',
@@ -1137,6 +1207,30 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 9/12/17 ms (Recursiv
 
     if (lower === 'commit') {
       return SIMULATOR_COMMANDS['commit'];
+    }
+
+    if (lower === 'display vlan' || lower === 'dis vlan' || (labId === 'lab-017' && lower.includes('vlan'))) {
+      return SIMULATOR_COMMANDS['display vlan'];
+    }
+
+    if (lower.startsWith('display ip int') || lower.startsWith('dis ip int') || (labId === 'lab-017' && (lower.includes('ip') || lower.includes('brief')))) {
+      return SIMULATOR_COMMANDS['display ip interface brief'];
+    }
+
+    if (lower.startsWith('display mac') || lower.startsWith('dis mac') || (labId === 'lab-017' && lower.includes('mac'))) {
+      return SIMULATOR_COMMANDS['display mac-address'];
+    }
+
+    if (lower.includes('pool') || lower.includes('dhcp')) {
+      return SIMULATOR_COMMANDS['display ip pool interface vlanif10 used'];
+    }
+
+    if (lower === 'save' || lower === 'wr') {
+      return SIMULATOR_COMMANDS['save'];
+    }
+
+    if (lower === 'system-view' || lower === 'sys') {
+      return `[HW-SW01-ACCESS] Entered system view. Enter system commands to configure switch.`;
     }
 
     // Check show running-config or show run

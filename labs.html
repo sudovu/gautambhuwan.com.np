@@ -205,6 +205,8 @@
           <button type="button" class="sandbox-chip" data-cmd="display dfs-group 1 m-lag">display m-lag</button>
           <button type="button" class="sandbox-chip" data-cmd="display vxlan vni verbose">display vxlan vni</button>
           <button type="button" class="sandbox-chip" data-cmd="display dcb pfc interface 100GE1/0/1">display dcb pfc</button>
+          <button type="button" class="sandbox-chip" data-cmd="display vlan">display vlan</button>
+          <button type="button" class="sandbox-chip" data-cmd="display ip interface brief">display ip int brief</button>
           <button type="button" class="sandbox-chip" data-cmd="/ip route print">/ip route print</button>
           <button type="button" class="sandbox-chip" data-cmd="subnet 172.16.0.0/23">subnet 172.16.0.0/23</button>
           <button type="button" class="sandbox-chip" data-cmd="ping 10.255.255.2">ping 10.255.255.2</button>
@@ -232,8 +234,8 @@
           </div>
 
           <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
-            <button type="button" class="btn btn-secondary btn-sm lab-filter-pill active" data-platform="all">All Labs (16)</button>
-            <button type="button" class="btn btn-secondary btn-sm lab-filter-pill" data-platform="huawei">Huawei (3)</button>
+            <button type="button" class="btn btn-secondary btn-sm lab-filter-pill active" data-platform="all">All Labs (17)</button>
+            <button type="button" class="btn btn-secondary btn-sm lab-filter-pill" data-platform="huawei">Huawei (4)</button>
             <button type="button" class="btn btn-secondary btn-sm lab-filter-pill" data-platform="cisco">Cisco (3)</button>
             <button type="button" class="btn btn-secondary btn-sm lab-filter-pill" data-platform="juniper">Juniper (2)</button>
             <button type="button" class="btn btn-secondary btn-sm lab-filter-pill" data-platform="mikrotik">MikroTik (2)</button>
@@ -2345,6 +2347,352 @@ Slot  Type           Item                  Status     Sub-Type  Power  Fan
           <span class="mono-label" style="color: #38bdf8; font-size: 0.78rem;">PORTFOLIO PROJECT REFERENCE // CLOUDENGINE DATA CENTER FABRIC</span>
           <a href="projects.html#project-huawei-ce" class="btn btn-outline btn-sm">
             <span>Inspect CloudEngine DC Fabric Architecture Project &rarr;</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- LAB // 017: Huawei Switch Fundamentals: Beginner Quickstart (VLANs, Access/Trunk, Vlanif Routing & DHCP) -->
+      <article id="lab-017" class="card reveal" style="margin-bottom: 48px; border-left: 4px solid #10b981;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="mono-label" style="color: #10b981; font-weight: 700;">LAB // 017</span>
+            <span class="tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3);">BEGINNER QUICKSTART // HUAWEI VRP</span>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <span class="tag">Huawei VRP Basics</span>
+            <span class="tag">S5700 / S5720 / S5735</span>
+            <span class="tag">VLAN Segmentation</span>
+            <span class="tag">Access &amp; Trunk Ports</span>
+            <span class="tag">Inter-VLAN (Vlanif)</span>
+            <span class="tag">Built-in DHCP Server</span>
+            <span class="tag">AAA &amp; SSHv2</span>
+            <span class="tag">Cisco Translation Cheat Sheet</span>
+          </div>
+        </div>
+
+        <h2 style="font-size: 1.6rem; margin-top: 4px; margin-bottom: 12px;">Huawei Switch Fundamentals: Beginner Quickstart (VLANs, Access/Trunk, Inter-VLAN Routing &amp; DHCP)</h2>
+        <p class="body-sm" style="color: var(--text-secondary); margin-bottom: 24px; line-height: 1.7;">
+          <strong>Objective:</strong> A clear, step-by-step foundational guide designed for junior network engineers, students, and technicians setting up a Huawei enterprise switch (such as the CloudEngine S5735, S5720, or S5700 series) for the very first time. Learn how to configure a switch straight out of the box: rename the device, secure the administrator login with SSHv2 and AAA, create local VLANs (Office Staff, Guests, and Management), assign Access ports to user PCs, configure an 802.1Q Trunk uplink to an upstream router, enable Inter-VLAN routing with Layer 3 virtual interfaces (`interface Vlanif`), configure the switch's built-in DHCP server to automatically assign IP addresses and DNS to connected computers, and verify the network with essential Huawei diagnostic commands.
+        </p>
+
+        <!-- Cisco IOS vs Huawei VRP Command Translation Cheat Sheet -->
+        <div class="code-block-header" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.25);">
+          <span class="mono-label" style="color: #10b981;">COMMAND TRANSLATION CHEAT SHEET // CISCO IOS vs. HUAWEI VRP</span>
+        </div>
+        <div style="overflow-x: auto; margin-bottom: 28px;">
+          <table class="table-custom" style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+            <thead>
+              <tr style="border-bottom: 1px solid var(--border); text-align: left; background: var(--surface-elevated);">
+                <th style="padding: 10px 14px; width: 28%;">Networking Action</th>
+                <th style="padding: 10px 14px; width: 36%;">Cisco IOS Command</th>
+                <th style="padding: 10px 14px; width: 36%;">Huawei VRP Command</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Enter Configuration Mode</strong></td>
+                <td><code>configure terminal</code> (or <code>conf t</code>)</td>
+                <td><code>system-view</code> (or <code>sys</code>)</td>
+              </tr>
+              <tr>
+                <td><strong>Return to User Exec Mode</strong></td>
+                <td><code>end</code> (or <code>Ctrl+Z</code>)</td>
+                <td><code>return</code> (or <code>Ctrl+Z</code>)</td>
+              </tr>
+              <tr>
+                <td><strong>Exit One Sub-View Level</strong></td>
+                <td><code>exit</code></td>
+                <td><code>quit</code> (or <code>q</code>)</td>
+              </tr>
+              <tr>
+                <td><strong>View Running Configuration</strong></td>
+                <td><code>show running-config</code> (or <code>sh run</code>)</td>
+                <td><code>display current-configuration</code> (or <code>dis cur</code>)</td>
+              </tr>
+              <tr>
+                <td><strong>Save Configuration to Flash</strong></td>
+                <td><code>write memory</code> (or <code>copy run start</code>)</td>
+                <td><code>save</code></td>
+              </tr>
+              <tr>
+                <td><strong>View Interface Status &amp; IPs</strong></td>
+                <td><code>show ip interface brief</code></td>
+                <td><code>display ip interface brief</code></td>
+              </tr>
+              <tr>
+                <td><strong>Remove a Command / Disable</strong></td>
+                <td><code>no [command]</code> (e.g. <code>no shutdown</code>)</td>
+                <td><code>undo [command]</code> (e.g. <code>undo shutdown</code>)</td>
+              </tr>
+              <tr>
+                <td><strong>Create Multiple VLANs</strong></td>
+                <td><code>vlan 10,20,99</code></td>
+                <td><code>vlan batch 10 20 99</code></td>
+              </tr>
+              <tr>
+                <td><strong>Configure End-User Access Port</strong></td>
+                <td><code>switchport mode access</code><br><code>switchport access vlan 10</code></td>
+                <td><code>port link-type access</code><br><code>port default vlan 10</code></td>
+              </tr>
+              <tr>
+                <td><strong>Configure Uplink Trunk Port</strong></td>
+                <td><code>switchport mode trunk</code><br><code>switchport trunk allowed vlan 10,20,99</code></td>
+                <td><code>port link-type trunk</code><br><code>port trunk allow-pass vlan 10 20 99</code></td>
+              </tr>
+              <tr>
+                <td><strong>Layer 3 Virtual Gateway (SVI)</strong></td>
+                <td><code>interface Vlan10</code></td>
+                <td><code>interface Vlanif10</code></td>
+              </tr>
+              <tr>
+                <td><strong>View Learned MAC Table</strong></td>
+                <td><code>show mac address-table</code></td>
+                <td><code>display mac-address</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Beginner Topology Blueprint -->
+        <div class="code-block-header">
+          <span class="mono-label">TOPOLOGY BLUEPRINT // BEGINNER OFFICE LAN WITH HUAWEI VRP ACCESS SWITCH</span>
+        </div>
+        <pre class="code-terminal" style="margin-bottom: 24px;"><code>+-------------------------------------------------------------------------------------------------------------------+
+|                            BEGINNER OFFICE &amp; CAMPUS NETWORK TOPOLOGY (HUAWEI VRP)                                 |
++-------------------------------------------------------------------------------------------------------------------+
+
+                                        [Internet Gateway / Edge Router]
+                                                  (192.168.99.1)
+                                                        |
+                                                        | Uplink Trunk: GE0/0/24
+                                                        | (Carries VLANs 10, 20, 99)
+                                                        v
+                                    +---------------------------------------+
+                                    |     HW-SW01-ACCESS (Huawei S5735)     |
+                                    |                                       |
+                                    |  Vlanif10: 192.168.10.1 (Staff GW)    |
+                                    |  Vlanif20: 192.168.20.1 (Guest GW)    |
+                                    |  Vlanif99: 192.168.99.10 (Management) |
+                                    |  DHCP Pool: Active on Vlanif10 &amp; 20   |
+                                    +---------------------------------------+
+                                           |                         |
+               Port GE0/0/1 (Access VLAN 10) |                         | Port GE0/0/2 (Access VLAN 20)
+                                           v                         v
+                               +-----------------------+ +-----------------------+
+                               | Staff Workstation PC  | | Guest Laptop / Wi-Fi  |
+                               | IP: 192.168.10.x/24   | | IP: 192.168.20.x/24   |
+                               | Gateway: 192.168.10.1 | | Gateway: 192.168.20.1 |
+                               | DNS: 8.8.8.8, 1.1.1.1 | | DNS: 8.8.8.8, 1.1.1.1 |
+                               +-----------------------+ +-----------------------+</code></pre>
+
+        <!-- Configuration Terminal -->
+        <div class="terminal-card" style="margin-bottom: 24px;">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="terminal-dot dot-red"></span>
+              <span class="terminal-dot dot-yellow"></span>
+              <span class="terminal-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">huawei-beginner-cli // HW-SW01-ACCESS-initial-setup.cfg</span>
+          </div>
+          <pre class="terminal-body"><code>! ====================================================================
+! HUAWEI VRP SWITCH COMMISSIONING GUIDE FOR BEGINNERS
+! Target Hardware: Huawei S5700 / S5720 / S5735 / S2700 Series
+! Topics Covered: Hostname, AAA Admin, VLANs, Access/Trunk, Vlanif, DHCP
+! ====================================================================
+
+! --------------------------------------------------------------------
+! STEP 1: ENTER SYSTEM VIEW &amp; SET SWITCH HOSTNAME
+! --------------------------------------------------------------------
+! In Huawei, user mode prompt is &lt;HUAWEI&gt;. Enter system view to configure.
+&lt;HUAWEI&gt; system-view
+[HUAWEI] sysname HW-SW01-ACCESS
+[HW-SW01-ACCESS] header shell information "Welcome to Huawei Office Access Switch. Authorized Access Only."
+[HW-SW01-ACCESS] clock timezone UTC add 05:45
+
+! --------------------------------------------------------------------
+! STEP 2: SECURE ADMINISTRATOR LOGIN WITH AAA &amp; SSHv2
+! --------------------------------------------------------------------
+! Create local admin user credentials with level 15 (full administrator privileges)
+[HW-SW01-ACCESS] aaa
+[HW-SW01-ACCESS-aaa] local-user admin password cipher Huawei@Office2026!
+[HW-SW01-ACCESS-aaa] local-user admin service-type ssh terminal
+[HW-SW01-ACCESS-aaa] local-user admin privilege level 15
+[HW-SW01-ACCESS-aaa] quit
+
+! Generate 2048-bit RSA encryption keys and enable SSH server
+[HW-SW01-ACCESS] rsa local-key-pair create 2048
+[HW-SW01-ACCESS] stelnet server enable
+[HW-SW01-ACCESS] ssh user admin authentication-type password
+[HW-SW01-ACCESS] ssh user admin service-type stelnet
+
+! Configure Virtual Terminal (VTY) lines for remote SSH access
+[HW-SW01-ACCESS] user-interface vty 0 4
+[HW-SW01-ACCESS-ui-vty0-4] authentication-mode aaa
+[HW-SW01-ACCESS-ui-vty0-4] protocol inbound ssh
+[HW-SW01-ACCESS-ui-vty0-4] idle-timeout 15 0
+[HW-SW01-ACCESS-ui-vty0-4] quit
+
+! --------------------------------------------------------------------
+! STEP 3: CREATE VLANS FOR NETWORK SEGMENTATION
+! --------------------------------------------------------------------
+! In Huawei, you can create multiple VLANs in one command using 'vlan batch'
+[HW-SW01-ACCESS] vlan batch 10 20 99
+
+! Add human-readable descriptions to each VLAN
+[HW-SW01-ACCESS] vlan 10
+[HW-SW01-ACCESS-vlan10] description OFFICE_STAFF_USERS
+[HW-SW01-ACCESS-vlan10] quit
+
+[HW-SW01-ACCESS] vlan 20
+[HW-SW01-ACCESS-vlan20] description GUEST_AND_WIFI_USERS
+[HW-SW01-ACCESS-vlan20] quit
+
+[HW-SW01-ACCESS] vlan 99
+[HW-SW01-ACCESS-vlan99] description SWITCH_MANAGEMENT
+[HW-SW01-ACCESS-vlan99] quit
+
+! --------------------------------------------------------------------
+! STEP 4: CONFIGURE ACCESS PORTS (FOR COMPUTERS &amp; PRINTERS)
+! --------------------------------------------------------------------
+! Port GE0/0/1 connects to a Staff Workstation PC in VLAN 10
+[HW-SW01-ACCESS] interface GigabitEthernet 0/0/1
+[HW-SW01-ACCESS-GigabitEthernet0/0/1] description CONNECTED_TO_STAFF_PC_01
+[HW-SW01-ACCESS-GigabitEthernet0/0/1] port link-type access
+[HW-SW01-ACCESS-GigabitEthernet0/0/1] port default vlan 10
+[HW-SW01-ACCESS-GigabitEthernet0/0/1] quit
+
+! Port GE0/0/2 connects to a Guest Laptop or Wi-Fi Access Point in VLAN 20
+[HW-SW01-ACCESS] interface GigabitEthernet 0/0/2
+[HW-SW01-ACCESS-GigabitEthernet0/0/2] description CONNECTED_TO_GUEST_AP_01
+[HW-SW01-ACCESS-GigabitEthernet0/0/2] port link-type access
+[HW-SW01-ACCESS-GigabitEthernet0/0/2] port default vlan 20
+[HW-SW01-ACCESS-GigabitEthernet0/0/2] quit
+
+! --------------------------------------------------------------------
+! STEP 5: CONFIGURE TRUNK PORT (UPLINK TO ROUTER / CORE SWITCH)
+! --------------------------------------------------------------------
+! Port GE0/0/24 connects to upstream Internet Router and tags multiple VLANs
+[HW-SW01-ACCESS] interface GigabitEthernet 0/0/24
+[HW-SW01-ACCESS-GigabitEthernet0/0/24] description UPLINK_TO_INTERNET_ROUTER
+[HW-SW01-ACCESS-GigabitEthernet0/0/24] port link-type trunk
+[HW-SW01-ACCESS-GigabitEthernet0/0/24] port trunk allow-pass vlan 10 20 99
+[HW-SW01-ACCESS-GigabitEthernet0/0/24] quit
+
+! --------------------------------------------------------------------
+! STEP 6: LAYER 3 INTER-VLAN ROUTING WITH VLANIF GATEWAYS
+! --------------------------------------------------------------------
+! Vlanif interfaces act as default gateways for each VLAN
+[HW-SW01-ACCESS] interface Vlanif 10
+[HW-SW01-ACCESS-Vlanif10] description GATEWAY_FOR_STAFF_VLAN10
+[HW-SW01-ACCESS-Vlanif10] ip address 192.168.10.1 255.255.255.0
+[HW-SW01-ACCESS-Vlanif10] quit
+
+[HW-SW01-ACCESS] interface Vlanif 20
+[HW-SW01-ACCESS-Vlanif20] description GATEWAY_FOR_GUEST_VLAN20
+[HW-SW01-ACCESS-Vlanif20] ip address 192.168.20.1 255.255.255.0
+[HW-SW01-ACCESS-Vlanif20] quit
+
+[HW-SW01-ACCESS] interface Vlanif 99
+[HW-SW01-ACCESS-Vlanif99] description SWITCH_MANAGEMENT_IP
+[HW-SW01-ACCESS-Vlanif99] ip address 192.168.99.10 255.255.255.0
+[HW-SW01-ACCESS-Vlanif99] quit
+
+! --------------------------------------------------------------------
+! STEP 7: CONFIGURE BUILT-IN DHCP SERVER FOR AUTOMATIC IP LEASING
+! --------------------------------------------------------------------
+! Enable global DHCP processing on switch
+[HW-SW01-ACCESS] dhcp enable
+
+! Enable DHCP directly on Vlanif10 so Staff PCs automatically get IPs
+[HW-SW01-ACCESS] interface Vlanif 10
+[HW-SW01-ACCESS-Vlanif10] dhcp select interface
+[HW-SW01-ACCESS-Vlanif10] dhcp server dns-list 8.8.8.8 1.1.1.1
+[HW-SW01-ACCESS-Vlanif10] dhcp server lease day 3
+[HW-SW01-ACCESS-Vlanif10] quit
+
+! Enable DHCP directly on Vlanif20 for Guest devices
+[HW-SW01-ACCESS] interface Vlanif 20
+[HW-SW01-ACCESS-Vlanif20] dhcp select interface
+[HW-SW01-ACCESS-Vlanif20] dhcp server dns-list 8.8.8.8 1.1.1.1
+[HW-SW01-ACCESS-Vlanif20] dhcp server lease day 1
+[HW-SW01-ACCESS-Vlanif20] quit
+
+! --------------------------------------------------------------------
+! STEP 8: DEFAULT ROUTE TO INTERNET GATEWAY &amp; SAVE
+! --------------------------------------------------------------------
+! Route all outbound traffic to the upstream router (192.168.99.1)
+[HW-SW01-ACCESS] ip route-static 0.0.0.0 0.0.0.0 192.168.99.1
+
+! Return to user view and save configuration to permanent flash memory
+[HW-SW01-ACCESS] return
+&lt;HW-SW01-ACCESS&gt; save
+The current configuration will be written to the device.
+Are you sure to continue? (y/n)[n]: y
+Info: Configuration saved successfully.</code></pre>
+        </div>
+
+        <!-- Verification Output Terminal -->
+        <div class="terminal-card" style="margin-bottom: 24px;">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="terminal-dot dot-red"></span>
+              <span class="terminal-dot dot-yellow"></span>
+              <span class="terminal-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">huawei-beginner-diagnostics // display-vlan-and-ip-interface-brief.log</span>
+          </div>
+          <pre class="terminal-body"><code>&lt;HW-SW01-ACCESS&gt; display vlan
+The total number of vlans is : 4
+--------------------------------------------------------------------------------
+U: Up;         D: Down;         TG: Tagged;         UT: Untagged;
+MP: Vlan-mapping;               ST: Vlan-stacking;
+#: Protocol VLAN;               +: MAC-based VLAN;  *: Voice VLAN;
+--------------------------------------------------------------------------------
+VID  Type    Ports
+--------------------------------------------------------------------------------
+1    common  UT:GE0/0/3(D)      GE0/0/4(D)      GE0/0/5(D)      GE0/0/6(D)
+10   common  UT:GE0/0/1(U)      TG:GE0/0/24(U)
+20   common  UT:GE0/0/2(U)      TG:GE0/0/24(U)
+99   common  TG:GE0/0/24(U)
+
+&lt;HW-SW01-ACCESS&gt; display ip interface brief
+*down: administratively down
+^down: standby
+(l): loopback
+(s): spoofing
+(E): E-Trunk down
+Interface                         IP Address/Mask      Physical   Protocol
+MEth0/0/1                         unassigned           down       down
+Vlanif10                          192.168.10.1/24      up         up
+Vlanif20                          192.168.20.1/24      up         up
+Vlanif99                          192.168.99.10/24     up         up
+
+&lt;HW-SW01-ACCESS&gt; display mac-address
+-------------------------------------------------------------------------------
+MAC Address    VLAN/VSI/BD   Learned-From        Type                Aging
+-------------------------------------------------------------------------------
+5489-98a1-b2c3 10/-/-        GE0/0/1             dynamic             300
+5489-98d4-e5f6 20/-/-        GE0/0/2             dynamic             285
+-------------------------------------------------------------------------------
+Total items displayed = 2</code></pre>
+        </div>
+
+        <div class="grid-2" style="background: var(--surface-elevated); padding: 20px; border-radius: var(--radius-sm); font-size: 0.9rem;">
+          <div>
+            <strong>Beginner Mistake 1 (Port Link-Type):</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">In Cisco, typing <code>switchport access vlan 10</code> automatically sets the port to access mode. In Huawei VRP, if you run <code>port default vlan 10</code> without first specifying <code>port link-type access</code>, the switch returns an error. Always define <code>port link-type access</code> or <code>port link-type trunk</code> first!</p>
+          </div>
+          <div>
+            <strong>Beginner Mistake 2 (DHCP Service):</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Configuring <code>dhcp select interface</code> on a Vlanif will not lease IP addresses if the global DHCP process is disabled. Always run <code>dhcp enable</code> in system-view first before configuring DHCP on interfaces.</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <span class="mono-label" style="color: #10b981; font-size: 0.78rem;">PORTFOLIO PROJECT REFERENCE // BEGINNER SWITCH QUICKSTART</span>
+          <a href="projects.html#project-huawei-beginner" class="btn btn-outline btn-sm">
+            <span>Inspect Beginner Huawei Switch Project &rarr;</span>
           </a>
         </div>
       </article>
