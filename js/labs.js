@@ -73,6 +73,56 @@ document.addEventListener('DOMContentLoaded', () => {
             '100': { desc: 'Show specific service port configuration and state' },
             'all': { desc: 'Show all active service port mappings' }
           }
+        },
+        'dfs-group': {
+          desc: 'Multichassis Link Aggregation (M-LAG) DFS status and peer-links',
+          sub: {
+            '1': {
+              desc: 'DFS group 1 status',
+              sub: {
+                'm-lag': { desc: 'Show M-LAG interface synchronization and port states' },
+                'node': { desc: 'Show DFS group dual-active heartbeat and keepalive status' }
+              }
+            }
+          }
+        },
+        'vxlan': {
+          desc: 'Virtual Extensible LAN (VXLAN) fabric',
+          sub: {
+            'vni': {
+              desc: 'VXLAN Network Identifier (VNI) table',
+              sub: {
+                'verbose': { desc: 'Show detailed VNI tunnel bindings and packet statistics' }
+              }
+            },
+            'tunnel': { desc: 'Show active VXLAN VTEP peer tunnels' }
+          }
+        },
+        'evpn': {
+          desc: 'BGP EVPN routing database',
+          sub: {
+            'routing-table': { desc: 'Show EVPN Type-2 MAC/IP, Type-3 Multicast, and Type-5 Prefix routes' }
+          }
+        },
+        'dcb': {
+          desc: 'Data Center Bridging and Lossless AI fabric',
+          sub: {
+            'pfc': {
+              desc: 'Priority-based Flow Control status',
+              sub: {
+                'interface': { desc: 'Show per-interface PFC queue statistics and pause frames' }
+              }
+            }
+          }
+        },
+        'device': {
+          desc: 'Chassis hardware architecture, MPUs, SFU crossbars, and LPUs'
+        },
+        'configuration': {
+          desc: 'Candidate and committed configuration states',
+          sub: {
+            'candidate': { desc: 'Show uncommitted VRPv8 candidate configuration changes' }
+          }
         }
       }
     },
@@ -175,6 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
         '172.16.0.0/23': { desc: 'Calculate 172.16.0.0/23 VLSM allocation matrix' }
       }
     },
+    'commit': { desc: 'Commit candidate configuration to running database in VRPv8' },
     'clear': { desc: 'Reset and clear the console session' },
     'help': { desc: 'Description of the interactive help system' },
 
@@ -432,6 +483,98 @@ SlotID  BoardName  Status          SubType0 SubType1    Online/Offline
   Software Version    : V5R019C00S105
   Auto-find time      : 2026-11-20 09:40:12
 ----------------------------------------------------------------------------`,
+
+    'display dfs-group 1 m-lag': `--------------------------------------------------------------------------------
+MLAG-ID   State      Local-State  Peer-State   Local-Port     Peer-Port
+--------------------------------------------------------------------------------
+1         Success    Active       Active       Eth-Trunk10    Eth-Trunk10
+--------------------------------------------------------------------------------
+Peer-Link Status     : Up (200 Gbps, Eth-Trunk0)
+Heartbeat (DAD)      : Normal (Keepalive RTT: 0.42 ms via __LOCAL_MGMT__)
+Config-Consistency   : Consistent (VLAN, STP, LACP, MTU synchronized)
+Dual-Active Action   : Error-Down (Standby member ports isolate on peer-link fault)`,
+
+    'display dfs-group 1 node': `DFS Group 1 Node Status:
+  Local Priority     : 150 (Master Role)
+  Peer Priority      : 120 (Backup Role)
+  Local IP Address   : 192.168.100.11 (vpn-instance __LOCAL_MGMT__)
+  Peer IP Address    : 192.168.100.12 (vpn-instance __LOCAL_MGMT__)
+  Heartbeat State    : Established (Timer: 1000ms, Timeout: 6000ms)
+  Peer-Link Port     : Eth-Trunk0 (100GE1/0/5, 100GE1/0/6)
+  M-LAG Version      : V200R020C10 (CloudEngine Standard)`,
+
+    'display vxlan vni verbose': `--------------------------------------------------------------------------------
+BD-ID   VNI     Source-IP        Peer-VTEP-IP     Status   In-Packets   Out-Packets
+--------------------------------------------------------------------------------
+10      10010   10.255.255.11    10.255.255.12    Up       189,451,202  187,902,110
+10      10010   10.255.255.11    10.255.255.13    Up        98,114,500   97,882,410
+20      10020   10.255.255.11    10.255.255.12    Up       240,119,410  239,812,001
+--------------------------------------------------------------------------------
+Total Active VNIs: 2 | Encap Type: VXLAN Standard (RFC 7348)`,
+
+    'display vxlan tunnel': `--------------------------------------------------------------------------------
+Tunnel-ID   Source          Destination     State   Type    Out-Interface
+--------------------------------------------------------------------------------
+1           10.255.255.11   10.255.255.12   Up      bgp     100GE1/0/1
+2           10.255.255.11   10.255.255.13   Up      bgp     100GE1/0/2
+--------------------------------------------------------------------------------
+Total VXLAN Tunnels: 2 | MTU: 9216 (Jumbo Underlay Enabled)`,
+
+    'display evpn routing-table': `Local AS: 65001   BGP EVPN Routing Table
+Routes: 4 Total, 4 Active
+RD: 65001:10010 (Bridge-Domain 10)
+  Type-2 (MAC/IP Route):
+    * >  [2]:[0]:[48]:[4857-021b-a101]:[32]:[192.168.10.15]/104  Nexthop: 10.255.255.12  Label: 10010
+    * >  [2]:[0]:[48]:[4857-021b-a102]:[32]:[192.168.10.16]/104  Nexthop: 10.255.255.13  Label: 10010
+  Type-3 (Inclusive Multicast Route):
+    * >  [3]:[0]:[32]:[10.255.255.12]/64                          Nexthop: 10.255.255.12  Label: 10010
+  Type-5 (IP Prefix Route):
+    * >  [5]:[0]:[24]:[192.168.10.0]/88                           Nexthop: 10.255.255.11  Label: 10010`,
+
+    'display dcb pfc interface 100ge 1/0/1': `--------------------------------------------------------------------------------
+Port: 100GE1/0/1   PFC-Admin-Status: Enabled   PFC-Oper-Status: Enabled
+Priority: 3 (Lossless RoCEv2 AI Fabric)
+Rx-Pause-Frames: 0      Tx-Pause-Frames: 0      PFC-Deadlock-Recovery: Normal
+Dynamic-Buffer: Allocated (32MB Unified Egress Pool)
+ECN-Thresholds: Queue 3 (Min: 25%, Max: 75%, Discard: 100% Mark-Only)`,
+
+    'display device': `--------------------------------------------------------------------------------
+Slot  Type           Item                  Status     Sub-Type  Power  Fan
+--------------------------------------------------------------------------------
+1     LPU            CE-LPU-36CQ-FD (36*100GE) Normal     --        Normal Normal
+2     LPU            CE-LPU-48S8CQ (48*25G)    Normal     --        Normal Normal
+9     MPU            CE-MPU-B (Active)         Normal     Master    Normal Normal
+10    MPU            CE-MPU-B (Standby)        Normal     Slave     Normal Normal
+11    SFU            CE-SFU-12808 (Switch-Fab) Normal     --        Normal Normal
+12    SFU            CE-SFU-12808 (Switch-Fab) Normal     --        Normal Normal
+13    SFU            CE-SFU-12808 (Switch-Fab) Normal     --        Normal Normal
+14    SFU            CE-SFU-12808 (Switch-Fab) Normal     --        Normal Normal
+--------------------------------------------------------------------------------
+System State: Non-blocking Orthogonal Crossbar Fabric Operational`,
+
+    'display configuration candidate': `System candidate configuration changes:
+#
++ dfs-group 1
++  priority 150
++  source ip 192.168.100.11 vpn-instance __LOCAL_MGMT__
++  dual-active detection track vpn-instance __LOCAL_MGMT__ ip 192.168.100.12
+#
++ interface Eth-Trunk0
++  peer-link 1
++  mode lacp-static
+#
++ dcb pfc enable
++ dcb pfc priority 3
+#
+Total 6 uncommitted candidate blocks ready. Use 'commit' or 'commit trial 300' to apply.`,
+
+    'commit': `[~HW-CE6881-LEAF01] commit
+Commit operational changes to running system database...
+Info: Candidate configuration committed successfully. Current configuration generation: 0x48a12.`,
+
+    'commit trial 300': `[~HW-CE6881-LEAF01] commit trial 300
+Trial commit initiated with 300 second safety timeout.
+Info: The trial configuration will be automatically rolled back if not confirmed within 300 seconds.`,
 
     'display service-port 100': `-------------------------------------------------------------------------
   Index                   : 100
@@ -743,6 +886,26 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 9/12/17 ms (Recursiv
 
   // Lab Device Configurations
   const LAB_CONFIGS = {
+    'lab-016': {
+      prompt: '<HW-CE6881-LEAF01>',
+      device: 'Huawei CloudEngine CE6881-48T6CQ TOR Leaf (VRPv8)',
+      defaultCmd: 'display dfs-group 1 m-lag',
+      helpCmds: [
+        'display dfs-group 1 m-lag',
+        'display dfs-group 1 node',
+        'display vxlan vni verbose',
+        'display vxlan tunnel',
+        'display evpn routing-table',
+        'display dcb pfc interface 100ge 1/0/1',
+        'display device',
+        'display configuration candidate',
+        'commit',
+        'display current-configuration',
+        'help',
+        'clear'
+      ]
+    },
+
     'lab-014': {
       prompt: '<HW-PE01-CORE>',
       device: 'Huawei CloudEngine S6730 Core Switch (VRP v8)',
@@ -940,6 +1103,40 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 9/12/17 ms (Recursiv
 
     if (lower.startsWith('display service-port') || (labId === 'lab-015' && lower.includes('service-port'))) {
       return SIMULATOR_COMMANDS['display service-port 100'];
+    }
+
+    if (lower.startsWith('display dfs-group') || lower.startsWith('display m-lag') || lower.startsWith('display mlag') || (labId === 'lab-016' && (lower.includes('lag') || lower.includes('dfs')))) {
+      if (lower.includes('node') || lower.includes('heartbeat')) return SIMULATOR_COMMANDS['display dfs-group 1 node'];
+      return SIMULATOR_COMMANDS['display dfs-group 1 m-lag'];
+    }
+
+    if (lower.startsWith('display vxlan') || (labId === 'lab-016' && lower.includes('vxlan'))) {
+      if (lower.includes('tunnel')) return SIMULATOR_COMMANDS['display vxlan tunnel'];
+      return SIMULATOR_COMMANDS['display vxlan vni verbose'];
+    }
+
+    if (lower.startsWith('display evpn') || (labId === 'lab-016' && lower.includes('evpn'))) {
+      return SIMULATOR_COMMANDS['display evpn routing-table'];
+    }
+
+    if (lower.startsWith('display dcb') || lower.startsWith('display pfc') || (labId === 'lab-016' && (lower.includes('pfc') || lower.includes('roce')))) {
+      return SIMULATOR_COMMANDS['display dcb pfc interface 100ge 1/0/1'];
+    }
+
+    if (lower === 'display device' || (labId === 'lab-016' && lower.includes('device'))) {
+      return SIMULATOR_COMMANDS['display device'];
+    }
+
+    if (lower.startsWith('display configuration candidate') || lower.startsWith('display cand')) {
+      return SIMULATOR_COMMANDS['display configuration candidate'];
+    }
+
+    if (lower.startsWith('commit trial')) {
+      return SIMULATOR_COMMANDS['commit trial 300'];
+    }
+
+    if (lower === 'commit') {
+      return SIMULATOR_COMMANDS['commit'];
     }
 
     // Check show running-config or show run

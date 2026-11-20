@@ -202,6 +202,9 @@
           <button type="button" class="sandbox-chip" data-cmd="display isis peer">display isis peer</button>
           <button type="button" class="sandbox-chip" data-cmd="display vsi verbose">display vsi verbose</button>
           <button type="button" class="sandbox-chip" data-cmd="display ont optical-info 0/1 0 1">display ont optical-info</button>
+          <button type="button" class="sandbox-chip" data-cmd="display dfs-group 1 m-lag">display m-lag</button>
+          <button type="button" class="sandbox-chip" data-cmd="display vxlan vni verbose">display vxlan vni</button>
+          <button type="button" class="sandbox-chip" data-cmd="display dcb pfc interface 100GE1/0/1">display dcb pfc</button>
           <button type="button" class="sandbox-chip" data-cmd="/ip route print">/ip route print</button>
           <button type="button" class="sandbox-chip" data-cmd="subnet 172.16.0.0/23">subnet 172.16.0.0/23</button>
           <button type="button" class="sandbox-chip" data-cmd="ping 10.255.255.2">ping 10.255.255.2</button>
@@ -1895,6 +1898,426 @@ MA5800-X7# display service-port 100
           <span class="mono-label" style="color: var(--accent-secondary); font-size: 0.78rem;">PORTFOLIO PROJECT REFERENCE // CARRIER FTTH OLT</span>
           <a href="projects.html#project-huawei-olt" class="btn btn-outline btn-sm">
             <span>Inspect Huawei OLT Architecture Project &rarr;</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- LAB // 016: Huawei CloudEngine (CE) Series Data Center Fabric: M-LAG, BGP EVPN VXLAN, RoCEv2 Lossless AI & Hardware Models -->
+      <article id="lab-016" class="card reveal" style="margin-bottom: 48px; border-left: 4px solid #38bdf8;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="mono-label" style="color: #38bdf8; font-weight: 700;">LAB // 016</span>
+            <span class="tag" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border-color: rgba(56, 189, 248, 0.3);">HUAWEI CLOUDENGINE FABRIC</span>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <span class="tag">Huawei VRPv8</span>
+            <span class="tag">CE6800 / CE8800 / CE12800</span>
+            <span class="tag">Candidate / Commit</span>
+            <span class="tag">M-LAG Dual-Active</span>
+            <span class="tag">BGP EVPN VXLAN</span>
+            <span class="tag">Anycast Gateway (VBDIF)</span>
+            <span class="tag">RoCEv2 AI Fabric (PFC/ECN)</span>
+            <span class="tag">gRPC Telemetry</span>
+          </div>
+        </div>
+
+        <h2 style="font-size: 1.6rem; margin-top: 4px; margin-bottom: 12px;">Huawei CloudEngine (CE) Series Data Center Fabric: M-LAG, BGP EVPN VXLAN, RoCEv2 AI Fabric &amp; Multi-Model Deployment</h2>
+        <p class="body-sm" style="color: var(--text-secondary); margin-bottom: 24px; line-height: 1.7;">
+          <strong>Objective:</strong> Architect, commission, and harden a hyperscale cloud data center switching fabric across Huawei CloudEngine (CE) models running VRPv8 (distributed containerized microkernel). Master VRPv8 candidate-configuration commits with automatic trial rollbacks (`commit trial 300`), deploy active-active Multichassis Link Aggregation Group (M-LAG) dual-homed server access without Spanning Tree blocking, engineer a 9216-byte jumbo Spine-Leaf Clos underlay with ECMP multi-pathing, implement a distributed BGP EVPN VXLAN overlay with Anycast default gateways (`interface Vbdif`), tune ultra-low-latency RoCEv2 lossless fabrics for AI/GPU compute clusters with Priority-based Flow Control (PFC) and Explicit Congestion Notification (ECN) on CoS 3, and verify modular chassis MPUs, SFU crossbar fabrics, and LPUs.
+        </p>
+
+        <!-- Hardware Model Matrix Comparison -->
+        <div class="code-block-header" style="background: rgba(56, 189, 248, 0.1); border-color: rgba(56, 189, 248, 0.25);">
+          <span class="mono-label" style="color: #38bdf8;">HUAWEI CLOUDENGINE (CE) HARDWARE MATRIX // CE5800 vs CE6800 vs CE8800 vs CE12800/CE16800</span>
+        </div>
+        <div style="overflow-x: auto; margin-bottom: 28px;">
+          <table class="table-custom" style="width: 100%; border-collapse: collapse; font-size: 0.84rem;">
+            <thead>
+              <tr style="border-bottom: 1px solid var(--border); text-align: left; background: var(--surface-elevated);">
+                <th style="padding: 10px 14px;">Architecture Parameter</th>
+                <th style="padding: 10px 14px;">CE5800 Series (CE5855 / CE5882)</th>
+                <th style="padding: 10px 14px;">CE6800 Series (CE6881 / CE6865)</th>
+                <th style="padding: 10px 14px;">CE8800 Series (CE8850 / CE8861)</th>
+                <th style="padding: 10px 14px;">CE12800 / CE16800 Modular Core</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Form Factor &amp; Chassis</strong></td>
+                <td>1U Fixed TOR (442 x 420 x 43.6 mm)</td>
+                <td>1U Fixed High-Density TOR (442 x 420 x 43.6 mm)</td>
+                <td>1U/2U High-Density Spine (442 x 600 x 43.6 mm)</td>
+                <td>4U / 8U / 16U Direct-FAS Orthogonal Modular Chassis</td>
+              </tr>
+              <tr>
+                <td><strong>Port Density &amp; Speeds</strong></td>
+                <td>48x GE RJ45, 4x 10GE SFP+, 2x 40GE QSFP+</td>
+                <td>48x 10GE/25GE SFP28 + 6x or 8x 100GE QSFP28</td>
+                <td>32x / 64x 100GE QSFP28 (or 16x 400GE Breakout)</td>
+                <td>Up to 576x 100GE or 288x 400GE / 144x 800GE Line Cards</td>
+              </tr>
+              <tr>
+                <td><strong>Switching &amp; Latency</strong></td>
+                <td>336 Gbps / 126 Mpps (&lt; 2.5 &micro;s)</td>
+                <td>4.0 Tbps / 2,000 Mpps ultra-low (&lt; 1.0 &micro;s)</td>
+                <td>12.8 Tbps / 4,350 Mpps non-blocking line-rate</td>
+                <td>178 Tbps to 576 Tbps (AI-Assisted NPU Crossbar)</td>
+              </tr>
+              <tr>
+                <td><strong>Internal Architecture</strong></td>
+                <td>Merchant silicon ASIC, standard fan airflow</td>
+                <td>Programmable pipeline ASIC, front-to-back / back-to-front</td>
+                <td>Deep dynamic buffer ASIC (32MB - 64MB per chip)</td>
+                <td>Cable-less Orthogonal Backplane, Dual MPUs, SFU Crossbars, LPUs</td>
+              </tr>
+              <tr>
+                <td><strong>High-Availability Mode</strong></td>
+                <td>iStack hardware stacking (up to 9 switches)</td>
+                <td>M-LAG (Active-Active TOR) &amp; BGP EVPN Multi-Homing</td>
+                <td>M-LAG, BGP Route Reflector Cluster, Spine Anycast</td>
+                <td>1+1 MPU Redundancy, N+1 / N+M SFU Fabric, ISSU Zero-Downtime</td>
+              </tr>
+              <tr>
+                <td><strong>EVPN VXLAN &amp; Overlay</strong></td>
+                <td>Layer 2 VLAN Only (No HW VXLAN)</td>
+                <td>Hardware VXLAN Routing &amp; Bridging, BGP EVPN Type 2/3/5</td>
+                <td>Distributed &amp; Centralized Anycast VTEP Gateway</td>
+                <td>Hyperscale Multi-Tenant VXLAN Fabric &amp; Data Center Interconnect (DCI)</td>
+              </tr>
+              <tr>
+                <td><strong>Lossless AI / RoCEv2</strong></td>
+                <td>Standard 802.1p CoS Queuing</td>
+                <td>RoCEv2 Lossless: Hardware PFC, ECN (WRED), Fast Drop</td>
+                <td>AI Fabric: Dynamic Ingress/Egress ECN, Smart Buffer</td>
+                <td>iLossless Algorithm, Ultra-Deep Buffers, AI Flow Scheduling</td>
+              </tr>
+              <tr>
+                <td><strong>Primary Deployment Role</strong></td>
+                <td>Management network, legacy 1G server TOR</td>
+                <td>Cloud TOR Leaf, Kubernetes Worker Clusters, AI GPUs</td>
+                <td>Data Center Spine, 100G/400G Interconnect Fabric</td>
+                <td>Enterprise / Telecom Cloud Core, Supercomputing Backbone</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Topology Blueprint -->
+        <div class="code-block-header">
+          <span class="mono-label">TOPOLOGY BLUEPRINT // HUAWEI CLOUDENGINE SPINE-LEAF EVPN VXLAN &amp; M-LAG TOR FABRIC</span>
+        </div>
+        <pre class="code-terminal" style="margin-bottom: 24px;"><code>+-------------------------------------------------------------------------------------------------------------------+
+|                            HUAWEI CLOUDENGINE DATA CENTER FABRIC (SPINE-LEAF &amp; M-LAG)                             |
++-------------------------------------------------------------------------------------------------------------------+
+
+                          [HW-CE8850-SPINE01]                     [HW-CE8850-SPINE02]
+                         (100GE BGP EVPN RR01)                   (100GE BGP EVPN RR02)
+                                   |       \                       /       |
+                     100GE Links   |         \                   /         |   100GE Links
+                     (Underlay IGP)|           \               /           |   (Underlay IGP)
+                                   |             \           /             |
+                                   |               \       /               |
+                                   v                 v   v                 v
+                        +----------------------+               +----------------------+
+                        |  HW-CE6881-LEAF01    |==============|  HW-CE6881-LEAF02    |
+                        | (TOR Leaf 1, VTEP 1) | Peer-Link 1  | (TOR Leaf 2, VTEP 2) |
+                        | DFS-Group 1 (Pri 150)| (2x 100GE)   | DFS-Group 1 (Pri 120)|
+                        +----------------------+               +----------------------+
+                                   \                                     //
+                                    \   M-LAG Eth-Trunk 10 (Dual-Active)//
+                                     \   (VLAN 10/20 &lt;--&gt; BD 10/20)    //
+                                      \                               //
+                                       v                               v
+                                  +-----------------------------------------+
+                                  |   AI / GPU Compute Server Cluster 01    |
+                                  |   (Dual-Homed 2x 25GE LACP Bonding)     |
+                                  |   RoCEv2 Low-Latency Lossless (CoS 3)   |
+                                  +-----------------------------------------+</code></pre>
+
+        <!-- Configuration Terminal -->
+        <div class="terminal-card" style="margin-bottom: 24px;">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="terminal-dot dot-red"></span>
+              <span class="terminal-dot dot-yellow"></span>
+              <span class="terminal-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">huawei-cloudengine-cli // HW-CE6881-LEAF01-and-CE8850-SPINE.cfg</span>
+          </div>
+          <pre class="terminal-body"><code>! ====================================================================
+! HUAWEI CLOUDENGINE VRPv8 DATA CENTER FABRIC CONFIGURATION
+! Models: CE6881-48T6CQ (TOR Leaf) &amp; CE8850-64CQ (Fabric Spine)
+! Architecture: M-LAG Dual-Active, BGP EVPN VXLAN, RoCEv2 AI Lossless
+! System Workflow: Candidate Configuration Database &amp; Safe Commit
+! ====================================================================
+
+! --------------------------------------------------------------------
+! SECTION 1: SYSTEM INITIALIZATION, OUT-OF-BAND MGMT &amp; AAA HARDENING
+! --------------------------------------------------------------------
+&lt;HUAWEI&gt; system-view
+sysname HW-CE6881-LEAF01
+
+! Configure dedicated Out-of-Band Management VRF
+ip vpn-instance __LOCAL_MGMT__
+ ipv4-family
+#
+interface MEth0/0/0
+ description OUT_OF_BAND_MANAGEMENT_PORT
+ ip binding vpn-instance __LOCAL_MGMT__
+ ip address 192.168.100.11 255.255.255.0
+#
+ssh server enable
+stelnet server enable
+rsa local-key-pair create 3072
+
+aaa
+ local-user admin password cipher CloudEngine@Ops2026!
+ local-user admin service-type ssh terminal
+ local-user admin level 15
+#
+commit
+
+! --------------------------------------------------------------------
+! SECTION 2: M-LAG (MULTICHASSIS LINK AGGREGATION GROUP) DUAL-ACTIVE
+! --------------------------------------------------------------------
+! 1. Configure DFS Group &amp; Dual-Active Detection (DAD) Keepalive Link
+dfs-group 1
+ priority 150
+ source ip 192.168.100.11 vpn-instance __LOCAL_MGMT__
+ dual-active detection track vpn-instance __LOCAL_MGMT__ ip 192.168.100.12
+#
+
+! 2. Configure M-LAG Peer-Link (2x 100GE LACP Interconnect)
+interface Eth-Trunk0
+ description MLAG_PEER_LINK_INTERCONNECT_TO_LEAF02
+ mode lacp-static
+ peer-link 1
+ port link-type trunk
+ port trunk allow-pass vlan 10 20 100
+ trunk-isolate enable
+#
+interface 100GE1/0/5
+ description PEER_LINK_PHYSICAL_MEMBER_1
+ eth-trunk 0
+#
+interface 100GE1/0/6
+ description PEER_LINK_PHYSICAL_MEMBER_2
+ eth-trunk 0
+#
+
+! 3. Configure M-LAG Member Interfaces to Dual-Homed Server Compute Cluster
+interface Eth-Trunk10
+ description MLAG_TO_AI_GPU_COMPUTE_CLUSTER_01
+ mode lacp-static
+ dfs-group 1 m-lag 1
+ port link-type trunk
+ port trunk allow-pass vlan 10 20
+ port-security enable
+#
+interface 25GE1/0/1
+ description SERVER_NIC1_ATTACHMENT
+ eth-trunk 10
+#
+
+! --------------------------------------------------------------------
+! SECTION 3: UNDERLAY ROUTING (OSPF/ECMP &amp; JUMBO MTU 9216)
+! --------------------------------------------------------------------
+interface Loopback0
+ description VTEP_SOURCE_ROUTER_ID
+ ip address 10.255.255.11 255.255.255.255
+#
+! Fabric Uplink to Spine 01 (100GE)
+interface 100GE1/0/1
+ description UPLINK_TO_CE8850_SPINE01
+ mtu 9216
+ undo portswitch
+ ip address 10.10.11.2 255.255.255.252
+ ospf 1 area 0.0.0.0
+ ospf network-type p2p
+ ospf cost 10
+ ospf bfd enable
+#
+! Fabric Uplink to Spine 02 (100GE)
+interface 100GE1/0/2
+ description UPLINK_TO_CE8850_SPINE02
+ mtu 9216
+ undo portswitch
+ ip address 10.10.12.2 255.255.255.252
+ ospf 1 area 0.0.0.0
+ ospf network-type p2p
+ ospf cost 10
+ ospf bfd enable
+#
+ospf 1 router-id 10.255.255.11
+ nexthop 10.10.11.1 weight 1
+ nexthop 10.10.12.1 weight 1
+ bfd all-interfaces enable
+#
+
+! --------------------------------------------------------------------
+! SECTION 4: BGP EVPN OVERLAY &amp; VXLAN BRIDGING / ROUTING
+! --------------------------------------------------------------------
+! Enable L2VPN EVPN capability
+evpn-overlay enable
+#
+bridge-domain 10
+ vxlan vni 10010
+ evpn
+  route-distinguisher 65001:10010
+  vpn-target 65001:10010 both
+#
+bridge-domain 20
+ vxlan vni 10020
+ evpn
+  route-distinguisher 65001:10020
+  vpn-target 65001:10020 both
+#
+
+! Distributed Anycast Gateway (VBDIF) for Seamless VM/Container Mobility
+interface Vbdif10
+ description ANYCAST_GW_TENANT_VLAN10
+ ip address 192.168.10.1 255.255.255.0
+ mac-address 0000-5e00-0101
+#
+interface Vbdif20
+ description ANYCAST_GW_TENANT_VLAN20
+ ip address 192.168.20.1 255.255.255.0
+ mac-address 0000-5e00-0102
+#
+
+! NVE (Network Virtualization Edge) VTEP Interface
+interface Nve1
+ source-ip 10.255.255.11
+ vni 10010 head-end peer-list protocol bgp
+ vni 10020 head-end peer-list protocol bgp
+#
+
+! BGP EVPN Peering with Spine Route Reflectors
+bgp 65001
+ router-id 10.255.255.11
+ peer 10.255.255.1 as-number 65001
+ peer 10.255.255.1 connect-interface Loopback0
+ peer 10.255.255.2 as-number 65001
+ peer 10.255.255.2 connect-interface Loopback0
+ #
+ l2vpn-family evpn
+  undo policy vpn-target
+  peer 10.255.255.1 enable
+  peer 10.255.255.1 advertise encap-type vxlan
+  peer 10.255.255.2 enable
+  peer 10.255.255.2 advertise encap-type vxlan
+#
+
+! --------------------------------------------------------------------
+! SECTION 5: LOSSLESS AI FABRIC: RoCEv2, PFC &amp; ECN CONGESTION NOTIFICATION
+! --------------------------------------------------------------------
+! 1. Enable Priority-based Flow Control (PFC) on Queue 3 (Lossless Traffic)
+dcb pfc enable
+dcb pfc priority 3
+
+! 2. Explicit Congestion Notification (ECN) via WRED Dynamic Thresholds
+qos wred-profile ROCE_LOSSLESS_AI
+ wred queue 3 low-limit 25 high-limit 75 discard-percentage 100 ecn
+
+! Apply Lossless Profiles to Server and Spine 100GE Ports
+interface 100GE1/0/1
+ dcb pfc enable
+ qos wred ROCE_LOSSLESS_AI
+#
+interface 100GE1/0/2
+ dcb pfc enable
+ qos wred ROCE_LOSSLESS_AI
+#
+interface 25GE1/0/1
+ dcb pfc enable
+ qos wred ROCE_LOSSLESS_AI
+#
+
+! --------------------------------------------------------------------
+! SECTION 6: STREAMING TELEMETRY (gRPC) &amp; COMMIT VERIFICATION
+! --------------------------------------------------------------------
+telemetry
+ sensor-group ROCE_BUFFER_MONITOR
+  sensor-path huawei-qos:qos/qosIfQosBuffInfos/qosIfQosBuffInfo
+ destination-group SOC_TELEMETRY_COLLECTOR
+  ipv4-address 192.168.100.50 port 50051 vpn-instance __LOCAL_MGMT__ protocol grpc
+ subscription SUB_ROCE_TELEMETRY
+  sensor-group ROCE_BUFFER_MONITOR sample-interval 1000
+  destination-group SOC_TELEMETRY_COLLECTOR
+#
+
+! Candidate Inspection &amp; Safe Commit Trial (Auto-Rollback if Session Fails)
+commit trial 300
+commit
+return</code></pre>
+        </div>
+
+        <!-- Verification Output Terminal -->
+        <div class="terminal-card" style="margin-bottom: 24px;">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="terminal-dot dot-red"></span>
+              <span class="terminal-dot dot-yellow"></span>
+              <span class="terminal-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">huawei-cloudengine-diagnostics // display-mlag-vxlan-pfc-device.log</span>
+          </div>
+          <pre class="terminal-body"><code>HW-CE6881-LEAF01# display dfs-group 1 m-lag
+--------------------------------------------------------------------------------
+MLAG-ID   State      Local-State  Peer-State   Local-Port     Peer-Port
+--------------------------------------------------------------------------------
+1         Success    Active       Active       Eth-Trunk10    Eth-Trunk10
+--------------------------------------------------------------------------------
+Peer-Link Status     : Up (200 Gbps, Eth-Trunk0)
+Heartbeat (DAD)      : Normal (Keepalive RTT: 0.42 ms via __LOCAL_MGMT__)
+Config-Consistency   : Consistent (VLAN, STP, LACP, MTU synchronized)
+
+HW-CE6881-LEAF01# display vxlan vni verbose
+--------------------------------------------------------------------------------
+BD-ID   VNI     Source-IP        Peer-VTEP-IP     Status   In-Packets   Out-Packets
+--------------------------------------------------------------------------------
+10      10010   10.255.255.11    10.255.255.12    Up       189,451,202  187,902,110
+10      10010   10.255.255.11    10.255.255.13    Up        98,114,500   97,882,410
+20      10020   10.255.255.11    10.255.255.12    Up       240,119,410  239,812,001
+--------------------------------------------------------------------------------
+
+HW-CE6881-LEAF01# display dcb pfc interface 100GE1/0/1
+--------------------------------------------------------------------------------
+Port: 100GE1/0/1   PFC-Admin-Status: Enabled   PFC-Oper-Status: Enabled
+Priority: 3 (Lossless RoCEv2 AI Fabric)
+Rx-Pause-Frames: 0      Tx-Pause-Frames: 0      PFC-Deadlock-Recovery: Normal
+Dynamic-Buffer: Allocated (32MB Unified Egress Pool)
+
+HW-CE12808-CORE# display device
+--------------------------------------------------------------------------------
+Slot  Type           Item                  Status     Sub-Type  Power  Fan
+--------------------------------------------------------------------------------
+1     LPU            CE-LPU-36CQ-FD (36*100GE) Normal     --        Normal Normal
+2     LPU            CE-LPU-48S8CQ (48*25G)    Normal     --        Normal Normal
+9     MPU            CE-MPU-B (Active)         Normal     Master    Normal Normal
+10    MPU            CE-MPU-B (Standby)        Normal     Slave     Normal Normal
+11    SFU            CE-SFU-12808 (Switch-Fab) Normal     --        Normal Normal
+12    SFU            CE-SFU-12808 (Switch-Fab) Normal     --        Normal Normal
+13    SFU            CE-SFU-12808 (Switch-Fab) Normal     --        Normal Normal
+14    SFU            CE-SFU-12808 (Switch-Fab) Normal     --        Normal Normal
+--------------------------------------------------------------------------------</code></pre>
+        </div>
+
+        <div class="grid-2" style="background: var(--surface-elevated); padding: 20px; border-radius: var(--radius-sm); font-size: 0.9rem;">
+          <div>
+            <strong>Problem Diagnosed:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">An accidental maintenance cut severed the 2x100GE M-LAG peer-link (`Eth-Trunk0`) between dual Top-of-Rack CE6881 switches, threatening an active-active split-brain loop where both switches would attempt to drive identical Anycast default gateway MAC addresses and MAC table flapping.</p>
+          </div>
+          <div>
+            <strong>Resolution &amp; Takeaway:</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">Dual-Active Detection (DAD) keepalive heartbeats routed over the out-of-band management network detected peer-link loss in 80ms. The standby switch immediately invoked `m-lag error-down` policy, shutting down all local downlink member interfaces (`Eth-Trunk10`) while keeping uplinks intact, isolating the split chassis and preserving 100% cloud traffic forwarding through the primary switch.</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <span class="mono-label" style="color: #38bdf8; font-size: 0.78rem;">PORTFOLIO PROJECT REFERENCE // CLOUDENGINE DATA CENTER FABRIC</span>
+          <a href="projects.html#project-huawei-ce" class="btn btn-outline btn-sm">
+            <span>Inspect CloudEngine DC Fabric Architecture Project &rarr;</span>
           </a>
         </div>
       </article>

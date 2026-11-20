@@ -43,6 +43,16 @@ document.addEventListener('DOMContentLoaded', () => {
         id: 'huawei-olt-ma5800',
         title: 'Huawei Next-Gen MA5800-X7/X15: Combo-PON & Multi-Service QinQ',
         desc: 'Distributed 6U/11U NG-OLT deployment with 10G-GPON XGS-PON, T-CONT allocation, 802.1ad QinQ service ports, and rogue ONT suppression.'
+      },
+      {
+        id: 'huawei-ce-evpn',
+        title: 'Huawei CloudEngine: BGP EVPN VXLAN Spine-Leaf Fabric (CE6800 / CE8800)',
+        desc: 'Hyperscale Clos DC fabric with CE6800 Leafs, CE8800 Spines, distributed Anycast Gateway (VBDIF), Jumbo 9216 MTU, and EVPN Type 2/3/5 routes.'
+      },
+      {
+        id: 'huawei-ce-mlag',
+        title: 'Huawei CloudEngine: M-LAG Dual-Active TOR & Lossless RoCEv2 AI Fabric',
+        desc: 'Carrier active-active TOR server multi-homing via M-LAG (Eth-Trunk peer-link & DAD) with RoCEv2 Priority Flow Control (PFC) & ECN on CoS 3.'
       }
     ],
 
@@ -201,6 +211,26 @@ document.addEventListener('DOMContentLoaded', () => {
       telemetryLogging: true,
       hostname: 'HW-MA5800-X7',
       subnet: '10.100.0.0/24'
+    },
+    huawei_ce_evpn: {
+      platform: 'huawei',
+      scenario: 'huawei-ce-evpn',
+      securityHardened: true,
+      haRedundancy: true,
+      dualStackIPv6: true,
+      telemetryLogging: true,
+      hostname: 'HW-CE6881-LEAF01',
+      subnet: '10.200.0.0/24'
+    },
+    huawei_ce_mlag: {
+      platform: 'huawei',
+      scenario: 'huawei-ce-mlag',
+      securityHardened: true,
+      haRedundancy: true,
+      dualStackIPv6: false,
+      telemetryLogging: true,
+      hostname: 'HW-CE6881-TOR01',
+      subnet: '10.200.10.0/24'
     },
 
     cisco_campus: {
@@ -1640,6 +1670,205 @@ ospf 1 router-id ${baseIP}.2
   network ${baseIP}.0 0.0.0.255
 #
 return`;
+      } else if (scenario === 'huawei-ce-evpn') {
+        roleText = 'CloudEngine Spine-Leaf BGP EVPN VXLAN Fabric (VRPv8)';
+        interfacesText = '100GE1/0/1-2 (Spine Uplinks) / Nve1 (VTEP) / Vbdif10,20';
+        protocolText = 'BGP EVPN (RFC 7432), VXLAN (RFC 7348), OSPF Underlay, ECMP';
+
+        code = `! ====================================================================
+! HUAWEI CLOUDENGINE VRPv8 BGP EVPN VXLAN FABRIC CONFIGURATION
+! Hostname: ${hostname} (CE6881-48T6CQ TOR Leaf / CE8850-64CQ Spine)
+! Architecture: Spine-Leaf Clos Underlay, BGP EVPN Overlay & Anycast Gateways
+! Scope: ${subnet} ${dualStackIPv6 ? '& 2001:db8:acad::/48' : ''}
+! Flow Mode: Candidate Configuration Database & Safe Commit
+! ====================================================================
+
+system-view
+sysname ${hostname}
+#
+! Enable VXLAN EVPN Capability
+evpn-overlay enable
+#
+! Dedicated Out-of-Band Management VRF
+ip vpn-instance __LOCAL_MGMT__
+ ipv4-family
+#
+interface MEth0/0/0
+ description OOB_MANAGEMENT_PORT
+ ip binding vpn-instance __LOCAL_MGMT__
+ ip address 192.168.100.11 255.255.255.0
+#
+! Underlay VTEP Loopback Router-ID
+interface Loopback0
+ description VTEP_SOURCE_ADDRESS
+ ip address 10.255.255.11 255.255.255.255
+#
+! 100GE Spine Uplink 1 (Jumbo MTU 9216 & BFD)
+interface 100GE1/0/1
+ description UPLINK_TO_SPINE01_100GE
+ mtu 9216
+ undo portswitch
+ ip address ${baseIP}.1 255.255.255.252
+ ospf 1 area 0.0.0.0
+ ospf network-type p2p
+ ospf cost 10
+ ospf bfd enable
+#
+! 100GE Spine Uplink 2 (Jumbo MTU 9216 & BFD)
+interface 100GE1/0/2
+ description UPLINK_TO_SPINE02_100GE
+ mtu 9216
+ undo portswitch
+ ip address ${baseIP}.5 255.255.255.252
+ ospf 1 area 0.0.0.0
+ ospf network-type p2p
+ ospf cost 10
+ ospf bfd enable
+#
+ospf 1 router-id 10.255.255.11
+ nexthop ${baseIP}.2 weight 1
+ nexthop ${baseIP}.6 weight 1
+ bfd all-interfaces enable
+#
+! VXLAN Bridge Domains (BD) & VNI Mapping
+bridge-domain 10
+ vxlan vni 10010
+ evpn
+  route-distinguisher 65001:10010
+  vpn-target 65001:10010 both
+#
+bridge-domain 20
+ vxlan vni 10020
+ evpn
+  route-distinguisher 65001:10020
+  vpn-target 65001:10020 both
+#
+! Distributed Anycast Gateway (VBDIF) for Seamless Live Migration
+interface Vbdif10
+ description ANYCAST_DEFAULT_GW_TENANT10
+ ip address 192.168.10.1 255.255.255.0
+ mac-address 0000-5e00-0101
+#
+interface Vbdif20
+ description ANYCAST_DEFAULT_GW_TENANT20
+ ip address 192.168.20.1 255.255.255.0
+ mac-address 0000-5e00-0102
+#
+! NVE VTEP Interface Configuration
+interface Nve1
+ source-ip 10.255.255.11
+ vni 10010 head-end peer-list protocol bgp
+ vni 10020 head-end peer-list protocol bgp
+#
+! BGP EVPN Peering with Spine Route Reflectors
+bgp 65001
+ router-id 10.255.255.11
+ peer 10.255.255.1 as-number 65001
+ peer 10.255.255.1 connect-interface Loopback0
+ peer 10.255.255.2 as-number 65001
+ peer 10.255.255.2 connect-interface Loopback0
+ #
+ l2vpn-family evpn
+  undo policy vpn-target
+  peer 10.255.255.1 enable
+  peer 10.255.255.1 advertise encap-type vxlan
+  peer 10.255.255.2 enable
+  peer 10.255.255.2 advertise encap-type vxlan
+#
+${telemetryLogging ? `! Streaming Telemetry (gRPC) for Buffer Congestion
+telemetry
+ sensor-group ROCE_BUFFER_MONITOR
+  sensor-path huawei-qos:qos/qosIfQosBuffInfos/qosIfQosBuffInfo
+ destination-group SOC_COLLECTOR
+  ipv4-address 192.168.100.50 port 50051 vpn-instance __LOCAL_MGMT__ protocol grpc
+ subscription SUB_FABRIC_TELEMETRY
+  sensor-group ROCE_BUFFER_MONITOR sample-interval 1000
+  destination-group SOC_COLLECTOR
+#` : ''}
+! Commit candidate configuration with safe trial timeout
+commit trial 300
+commit
+return`;
+      } else if (scenario === 'huawei-ce-mlag') {
+        roleText = 'CloudEngine M-LAG Dual-Active TOR & Lossless RoCEv2 AI Fabric';
+        interfacesText = 'Eth-Trunk 0 (Peer-Link) / Eth-Trunk 10 (Server) / 25GE/100GE';
+        protocolText = 'M-LAG (Active-Active), RoCEv2 Lossless, PFC (CoS 3), ECN WRED';
+
+        code = `! ====================================================================
+! HUAWEI CLOUDENGINE VRPv8 M-LAG & LOSSLESS AI FABRIC CONFIGURATION
+! Hostname: ${hostname} (CE6881-48T6CQ / CE6865-48S8CQ Top-of-Rack Switch)
+! Architecture: Active-Active M-LAG TOR Clustering & RoCEv2 AI/GPU Low Latency
+! Scope: ${subnet} | Dual-Active Detection: OOB Management Tracking
+! ====================================================================
+
+system-view
+sysname ${hostname}
+#
+! Dedicated Out-of-Band Management VRF
+ip vpn-instance __LOCAL_MGMT__
+ ipv4-family
+#
+interface MEth0/0/0
+ description OOB_MANAGEMENT_PORT
+ ip binding vpn-instance __LOCAL_MGMT__
+ ip address 192.168.100.11 255.255.255.0
+#
+! 1. DFS Group & Dual-Active Detection (DAD) Keepalive Link
+dfs-group 1
+ priority 150
+ source ip 192.168.100.11 vpn-instance __LOCAL_MGMT__
+ dual-active detection track vpn-instance __LOCAL_MGMT__ ip 192.168.100.12
+#
+! 2. M-LAG Peer-Link (2x 100GE High-Speed Interconnect)
+interface Eth-Trunk0
+ description MLAG_PEER_LINK_INTERCONNECT
+ mode lacp-static
+ peer-link 1
+ port link-type trunk
+ port trunk allow-pass vlan 10 20 100
+ trunk-isolate enable
+#
+interface 100GE1/0/5
+ description PEER_LINK_MEMBER_PORT_1
+ eth-trunk 0
+#
+interface 100GE1/0/6
+ description PEER_LINK_MEMBER_PORT_2
+ eth-trunk 0
+#
+! 3. M-LAG Server Downlinks (Active-Active Dual-Homed Server Cluster)
+interface Eth-Trunk10
+ description MLAG_TO_AI_GPU_CLUSTER_01
+ mode lacp-static
+ dfs-group 1 m-lag 1
+ port link-type trunk
+ port trunk allow-pass vlan 10 20
+ port-security enable
+#
+interface 25GE1/0/1
+ description SERVER_GPU_NODE1_ETH0
+ eth-trunk 10
+#
+! 4. RoCEv2 Lossless AI Network: Priority-based Flow Control (PFC)
+dcb pfc enable
+dcb pfc priority 3
+#
+! 5. Explicit Congestion Notification (ECN) Dynamic WRED Curve
+qos wred-profile ROCE_LOSSLESS_AI
+ wred queue 3 low-limit 25 high-limit 75 discard-percentage 100 ecn
+#
+interface 25GE1/0/1
+ dcb pfc enable
+ qos wred ROCE_LOSSLESS_AI
+#
+interface 100GE1/0/1
+ dcb pfc enable
+ qos wred ROCE_LOSSLESS_AI
+#
+! Commit candidate configuration with safe trial timeout
+commit trial 300
+commit
+return`;
       } else if (scenario === 'huawei-olt-ma5608t') {
         roleText = 'Huawei SmartAX MA5608T 2U Compact Mini-OLT';
         interfacesText = 'Uplink 10GE 0/19/0 / GPON 0/1 (GPFD 16-Port Board)';
@@ -2021,6 +2250,19 @@ if __name__ == "__main__":
           'display board 0',
           'display service-port 100',
           'display ont autofind all',
+          'display current-configuration',
+          'help',
+          'clear'
+        ]);
+      } else if (state.scenario.includes('ce')) {
+        renderChips([
+          'display dfs-group 1 m-lag',
+          'display vxlan vni verbose',
+          'display evpn routing-table',
+          'display dcb pfc interface 100ge 1/0/1',
+          'display device',
+          'display configuration candidate',
+          'commit',
           'display current-configuration',
           'help',
           'clear'
@@ -2419,6 +2661,46 @@ if __name__ == "__main__":
         appendLog(`0/10    H901PISA   Normal          Dual-AC Power        Online`);
       } else if (lower.startsWith('display service-port')) {
         appendLog(`Index: 100 | VLAN: 1100 (SVLAN) | User VLAN: 100 | State: UP | Port: 0/1/0:1`);
+      } else if (lower.startsWith('display dfs-group') || lower.startsWith('display m-lag') || lower.startsWith('display mlag')) {
+        appendLog(`--------------------------------------------------------------------------------`);
+        appendLog(`MLAG-ID   State      Local-State  Peer-State   Local-Port     Peer-Port`);
+        appendLog(`--------------------------------------------------------------------------------`);
+        appendLog(`1         Success    Active       Active       Eth-Trunk10    Eth-Trunk10`);
+        appendLog(`--------------------------------------------------------------------------------`);
+        appendLog(`Peer-Link Status     : Up (200 Gbps, Eth-Trunk0)`);
+        appendLog(`Heartbeat (DAD)      : Normal (Keepalive RTT: 0.42 ms via __LOCAL_MGMT__)`);
+        appendLog(`Config-Consistency   : Consistent (VLAN, STP, LACP, MTU synchronized)`);
+      } else if (lower.startsWith('display vxlan')) {
+        appendLog(`--------------------------------------------------------------------------------`);
+        appendLog(`BD-ID   VNI     Source-IP        Peer-VTEP-IP     Status   In-Packets   Out-Packets`);
+        appendLog(`--------------------------------------------------------------------------------`);
+        appendLog(`10      10010   10.255.255.11    10.255.255.12    Up       189,451,202  187,902,110`);
+        appendLog(`20      10020   10.255.255.11    10.255.255.12    Up       240,119,410  239,812,001`);
+        appendLog(`--------------------------------------------------------------------------------`);
+        appendLog(`Total Active VNIs: 2 | Encap Type: VXLAN Standard (RFC 7348)`);
+      } else if (lower.startsWith('display evpn')) {
+        appendLog(`Local AS: 65001   BGP EVPN Routing Table`);
+        appendLog(`  Type-2 (MAC/IP): [2]:[0]:[48]:[4857-021b-a101]:[32]:[192.168.10.15]/104 -> 10.255.255.12`);
+        appendLog(`  Type-3 (IMET)  : [3]:[0]:[32]:[10.255.255.12]/64 -> 10.255.255.12 (VNI: 10010)`);
+        appendLog(`  Type-5 (Prefix): [5]:[0]:[24]:[192.168.10.0]/88 -> 10.255.255.11`);
+      } else if (lower.startsWith('display dcb') || lower.startsWith('display pfc')) {
+        appendLog(`Port: 100GE1/0/1   PFC-Admin: Enabled   PFC-Oper: Enabled`);
+        appendLog(`Priority: 3 (Lossless RoCEv2 AI Fabric) | Rx-Pause: 0 | Tx-Pause: 0`);
+        appendLog(`Dynamic-Buffer: Allocated (32MB Unified Pool) | ECN Threshold: 25% - 75%`);
+      } else if (lower === 'display device') {
+        appendLog(`Slot  Type           Item                  Status     Sub-Type  Power  Fan`);
+        appendLog(`1     LPU            CE-LPU-36CQ-FD (36*100GE) Normal     --        Normal Normal`);
+        appendLog(`9     MPU            CE-MPU-B (Active)         Normal     Master    Normal Normal`);
+        appendLog(`11    SFU            CE-SFU-12808 (Switch-Fab) Normal     --        Normal Normal`);
+      } else if (lower.startsWith('display config') || lower.startsWith('display cand')) {
+        appendLog(`System candidate configuration changes:`);
+        appendLog(`+ dfs-group 1 (priority 150, DAD track __LOCAL_MGMT__)`);
+        appendLog(`+ interface Eth-Trunk0 (peer-link 1, mode lacp-static)`);
+        appendLog(`+ dcb pfc enable (priority 3)`);
+        appendLog(`Total 3 uncommitted candidate blocks ready. Use 'commit' to apply.`);
+      } else if (lower === 'commit' || lower.startsWith('commit trial')) {
+        appendLog(`[~${hostname}] commit`);
+        appendLog(`Info: Candidate configuration committed successfully. Current generation: 0x48a12.`);
       } else if (lower.startsWith('display current') || lower === 'dis cur') {
         const gen = generateConfiguration();
         appendLog(`! Current Active Huawei VRP / OLT Configuration:\n` + gen.code);
@@ -2548,7 +2830,7 @@ if __name__ == "__main__":
     } else if (platform === 'linux') {
       list = ['nginx -t', 'systemctl status nginx', 'ip addr show', 'wg show', 'curl -I https://gautambhuwan.com.np', 'nft list ruleset', 'clear', 'help'];
     } else if (platform === 'huawei') {
-      list = ['display isis peer', 'display isis lsdb', 'display mpls ldp session', 'display mpls lsp', 'display vsi verbose', 'display vsi remote-mac', 'display ospf peer brief', 'display ont optical-info 0/1 0 1', 'display ont info 0/1 0 1', 'display ont autofind all', 'display board 0', 'display service-port 100', 'display current-configuration', 'ping 10.255.255.2', 'clear', 'help'];
+      list = ['display dfs-group 1 m-lag', 'display vxlan vni verbose', 'display evpn routing-table', 'display dcb pfc interface 100ge 1/0/1', 'display device', 'display configuration candidate', 'commit', 'display isis peer', 'display isis lsdb', 'display mpls ldp session', 'display mpls lsp', 'display vsi verbose', 'display vsi remote-mac', 'display ospf peer brief', 'display ont optical-info 0/1 0 1', 'display ont info 0/1 0 1', 'display ont autofind all', 'display board 0', 'display service-port 100', 'display current-configuration', 'ping 10.255.255.2', 'clear', 'help'];
     } else if (platform === 'docker') {
       list = ['docker compose ps', 'docker network ls', 'docker compose logs --tail=10', 'docker stats --no-stream', 'clear', 'help'];
     } else {

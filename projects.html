@@ -212,6 +212,8 @@
           <button type="button" class="architect-preset-chip" data-preset="huawei_mpls_vpls">Huawei Core (IS-IS, OSPF &amp; VPLS)</button>
           <button type="button" class="architect-preset-chip" data-preset="huawei_olt_ma5608t">Huawei MA5608T OLT (Basic to FTTH)</button>
           <button type="button" class="architect-preset-chip" data-preset="huawei_olt_ma5800">Huawei MA5800-X7 OLT (XGS-PON &amp; QinQ)</button>
+          <button type="button" class="architect-preset-chip" data-preset="huawei_ce_evpn">Huawei CE6800/CE8800 (EVPN VXLAN)</button>
+          <button type="button" class="architect-preset-chip" data-preset="huawei_ce_mlag">Huawei CE6800 (M-LAG TOR &amp; RoCEv2)</button>
         </div>
 
         <!-- Main 2-Column Grid: Configurator vs Live Blueprint & Code -->
@@ -257,8 +259,8 @@
                 </button>
                 <button type="button" class="platform-btn" data-platform="huawei">
                   <span class="platform-btn-icon">🌐</span>
-                  <span class="platform-btn-name">Huawei VRP</span>
-                  <span class="platform-btn-sub">Switch &amp; OLT</span>
+                  <span class="platform-btn-name">Huawei CloudEngine</span>
+                  <span class="platform-btn-sub">CE, Switch &amp; OLT</span>
                 </button>
               </div>
             </div>
@@ -1367,6 +1369,33 @@
           </div>
           <div style="display: flex; gap: 10px;">
             <a href="labs.html#lab-015" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
+            <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
+          </div>
+        </article>
+
+        <!-- Project 18: Huawei CloudEngine Data Center Architecture -->
+        <article class="card card-interactive project-card" id="project-huawei-ce" data-category="networking">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <span class="tag" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border-color: rgba(56, 189, 248, 0.3);">HUAWEI CLOUDENGINE FABRIC</span>
+            <span class="mono-label" style="color: var(--accent-secondary);">2026</span>
+          </div>
+          <h3 style="margin-bottom: 10px;">Huawei CloudEngine Data Center Architecture: Spine-Leaf EVPN VXLAN, M-LAG &amp; Lossless AI Fabric</h3>
+          <p class="body-sm" style="color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">
+            Architected and engineered a hyperscale data center switching fabric across Huawei CloudEngine switches (CE6800 25GE/100GE Leaf, CE8800 100GE Spine, and CE12800 Modular Core) running VRPv8. Deployed active-active Top-of-Rack server multi-homing using Multichassis Link Aggregation (M-LAG) with Dual-Active Detection (DAD) split-brain protection; engineered a non-blocking Spine-Leaf Clos underlay with 9216-byte jumbo frames; implemented BGP EVPN VXLAN overlay with distributed Anycast Default Gateways (`interface Vbdif`) supporting seamless cross-rack virtual machine live migration; optimized lossless AI/HPC GPU fabrics with RoCEv2, Priority-based Flow Control (PFC), and ECN congestion notification; and deployed gRPC streaming telemetry for microburst visibility.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;">
+            <span class="skill-tag">Huawei CloudEngine</span>
+            <span class="skill-tag">CE6800 / CE8800 / CE12800</span>
+            <span class="skill-tag">VRPv8 Candidate/Commit</span>
+            <span class="skill-tag">M-LAG Dual-Active</span>
+            <span class="skill-tag">BGP EVPN VXLAN</span>
+            <span class="skill-tag">Anycast Gateway (VBDIF)</span>
+            <span class="skill-tag">RoCEv2 Lossless AI</span>
+            <span class="skill-tag">PFC &amp; ECN (CoS 3)</span>
+            <span class="skill-tag">gRPC Telemetry</span>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <a href="labs.html#lab-016" class="btn btn-outline btn-sm" style="flex: 1;">Lab Details</a>
             <a href="https://github.com/sudovu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">GitHub</a>
           </div>
         </article>
