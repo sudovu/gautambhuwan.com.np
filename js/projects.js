@@ -8,33 +8,118 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!filterBtns.length || !projectCards.length) return;
 
+  const projectSearchInput = document.getElementById('project-search-input');
+  const projectSearchCount = document.getElementById('project-search-count');
+  const jumpBottomProjectsBtn = document.getElementById('btn-jump-bottom-projects');
+  const jumpBottomArchitectBtn = document.getElementById('btn-jump-bottom-architect');
+
+  let activeCategory = 'all';
+
+  function filterProjects() {
+    const query = projectSearchInput ? projectSearchInput.value.trim().toLowerCase() : '';
+    let matchCount = 0;
+    let firstMatch = null;
+
+    projectCards.forEach(card => {
+      const category = card.getAttribute('data-category') || '';
+      const text = card.innerText.toLowerCase();
+      const cardId = card.id ? card.id.toLowerCase() : '';
+
+      let catMatch = false;
+      if (activeCategory === 'all') {
+        catMatch = true;
+      } else if (activeCategory === 'huawei') {
+        catMatch = text.includes('huawei') || text.includes('cloudengine') || text.includes('vrp') || text.includes('olt');
+      } else {
+        catMatch = category === activeCategory;
+      }
+
+      const queryMatch = !query || text.includes(query) || cardId.includes(query);
+
+      if (catMatch && queryMatch) {
+        card.style.display = 'block';
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, 10);
+        matchCount++;
+        if (!firstMatch) firstMatch = card;
+      } else {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(12px)';
+        setTimeout(() => {
+          card.style.display = 'none';
+        }, 200);
+      }
+    });
+
+    if (projectSearchCount) {
+      if (query || activeCategory !== 'all') {
+        projectSearchCount.textContent = `(${matchCount} match${matchCount === 1 ? '' : 'es'})`;
+      } else {
+        projectSearchCount.textContent = '';
+      }
+    }
+
+    return firstMatch;
+  }
+
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      const filter = btn.getAttribute('data-filter');
-
-      // Update button state
+      activeCategory = btn.getAttribute('data-filter') || 'all';
       filterBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-
-      // Filter cards
-      projectCards.forEach(card => {
-        const category = card.getAttribute('data-category');
-        if (filter === 'all' || category === filter) {
-          card.style.display = 'block';
-          setTimeout(() => {
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-          }, 10);
-        } else {
-          card.style.opacity = '0';
-          card.style.transform = 'translateY(12px)';
-          setTimeout(() => {
-            card.style.display = 'none';
-          }, 200);
-        }
-      });
+      filterProjects();
     });
   });
+
+  if (projectSearchInput) {
+    projectSearchInput.addEventListener('input', () => {
+      filterProjects();
+    });
+
+    projectSearchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const match = filterProjects();
+        if (match) {
+          match.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          match.classList.add('lab-highlight-match');
+          setTimeout(() => match.classList.remove('lab-highlight-match'), 2000);
+        }
+      } else if (e.key === 'Escape') {
+        projectSearchInput.value = '';
+        activeCategory = 'all';
+        filterBtns.forEach(b => b.classList.toggle('active', b.getAttribute('data-filter') === 'all'));
+        filterProjects();
+      }
+    });
+  }
+
+  // Fast-Travel Jump to Bottom Handlers
+  function scrollToBottomProjects() {
+    const bottomProject = document.getElementById('project-huawei-ce') || document.getElementById('project-huawei-olt') || document.querySelector('.project-card:last-of-type');
+    if (bottomProject) {
+      bottomProject.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      bottomProject.classList.add('lab-highlight-match');
+      setTimeout(() => bottomProject.classList.remove('lab-highlight-match'), 2000);
+    } else {
+      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+    }
+  }
+
+  if (jumpBottomProjectsBtn) {
+    jumpBottomProjectsBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      scrollToBottomProjects();
+    });
+  }
+
+  if (jumpBottomArchitectBtn) {
+    jumpBottomArchitectBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      scrollToBottomProjects();
+    });
+  }
 
   // Subnet Plan Modal Controller
   const subnetModal = document.getElementById('subnet-modal');

@@ -864,11 +864,21 @@ img, svg {
   font-size: 0.85rem;
 }
 
-/* Back to Top Button */
-.back-to-top {
+/* Floating Fast-Travel Navigation Dock (Scroll to Top & Scroll to Bottom) */
+.floating-nav-dock {
   position: fixed;
   bottom: 28px;
   right: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 990;
+  pointer-events: none;
+}
+
+.floating-nav-btn,
+.back-to-top,
+.scroll-to-bottom {
   width: 44px;
   height: 44px;
   border-radius: var(--radius-sm);
@@ -879,24 +889,97 @@ img, svg {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 990;
+  pointer-events: auto;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(12px);
+  transform: translateY(10px);
   transition: all var(--transition-normal);
   box-shadow: var(--shadow-md);
+  position: relative;
+  text-decoration: none;
 }
 
-.back-to-top.visible {
+/* Standalone positioning if not wrapped in dock */
+body > .back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 990;
+}
+
+body > .scroll-to-bottom {
+  position: fixed;
+  bottom: 80px;
+  right: 28px;
+  z-index: 990;
+}
+
+.floating-nav-btn.visible,
+.back-to-top.visible,
+.scroll-to-bottom.visible {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
 }
 
+.floating-nav-btn:hover,
 .back-to-top:hover {
   background: var(--accent-primary);
   color: #ffffff;
   border-color: var(--accent-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.scroll-to-bottom:hover {
+  background: var(--accent-secondary);
+  border-color: var(--accent-secondary);
+  color: #030712;
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+}
+
+/* Tooltips for Floating Fast-Travel Buttons */
+.floating-nav-btn[data-tooltip]::before,
+.back-to-top[data-tooltip]::before,
+.scroll-to-bottom[data-tooltip]::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  right: 52px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(3, 7, 18, 0.95);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.floating-nav-btn:hover::before,
+.back-to-top:hover::before,
+.scroll-to-bottom:hover::before {
+  opacity: 1;
+}
+
+/* Lab & Project Fast-Travel / Filter Strip */
+.lab-filter-pill.active {
+  background: var(--accent-secondary);
+  color: #030712 !important;
+  font-weight: 700;
+  border-color: var(--accent-secondary);
+}
+
+.lab-highlight-match {
+  box-shadow: 0 0 0 2px var(--accent-secondary), 0 0 25px rgba(6, 182, 212, 0.35) !important;
+  transition: box-shadow 0.3s ease;
 }
 
 /* ==========================================================================

@@ -1527,6 +1527,103 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 9/12/17 ms (Recursiv
     });
   });
 
+  // 3. Lab Search & Fast-Travel Navigator Controller
+  const labSearchInput = document.getElementById('lab-search-input');
+  const labFilterPills = document.querySelectorAll('.lab-filter-pill');
+  const labSearchStatus = document.getElementById('lab-search-status');
+  const jumpBottomLabsBtn = document.getElementById('btn-jump-bottom-labs');
+
+  if (jumpBottomLabsBtn) {
+    jumpBottomLabsBtn.addEventListener('click', () => {
+      const bottomLab = document.getElementById('lab-016') || document.querySelector('article[id^="lab-"]:last-of-type');
+      if (bottomLab) {
+        bottomLab.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        bottomLab.classList.add('lab-highlight-match');
+        setTimeout(() => bottomLab.classList.remove('lab-highlight-match'), 2000);
+      } else {
+        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+      }
+    });
+  }
+
+  if (labSearchInput && labArticles.length) {
+    let activePlatform = 'all';
+
+    function filterLabs() {
+      const query = labSearchInput.value.trim().toLowerCase();
+      let matchCount = 0;
+      let firstMatch = null;
+
+      labArticles.forEach(article => {
+        const text = article.innerText.toLowerCase();
+        const articleId = article.id.toLowerCase();
+        
+        let platformMatch = true;
+        if (activePlatform === 'huawei') {
+          platformMatch = text.includes('huawei') || text.includes('vrp') || text.includes('cloudengine') || text.includes('ma5800') || text.includes('ma5608t') || text.includes('ce6800') || text.includes('ce8800');
+        } else if (activePlatform === 'cisco') {
+          platformMatch = text.includes('cisco') || text.includes('ios') || text.includes('hsrp');
+        } else if (activePlatform === 'juniper') {
+          platformMatch = text.includes('juniper') || text.includes('junos') || text.includes('srx') || text.includes('mx204');
+        } else if (activePlatform === 'mikrotik') {
+          platformMatch = text.includes('mikrotik') || text.includes('routeros');
+        } else if (activePlatform === 'linux') {
+          platformMatch = text.includes('linux') || text.includes('docker') || text.includes('nginx') || text.includes('wireguard') || text.includes('python');
+        }
+
+        const queryMatch = !query || text.includes(query) || articleId.includes(query);
+
+        if (platformMatch && queryMatch) {
+          article.style.display = 'block';
+          matchCount++;
+          if (!firstMatch) firstMatch = article;
+        } else {
+          article.style.display = 'none';
+        }
+      });
+
+      if (labSearchStatus) {
+        if (query || activePlatform !== 'all') {
+          labSearchStatus.style.display = 'block';
+          labSearchStatus.textContent = `Showing ${matchCount} of ${labArticles.length} lab configurations${query ? ` matching "${query}"` : ''}.`;
+        } else {
+          labSearchStatus.style.display = 'none';
+        }
+      }
+
+      return firstMatch;
+    }
+
+    labSearchInput.addEventListener('input', () => {
+      filterLabs();
+    });
+
+    labSearchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const match = filterLabs();
+        if (match) {
+          match.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          match.classList.add('lab-highlight-match');
+          setTimeout(() => match.classList.remove('lab-highlight-match'), 2000);
+        }
+      } else if (e.key === 'Escape') {
+        labSearchInput.value = '';
+        activePlatform = 'all';
+        labFilterPills.forEach(p => p.classList.toggle('active', p.getAttribute('data-platform') === 'all'));
+        filterLabs();
+      }
+    });
+
+    labFilterPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        labFilterPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        activePlatform = pill.getAttribute('data-platform') || 'all';
+        filterLabs();
+      });
+    });
+  }
+
   function escapeHtml(str) {
     if (!str) return '';
     return str

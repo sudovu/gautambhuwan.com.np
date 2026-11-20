@@ -55,26 +55,63 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 3. Back to Top Button (Throttled 60fps with requestAnimationFrame & passive listener)
+  // 3. Fast-Travel Floating Scroll Navigation (Back to Top & Scroll to Bottom)
   const backToTopBtn = document.querySelector('.back-to-top');
-  if (backToTopBtn) {
+  const scrollToBottomBtn = document.querySelector('.scroll-to-bottom');
+
+  const updateScrollButtons = () => {
+    const scrollY = window.scrollY || document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+    const docHeight = document.documentElement.scrollHeight;
+    const distanceToBottom = docHeight - (scrollY + windowHeight);
+
+    // Back to top: visible when scrolled down > 280px
+    if (backToTopBtn) {
+      if (scrollY > 280) {
+        backToTopBtn.classList.add('visible');
+      } else {
+        backToTopBtn.classList.remove('visible');
+      }
+    }
+
+    // Scroll to bottom: visible when there is at least 320px of scrollable page remaining below
+    if (scrollToBottomBtn) {
+      if (distanceToBottom > 320) {
+        scrollToBottomBtn.classList.add('visible');
+      } else {
+        scrollToBottomBtn.classList.remove('visible');
+      }
+    }
+  };
+
+  if (backToTopBtn || scrollToBottomBtn) {
     let ticking = false;
     window.addEventListener('scroll', () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          if (window.scrollY > 350) {
-            backToTopBtn.classList.add('visible');
-          } else {
-            backToTopBtn.classList.remove('visible');
-          }
+          updateScrollButtons();
           ticking = false;
         });
         ticking = true;
       }
     }, { passive: true });
 
-    backToTopBtn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    // Initial check on load
+    updateScrollButtons();
+    window.addEventListener('load', updateScrollButtons);
+
+    if (backToTopBtn) {
+      backToTopBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    if (scrollToBottomBtn) {
+      scrollToBottomBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+      });
+    }
   }
 });
